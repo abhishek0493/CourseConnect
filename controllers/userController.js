@@ -1,50 +1,27 @@
-const knex = require('knex');
-const knexConfig = require('../knexfile');
-const db = knex(knexConfig.development);
+const db = require('../db');
+const catchAsync = require('../utils/catchAsync');
+const AppError = require('../utils/appError');
 
-async function getAllUsers() {
-  try {
-    const users = await db.select().from('users');
-    return users;
-  } catch (error) {
-    console.error('Error retrieving users:', error);
-    throw error;
+const getAllUsers = catchAsync(async (req, res, next) => {
+  const users = await db.select().from('users');
+  if (!users) {
+    return next(new AppError('No Users found', 404));
   }
-}
+  res.status(200).json({
+    data: users,
+  });
+});
 
-async function createUser(user) {
-  try {
-    const createdUser = await db('users').insert(user);
-    return createdUser;
-  } catch (error) {
-    console.error('Error creating user:', error);
-    throw error;
-  }
-}
+const createUser = catchAsync(async (req, res, next) => {
+  const { name, email, password } = req.body;
+  console.log(req.body);
 
-async function updateUser(id, user) {
-  try {
-    const updatedUser = await db('users').where('id', id).update(user);
-    return updatedUser;
-  } catch (error) {
-    console.error('Error updating user:', error);
-    throw error;
-  }
-}
-
-async function deleteUser(id) {
-  try {
-    const deletedUser = await db('users').where('id', id).del();
-    return deletedUser;
-  } catch (error) {
-    console.error('Error deleting user:', error);
-    throw error;
-  }
-}
+  res.status(200).json({
+    data: name,
+  });
+});
 
 module.exports = {
   getAllUsers,
   createUser,
-  updateUser,
-  deleteUser,
 };
