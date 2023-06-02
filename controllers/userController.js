@@ -15,42 +15,6 @@ const getAllUsers = catchAsync(async (req, res, next) => {
   });
 });
 
-const createUser = catchAsync(async (req, res, next) => {
-  // console.log(req.body);
-  const result = await userCreationSchema.validateAsync(req.body);
-  console.log(result.error);
-  const { name, email, password, type } = req.body;
-
-  return 1;
-
-  // Generate a salt
-  const salt = await bcrypt.genSalt(10);
-
-  // Hash the password with the generated salt
-  const hashedPassword = await bcrypt.hash(password, salt);
-
-  // Save the user to the database with the hashed password
-  const user = await db('users').insert({
-    name: name,
-    email: email,
-    password: hashedPassword,
-    type: 1,
-    type_value: userTypes.userTypes[1],
-  });
-
-  res.status(201).json({ message: 'User created successfully', user });
-});
-
-const createUserTest = catchAsync(async (req, res, next) => {
-  const { name, email, password } = req.body;
-  console.log(req.body);
-
-  res.status(200).json({
-    data: name,
-  });
-});
-
 module.exports = {
   getAllUsers,
-  createUser,
 };
