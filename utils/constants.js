@@ -1,8 +1,26 @@
 module.exports = {
   userTypes: {
-    1: 'Admin',
-    2: 'Students',
-    3: 'Instructors/Teachers',
-    4: 'Learning Professionals',
+    admin: {
+      name: 'Admin',
+      type_id: 1,
+      isActive: true,
+    },
+    user: {
+      student: {
+        name: 'Student',
+        type_id: 2,
+        isActive: true,
+      },
+      instructor: {
+        name: 'Instructor/Teacher',
+        type_id: 3,
+        isActive: true,
+      },
+      professional: {
+        name: 'Working Professional',
+        type_id: 4,
+        isActive: true,
+      },
+    },
   },
 };
