@@ -9,7 +9,7 @@ function App() {
     axios
       .get('http://localhost:8000/api/v1/users/categories')
       .then((response) => {
-        // console.log(response.data);
+        console.log(response.data);
         setUserTypes(response.data);
       })
       .catch((error) => {

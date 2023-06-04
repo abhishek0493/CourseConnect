@@ -1,16 +1,21 @@
 import './signup.css';
-import vector from './signup2.jpg';
+import vector from './images/7606000.jpg';
 
 const Signup = (props) => {
-  const arrData = Object.entries(props);
-  // console.log(arrData);
   return (
-    <section className="signup-super row p-4 m-5">
-      <div className="image-box col-md-6 p-3">
+    <section className="signup-super row p-5 m-5">
+      <div className="image-box col-md-6 p-3 text-center">
         <img src={vector} className="illustration" />
+        <a
+          href="https://www.freepik.com/free-vector/college-project-concept-illustration_29659818.htm#query=education%20illustration&position=3&from_view=keyword&track=ais"
+          className="attribution"
+        >
+          Image by storyset
+        </a>{' '}
+        <span className="attribution">on Freepik</span>
       </div>
       <div className="sign-up-form col-md-6 p-3">
-        <h1 className="mb-4">Signup</h1>
+        <h1 className="mb-4">Create an account</h1>
         <form className="row g-3">
           <div className="col-md-6">
             <label htmlFor="name" className="form-label">
@@ -45,12 +50,12 @@ const Signup = (props) => {
               Profession
             </label>
             <select id="inputState" className="form-select">
-              {arrData.map((item, index) => {
-                <option>{item[1].name}</option>;
-              })}
-              {/* <option>Student</option>
-              <option>Instrutor/Professor</option>
-              <option>Working Professional</option> */}
+              <option>--- Select ---</option>
+              {Object.values(props.userTypes).map((value) => (
+                <option key={value.type_id} value={value.type_id}>
+                  {value.name}
+                </option>
+              ))}
             </select>
           </div>
           <div className="col-md-6">
@@ -73,7 +78,7 @@ const Signup = (props) => {
           </div>
           <div className="col-12">
             <button type="submit" className="btn btn-primary">
-              Sign in
+              Create account
             </button>
           </div>
         </form>
