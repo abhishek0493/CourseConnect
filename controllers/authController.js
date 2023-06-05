@@ -8,7 +8,11 @@ const db = require('../db');
 
 exports.signup = catchAsync(async (req, res) => {
   const { error } = userCreationSchema.validate(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
+  if (error)
+    return res.status(400).json({
+      success: false,
+      message: error.details[0].message,
+    });
 
   const validateExisting = await helpers.checkIfUserExistsByEmail(
     req.body.email
