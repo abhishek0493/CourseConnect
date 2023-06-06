@@ -1,4 +1,5 @@
 const Joi = require('joi');
+const bcrypt = require('bcrypt');
 
 const userCreationSchema = Joi.object({
   name: Joi.string().min(5).required(),
@@ -15,4 +16,19 @@ const userCreationSchema = Joi.object({
   type_value: Joi.string(),
 });
 
-module.exports = { userCreationSchema };
+const communityCreationSchema = Joi.object({
+  name: Joi.string().min(3).required(),
+  description: Joi.string().min(5).required(),
+  category_id: Joi.number().min(1).required(),
+  created_by: Joi.number().min(1).required(),
+});
+
+const verifyPassword = async function (inputPassword, userPassword) {
+  return await bcrypt.compare(inputPassword, userPassword);
+};
+
+module.exports = {
+  userCreationSchema,
+  communityCreationSchema,
+  verifyPassword,
+};

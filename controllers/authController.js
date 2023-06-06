@@ -6,6 +6,30 @@ const { userCreationSchema } = require('../utils/validation');
 const catchAsync = require('../utils/catchAsync');
 const db = require('../db');
 
+const createSendToken = (user, statusCode, req, res) => {
+  const token = jwt.sign(
+    { id: user.uuid, name: user.name },
+    process.env.JWT_SECRET_KEY
+  );
+
+  res.cookie('jwt', token, {
+    expires: new Date(
+      Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+    ),
+    httpOnly: true,
+    secure: req.secure || req.headers['x-forwarded-proto'] === 'https',
+  });
+
+  user.password = undefined;
+  res.status(statusCode).json({
+    success: true,
+    token,
+    data: {
+      user,
+    },
+  });
+};
+
 exports.signup = catchAsync(async (req, res) => {
   const { error } = userCreationSchema.validate(req.body);
   if (error)
