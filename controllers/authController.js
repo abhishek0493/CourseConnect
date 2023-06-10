@@ -2,7 +2,11 @@ const bcrypt = require('bcrypt');
 const _ = require('lodash');
 const jwt = require('jsonwebtoken');
 const helpers = require('../utils/helpers');
-const { userCreationSchema } = require('../utils/validation');
+const {
+  userCreationSchema,
+  login,
+  verifyPassword,
+} = require('../utils/validation');
 const catchAsync = require('../utils/catchAsync');
 const db = require('../db');
 
@@ -66,14 +70,33 @@ exports.signup = catchAsync(async (req, res) => {
     .select('uuid')
     .then((row) => (userObj.uuid = row[0].uuid));
 
-  const token = jwt.sign(
-    { id: userObj.uuid, name: userObj.name },
-    process.env.JWT_SECRET_KEY
-  );
+  createSendToken(userObj);
+});
 
-  res.header('x-auth-token', token).status(200).send({
-    name: userObj.name,
+exports.login = catchAsync(async (req, res) => {
+  const { error } = login.validate(req.body);
+  if (error)
+    return res.status(400).json({
+      success: false,
+      message: error.details[0].message,
+    });
+
+  const { email, password } = req.body;
+
+  const user = await db('users').where({ email: email }).first();
+
+  const verify = await verifyPassword(password, user.password);
+  console.log(verify);
+
+  if (!user) {
+    return res.status(400).json({
+      succes: false,
+      message: 'No user found with this email. Please create an account',
+    });
+  }
+
+  res.status(200).json({
     success: true,
-    message: 'Account created successfully!',
+    data: user,
   });
 });

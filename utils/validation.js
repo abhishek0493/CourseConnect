@@ -27,8 +27,14 @@ const verifyPassword = async function (inputPassword, userPassword) {
   return await bcrypt.compare(inputPassword, userPassword);
 };
 
+const login = Joi.object({
+  email: Joi.string().email().required(),
+  password: Joi.string().required(),
+});
+
 module.exports = {
   userCreationSchema,
   communityCreationSchema,
   verifyPassword,
+  login,
 };
