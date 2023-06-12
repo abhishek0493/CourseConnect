@@ -24,4 +24,23 @@ const createCommunity = catchAsync(async (req, res) => {
       success: false,
       message: error.details[0].message,
     });
+
+  const { name, category_id, description } = req.body;
+
+  const id = await db('communities').insert({
+    name: name,
+    category_id: category_id,
+    description: description,
+    created_by: 1,
+  });
+
+  res.status(200).json({
+    success: true,
+    data: id,
+  });
 });
+
+module.exports = {
+  getCommunities,
+  createCommunity,
+};

@@ -57,7 +57,7 @@ exports.signup = catchAsync(async (req, res) => {
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(req.body.password, salt);
 
-  await db('users').insert({
+  const [id] = await db('users').insert({
     name: userObj.name,
     email: userObj.email,
     password: hashedPassword,
@@ -65,12 +65,14 @@ exports.signup = catchAsync(async (req, res) => {
     type_value: userObj.type_value,
   });
 
-  await db('users')
-    .where({ email: userObj.email })
+  const data = await db('users')
+    .where({ id: id })
     .select('uuid')
-    .then((row) => (userObj.uuid = row[0].uuid));
+    .then((row) => {
+      userObj.uuid = row[0].uuid;
+    });
 
-  createSendToken(userObj);
+  createSendToken(userObj, 201, req, res);
 });
 
 exports.login = catchAsync(async (req, res) => {

@@ -4,6 +4,7 @@ const rateLimit = require('express-rate-limit');
 const xss = require('xss-clean');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
 const cors = require('cors');
 
@@ -11,6 +12,7 @@ require('dotenv').config();
 
 const userRouter = require('./routes/users');
 const authRouter = require('./routes/auth');
+const commRouter = require('./routes/communites');
 
 // Start express app
 const app = express();
@@ -53,6 +55,8 @@ app.use('/api', limiter);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.use(cookieParser());
+
 // Data sanitization against XSS
 app.use(xss());
 
@@ -66,6 +70,7 @@ app.use((req, res, next) => {
 // 3) ROUTES
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/auth', authRouter);
+app.use('/api/v1/community', commRouter);
 
 // app.all('*', (req, res, next) => {
 //   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
