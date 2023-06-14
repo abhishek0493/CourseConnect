@@ -65,7 +65,7 @@ exports.signup = catchAsync(async (req, res) => {
     type_value: userObj.type_value,
   });
 
-  const data = await db('users')
+  await db('users')
     .where({ id: id })
     .select('uuid')
     .then((row) => {
@@ -86,19 +86,23 @@ exports.login = catchAsync(async (req, res) => {
   const { email, password } = req.body;
 
   const user = await db('users').where({ email: email }).first();
-
-  const verify = await verifyPassword(password, user.password);
-  console.log(verify);
-
-  if (!user) {
+  if (!user)
     return res.status(400).json({
       succes: false,
-      message: 'No user found with this email. Please create an account',
+      message:
+        'No user found with this email. Please check the email id or create a new account',
     });
-  }
 
+  const verify = await verifyPassword(password, user.password);
+  if (!verify)
+    return res.status(401).json({
+      succes: false,
+      message: 'Invalid password. Please check your password and try again',
+    });
+
+  const transform_user = _.pick(user, ['name', 'uuid', 'type']);
   res.status(200).json({
     success: true,
-    data: user,
+    data: transform_user,
   });
 });

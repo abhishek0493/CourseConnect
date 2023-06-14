@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const { auth } = require('../middleware/auth');
+const { protect } = require('../middleware/auth');
 const commController = require('../controllers/communityController');
 
 router
   .route('/')
-  .get(commController.getCommunities)
-  .post(commController.createCommunity);
+  .get(protect, commController.getCommunities)
+  .post(protect, commController.createCommunity);
 
 module.exports = router;

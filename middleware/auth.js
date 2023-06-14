@@ -1,22 +1,44 @@
 const jwt = require('jsonwebtoken');
+const catchAsync = require('../utils/catchAsync');
+const { promisify } = require('util');
+const db = require('../db');
 
-const auth = (req, res, next) => {
-  const token = req.header('x-auth-token');
-
-  if (!token)
-    return res
-      .status(401)
-      .json({ success: false, message: 'Access denied. No token provided!' });
-
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
-    req.decoded = decoded;
-    next();
-  } catch (err) {
-    res.status(400).send('Invalid data');
+const protect = catchAsync(async (req, res, next) => {
+  // 1) Getting token and check of it's there
+  const token = req.cookies.jwt;
+  if (!token) {
+    return res.status(401).json({
+      success: false,
+      message: 'You are not logged In. Please log in to get access',
+    });
   }
-};
+
+  // 2) Verification token
+  const decoded = await promisify(jwt.verify)(
+    token,
+    process.env.JWT_SECRET_KEY
+  );
+
+  // 3) Check if user still exists
+  const currentUser = await db
+    .from('users')
+    .select('name', 'uuid', 'type', 'email')
+    .where({ uuid: decoded.id });
+
+  if (!currentUser) {
+    return res.status(401).json({
+      success: false,
+      message: 'User not found',
+    });
+  }
+
+  // console.log(currentUser);
+  // GRANT ACCESS TO PROTECTED ROUTE
+  req.user = currentUser;
+  res.locals.user = currentUser;
+  next();
+});
 
 module.exports = {
-  auth,
+  protect,
 };
