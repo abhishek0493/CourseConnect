@@ -152,6 +152,21 @@ const Signup = (props) => {
             >
               {validationMessage}
             </div>
+            <div className="col-6 mt-4">
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  value=""
+                  id="flexCheckChecked"
+                  checked
+                  disabled={state}
+                />
+                <label class="form-check-label" for="flexCheckChecked">
+                  Consent Received
+                </label>
+              </div>
+            </div>
             <div className="col-12">
               <button type="submit" className="btn btn-primary mt-2">
                 Create account

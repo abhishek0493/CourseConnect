@@ -1,5 +1,6 @@
 import Signup from './pages/signup/Signup';
 import Home from './pages/home/home';
+import Sidebar from './components/sidebar/sidebar';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Consent from './pages/consent/consent';
 
@@ -12,7 +13,7 @@ function App() {
     axios
       .get('http://localhost:8000/api/v1/users/categories')
       .then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
         setUserTypes(response.data);
       })
       .catch((error) => {
@@ -28,7 +29,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route exact path="/" element={<Home />} />
+        <Route exact path="/" element={<Sidebar />} />
         <Route path="/consent" element={<Consent />} />
         <Route path="/signup" element={<Signup userTypes={userTypes} />} />
       </Routes>
