@@ -1,6 +1,6 @@
 import Signup from './pages/signup/Signup';
 import Home from './pages/home/home';
-import Sidebar from './components/sidebar/sidebar';
+import Navbar from './components/nav/navbar';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Consent from './pages/consent/consent';
 
@@ -29,7 +29,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route exact path="/" element={<Sidebar />} />
+        <Route exact path="/" element={<Navbar />} />
         <Route path="/consent" element={<Consent />} />
         <Route path="/signup" element={<Signup userTypes={userTypes} />} />
       </Routes>
