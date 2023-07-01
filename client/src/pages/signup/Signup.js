@@ -1,16 +1,18 @@
 import './signup.css';
 import { useState } from 'react';
-import { useLocation, Link } from 'react-router-dom';
+import { useLocation, Link, useNavigate } from 'react-router-dom';
 import vector from './7606000.jpg';
 import axios from 'axios';
 
 const Signup = (props) => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: '',
     confirmPassword: '',
-    user_type: 0,
+    type: 0,
+    type_value: '',
   });
 
   // Getting the consent status from the consent page
@@ -29,7 +31,9 @@ const Signup = (props) => {
     e.preventDefault();
     await axios
       .post('http://localhost:8000/api/v1/auth/signUp', formData)
-      .then((res) => {})
+      .then((res) => {
+        navigate('/dashboard', { replace: true });
+      })
       .catch((err) => {
         const response = err.response;
         if (!response.data.success) {
@@ -93,7 +97,7 @@ const Signup = (props) => {
               <select
                 id="user_type"
                 className="form-select"
-                name="user_type"
+                name="type"
                 onChange={handleChange}
               >
                 <option value="0">--- Select ---</option>
@@ -113,6 +117,8 @@ const Signup = (props) => {
                 className="form-control"
                 id="type_value"
                 name="type_value"
+                value={formData.type_value}
+                onChange={handleChange}
               />
             </div>
             <div className="col-6">

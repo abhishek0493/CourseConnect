@@ -13,7 +13,7 @@ const Consent = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (consentChecked) {
-      navigate('/signup', {
+      navigate('/sign-up', {
         state: consentChecked,
       });
     } else {

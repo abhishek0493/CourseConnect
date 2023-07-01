@@ -1,16 +1,18 @@
-import { Link } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 const Home = () => {
+  const navigate = useNavigate();
   return (
     <>
-      <div className="container-fuild m-5 p-5">
-        <div class="d-grid gap-2">
-          <Link to="/consent" class="btn btn-primary" type="button">
+      <div className="p-5 w-75 justify-content-center align-items-center bg-dark m-auto">
+        <div>
+          <button className="btn btn-primary mx-3">Login</button>
+          <button
+            className="btn btn-primary"
+            onClick={() => navigate('consent')}
+          >
             Sign-up
-          </Link>
-          <Link to="/signup" class="btn btn-primary" type="button">
-            Login
-          </Link>
+          </button>
         </div>
       </div>
     </>

@@ -1,7 +1,13 @@
 import Signup from './pages/signup/Signup';
+import SignupNew from './pages/signup/SignupNew';
 import Home from './pages/home/home';
-import Navbar from './components/nav/navbar';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Navbar from './components/navbar/navbar';
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  BrowserRouter,
+} from 'react-router-dom';
 import Consent from './pages/consent/consent';
 
 import { useState, useEffect } from 'react';
@@ -27,17 +33,17 @@ function App() {
   }, []);
 
   return (
-    <Router>
+    <BrowserRouter>
       <Routes>
-        <Route exact path="/" element={<Navbar />} />
-        <Route path="/consent" element={<Consent />} />
-        <Route path="/signup" element={<Signup userTypes={userTypes} />} />
+        <Route path="/" element={<Home />}></Route>
+        <Route path="/consent" element={<Consent />}></Route>
+        <Route
+          path="/sign-up"
+          element={<SignupNew userTypes={userTypes} />}
+        ></Route>
+        <Route path="/dashboard" element={<Navbar />}></Route>
       </Routes>
-    </Router>
-    // <div className="App">
-    //   <Consent />
-    //   {/* <Signup userTypes={userTypes} /> */}
-    // </div>
+    </BrowserRouter>
   );
 }
 

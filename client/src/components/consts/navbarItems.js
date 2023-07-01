@@ -1,4 +1,3 @@
-import PeopleIcon from '@mui/icons-material/People';
 import PsychologyIcon from '@mui/icons-material/Psychology';
 import BusinessIcon from '@mui/icons-material/Business';
 import EmojiObjectsIcon from '@mui/icons-material/EmojiObjects';
@@ -10,30 +9,30 @@ export const navbarItems = [
     id: 1,
     icon: <PsychologyIcon />,
     label: 'Science & Tech',
-    route: 'route',
+    route: 'science-tech',
   },
   {
     id: 2,
     icon: <BusinessIcon />,
     label: 'Business and Entrepreneurship',
-    route: 'route',
+    route: 'business-entrepreneurship',
   },
   {
     id: 3,
     icon: <EmojiObjectsIcon />,
     label: 'Creative Arts',
-    route: 'route',
+    route: 'creative-arts',
   },
   {
     id: 4,
     icon: <SettingsAccessibilityIcon />,
     label: 'Personal Development',
-    route: 'route',
+    route: 'personal-development',
   },
   {
     id: 5,
     icon: <GTranslateIcon />,
     label: 'Language Learning',
-    route: 'route',
+    route: 'language-learning',
   },
 ];
