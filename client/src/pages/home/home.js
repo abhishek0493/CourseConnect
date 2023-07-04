@@ -1,21 +1,66 @@
 import { useParams, useNavigate } from 'react-router-dom';
+import {
+  Container,
+  Box,
+  Typography,
+  Grid,
+  GridItem,
+  Button,
+} from '@mui/material';
+import image5 from './Connected world-cuate.png';
+import { replace } from 'lodash';
 
 const Home = () => {
   const navigate = useNavigate();
   return (
-    <>
-      <div className="p-5 w-75 justify-content-center align-items-center bg-dark m-auto">
-        <div>
-          <button className="btn btn-primary mx-3">Login</button>
-          <button
-            className="btn btn-primary"
-            onClick={() => navigate('consent')}
-          >
-            Sign-up
-          </button>
-        </div>
-      </div>
-    </>
+    <Box sx={{ bgcolor: ' #e3e3e3e3', p: 5 }}>
+      <Grid container>
+        <Grid item xs={6}>
+          <Box sx={{ display: 'flex' }}>
+            <img
+              src={image5}
+              style={{ width: '85%', display: 'block', margin: '0 auto' }}
+            ></img>
+          </Box>
+        </Grid>
+        <Grid item xs={6} sx={{ padding: '45px' }}>
+          <Typography variant="h1" color="secondary">
+            Welcome to CourseConnect
+          </Typography>
+          <Box sx={{ mt: 3 }}>
+            <Typography variant="p">
+              CourseConnect is an online platform that brings together learners
+              and instructors from various fields. Whether you're looking to
+              expand your knowledge, enhance your skills, or share your
+              expertise, CourseConnect has something for everyone.
+            </Typography>
+            <Typography variant="p">
+              Explore a wide range of courses, connect with like-minded
+              individuals, and embark on a journey of continuous learning. Join
+              our community today and unlock endless possibilities!
+            </Typography>
+          </Box>
+          <Typography variant="p">
+            Start your learning adventure now!
+          </Typography>
+          <Box sx={{ mt: 2 }}>
+            <Button
+              variant="contained"
+              onClick={() => {
+                navigate('sign-up', { replace: true });
+              }}
+            >
+              Sign up
+            </Button>
+          </Box>
+        </Grid>
+      </Grid>
+      {/* <Box sx={{ width: '450px', display: 'flex', margin: '10px' }}>
+        <img src={image1} style={{ width: '100%' }} />
+        <img src={image2} style={{ width: '100%' }} />
+        <img src={image3} style={{ width: '100%' }} />
+      </Box> */}
+    </Box>
   );
 };
 

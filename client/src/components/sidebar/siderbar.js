@@ -1,119 +1,200 @@
+import * as React from 'react';
 import Box from '@mui/material/Box';
-import Drawer from '@mui/material/Drawer';
-import CssBaseline from '@mui/material/CssBaseline';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import List from '@mui/material/List';
-import Typography from '@mui/material/Typography';
+import { styled, ThemeProvider, createTheme } from '@mui/material/styles';
 import Divider from '@mui/material/Divider';
+import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
-import { navbarItems } from '../consts/navbarItems';
-import './sidebar.css';
+import Paper from '@mui/material/Paper';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
+import ArrowRight from '@mui/icons-material/ArrowRight';
+import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
+import Home from '@mui/icons-material/Home';
+import Settings from '@mui/icons-material/Settings';
+import People from '@mui/icons-material/People';
+import PermMedia from '@mui/icons-material/PermMedia';
+import Dns from '@mui/icons-material/Dns';
+import Public from '@mui/icons-material/Public';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import GridViewIcon from '@mui/icons-material/GridView';
 
-const Sidebara = () => {
+const data = [
+  { icon: <People />, label: 'Science & Technology' },
+  { icon: <Dns />, label: 'Business & Entreprenuership' },
+  { icon: <PermMedia />, label: 'Creative Arts' },
+  { icon: <Public />, label: 'Language Learning' },
+];
+
+const FireNav = styled(List)({
+  '& .MuiListItemButton-root': {
+    paddingLeft: 24,
+    paddingRight: 24,
+  },
+  '& .MuiListItemIcon-root': {
+    minWidth: 0,
+    marginRight: 16,
+  },
+  '& .MuiSvgIcon-root': {
+    fontSize: 20,
+  },
+});
+
+export default function CustomizedList() {
+  const [open, setOpen] = React.useState(true);
   return (
-    <div
-      class="d-flex flex-column flex-shrink-0 p-3 bg-light"
-      style={{ width: '250px', height: '100vh' }}
-    >
-      <a class="d-flex align-items-center link-dark text-decoration-none my-4">
-        <span class="fs-4">Sidebar</span>
-      </a>
-      <ul class="nav nav-pills flex-column mb-auto">
-        {navbarItems.map((el) => {
-          return (
-            <li class="nav-item my-1">
-              <a class="nav-link" aria-current="page">
-                {el.label}
-              </a>
-            </li>
-          );
+    <Box sx={{ display: 'flex' }}>
+      <ThemeProvider
+        theme={createTheme({
+          components: {
+            MuiListItemButton: {
+              defaultProps: {
+                disableTouchRipple: true,
+              },
+            },
+          },
+          palette: {
+            mode: 'light',
+            primary: { main: 'rgb(102, 157, 246)' },
+            background: { paper: '#E0D9E5' },
+          },
         })}
-        {/* <li class="nav-item">
-          <a href="#" class="nav-link active" aria-current="page">
-            <svg class="bi me-2" width="16" height="16"></svg>
-            Home
-          </a>
-        </li>
-        <li>
-          <a href="#" class="nav-link link-dark">
-            <svg class="bi me-2" width="16" height="16"></svg>
-            Dashboard
-          </a>
-        </li>
-        <li>
-          <a href="#" class="nav-link link-dark">
-            <svg class="bi me-2" width="16" height="16"></svg>
-            Orders
-          </a>
-        </li>
-        <li>
-          <a href="#" class="nav-link link-dark">
-            <svg class="bi me-2" width="16" height="16"></svg>
-            Products
-          </a>
-        </li>
-        <li>
-          <a href="#" class="nav-link link-dark">
-            <svg class="bi me-2" width="16" height="16"></svg>
-            Customers
-          </a>
-        </li> */}
-      </ul>
-      <hr />
-      <div class="dropdown">
-        <a
-          href="#"
-          class="d-flex align-items-center link-dark text-decoration-none dropdown-toggle"
-          id="dropdownUser2"
-          data-bs-toggle="dropdown"
-          aria-expanded="false"
-        >
-          <img
-            src="https://github.com/mdo.png"
-            alt=""
-            width="32"
-            height="32"
-            class="rounded-circle me-2"
-          />
-          <strong>mdo</strong>
-        </a>
-        <ul
-          class="dropdown-menu text-small shadow"
-          aria-labelledby="dropdownUser2"
-        >
-          <li>
-            <a class="dropdown-item" href="#">
-              New project...
-            </a>
-          </li>
-          <li>
-            <a class="dropdown-item" href="#">
-              Settings
-            </a>
-          </li>
-          <li>
-            <a class="dropdown-item" href="#">
-              Profile
-            </a>
-          </li>
-          <li>
-            <a class="dropdown-divider" />
-          </li>
-          <li>
-            <a class="dropdown-item" href="#">
-              Sign out
-            </a>
-          </li>
-        </ul>
-      </div>
-    </div>
+      >
+        <Paper elevation={0} sx={{ maxWidth: 256 }}>
+          <FireNav component="nav" disablePadding>
+            {/* <ListItemButton component="a" href="#customized-list">
+              <ListItemIcon sx={{ fontSize: 20 }}>🔥</ListItemIcon>
+              <ListItemText
+                sx={{ my: 0 }}
+                primary="CourseConnect"
+                primaryTypographyProps={{
+                  fontSize: 20,
+                  fontWeight: 'medium',
+                  letterSpacing: 0,
+                }}
+              />
+            </ListItemButton> */}
+            <Divider />
+            <ListItem component="div" disablePadding>
+              <ListItemButton sx={{ height: 30 }}>
+                <ListItemIcon>
+                  <AddCircleIcon color="#333333" />
+                </ListItemIcon>
+                <ListItemText
+                  primary="Create Community"
+                  primaryTypographyProps={{
+                    color: '#333333',
+                    fontWeight: 'medium',
+                    variant: 'body2',
+                  }}
+                />
+              </ListItemButton>
+              <Tooltip title="View All Communities">
+                <IconButton
+                  size="large"
+                  sx={{
+                    '& svg': {
+                      color: '#333333',
+                      transition: '0.2s',
+                      transform: 'translateX(0) rotate(0)',
+                    },
+                    '&:hover, &:focus': {
+                      bgcolor: 'unset',
+                      '& svg:first-of-type': {
+                        transform: 'translateX(-4px) rotate(-20deg)',
+                      },
+                      '& svg:last-of-type': {
+                        right: 0,
+                        opacity: 1,
+                      },
+                    },
+                    '&:after': {
+                      content: '""',
+                      position: 'absolute',
+                      height: '80%',
+                      display: 'block',
+                      left: 0,
+                      width: '1px',
+                      bgcolor: 'divider',
+                    },
+                  }}
+                >
+                  <GridViewIcon />
+                  <ArrowRight
+                    sx={{ position: 'absolute', right: 4, opacity: 0 }}
+                  />
+                </IconButton>
+              </Tooltip>
+            </ListItem>
+            <Divider />
+            <Box
+              sx={{
+                bgcolor: open ? 'rgba(71, 98, 130, 0.2)' : null,
+                pb: open ? 2 : 0,
+                height: '85vh',
+              }}
+            >
+              <ListItemButton
+                alignItems="flex-start"
+                onClick={() => setOpen(!open)}
+                sx={{
+                  px: 3,
+                  pt: 2.5,
+                  pb: open ? 0 : 2.5,
+                  '&:hover, &:focus': { '& svg': { opacity: open ? 1 : 0 } },
+                }}
+              >
+                <ListItemText
+                  primary="Build"
+                  primaryTypographyProps={{
+                    fontSize: 15,
+                    fontWeight: 'medium',
+                    lineHeight: '20px',
+                    mb: '2px',
+                  }}
+                  secondary="Authentication, Firestore Database, Realtime Database, Storage, Hosting, Functions, and Machine Learning"
+                  secondaryTypographyProps={{
+                    noWrap: true,
+                    fontSize: 12,
+                    lineHeight: '16px',
+                    color: open ? 'rgba(0,0,0,0)' : 'rgba(255,255,255,0.5)',
+                  }}
+                  sx={{ my: 0 }}
+                />
+                <KeyboardArrowDown
+                  sx={{
+                    mr: -1,
+                    opacity: 0,
+                    transform: open ? 'rotate(-180deg)' : 'rotate(0)',
+                    transition: '0.2s',
+                  }}
+                />
+              </ListItemButton>
+              {open &&
+                data.map((item) => (
+                  <ListItemButton
+                    key={item.label}
+                    sx={{ py: 2, minHeight: 32, color: '#333333' }}
+                  >
+                    <ListItemIcon sx={{ color: 'inherit' }}>
+                      {item.icon}
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={item.label}
+                      primaryTypographyProps={{
+                        fontSize: 14,
+                        fontWeight: 'bold',
+                        color: '#333333',
+                      }}
+                    />
+                  </ListItemButton>
+                ))}
+            </Box>
+          </FireNav>
+        </Paper>
+      </ThemeProvider>
+    </Box>
   );
-};
-
-export default Navbar;
+}

@@ -1,20 +1,21 @@
 import React from 'react';
-import Container from '@mui/material/Container';
-import Grid from '@mui/material/Grid';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import InputLabel from '@mui/material/InputLabel';
-import FormControl from '@mui/material/FormControl';
-import Checkbox from '@mui/material/Checkbox';
-import Button from '@mui/material/Button';
-import Box from '@mui/material/Box';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
-import image from './signupimg.png';
-import Typography from '@mui/material/Typography';
+import {
+  Box,
+  Grid,
+  TextField,
+  FormControlLabel,
+  InputLabel,
+  FormControl,
+  Checkbox,
+  Button,
+  Select,
+  MenuItem,
+  Typography,
+} from '@mui/material';
 
 import { useState } from 'react';
 import { useLocation, Link, useNavigate } from 'react-router-dom';
+import image from './Connected world-amico.png';
 import axios from 'axios';
 
 // import './signup.css';
@@ -39,6 +40,8 @@ const SignupNew = (props) => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+    setValidationError(false);
+    setValidationMessage('');
   };
 
   const handleSignUp = async (e) => {
@@ -51,19 +54,22 @@ const SignupNew = (props) => {
       .catch((err) => {
         const response = err.response;
         if (!response.data.success) {
-          // console.log(response.data.message);
           setValidationError(true);
           setValidationMessage(response.data.message);
         }
-        console.log(err);
+        // console.log(err);
       });
   };
 
   return (
-    <Container fixed sx={{ padding: '60px' }}>
+    <Box sx={{ p: 8 }}>
       <Grid container spacing={3}>
         <Grid item xs={12} sm={6}>
-          <img src={image} style={{ width: '100%' }} alt="Your Image" />
+          <img
+            src={image}
+            style={{ width: '80%', display: 'block', margin: '0 auto' }}
+            alt="Your Image"
+          />
           <Typography
             variant="caption"
             component="p"
@@ -75,11 +81,11 @@ const SignupNew = (props) => {
         </Grid>
         <Grid item xs={12} sm={6}>
           <Typography
-            variant="h3"
+            variant="h2"
             component="h2"
             color="primary"
             align="center"
-            sx={{ margin: '40px 0' }}
+            sx={{ marginBottom: '2rem' }}
           >
             Create an account
           </Typography>
@@ -93,6 +99,12 @@ const SignupNew = (props) => {
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
+                  error={validationError && validationMessage.includes('name')}
+                  helperText={
+                    validationError && validationMessage.includes('name')
+                      ? validationMessage
+                      : ''
+                  }
                 />
               </Grid>
               <Grid item xs={6}>
@@ -100,6 +112,7 @@ const SignupNew = (props) => {
                   label="Email"
                   fullWidth
                   name="email"
+                  type="email"
                   value={formData.email}
                   onChange={handleChange}
                 />
@@ -108,16 +121,23 @@ const SignupNew = (props) => {
                 {/* Type of User row */}
                 <FormControl fullWidth>
                   <InputLabel>Profession</InputLabel>
-                  <Select label="User Type" name="type" onChange={handleChange}>
+                  <Select
+                    label="User Type"
+                    name="type"
+                    onChange={handleChange}
+                    error={
+                      validationError && validationMessage.includes('type')
+                    }
+                    helperText={
+                      validationError && validationMessage.includes('type')
+                        ? validationMessage
+                        : ''
+                    }
+                  >
                     <MenuItem value="0">--- Select ----</MenuItem>
                     {Object.values(props.userTypes).map((value) => (
                       <MenuItem value={value.type_id}>{value.name}</MenuItem>
                     ))}
-                    {/* <MenuItem value="student">Student</MenuItem>
-                    <MenuItem value="instructor">Instructor/Teacher</MenuItem>
-                    <MenuItem value="learning-professional">
-                      Working Professional
-                    </MenuItem> */}
                   </Select>
                 </FormControl>
               </Grid>
@@ -137,8 +157,17 @@ const SignupNew = (props) => {
                   label="Password"
                   fullWidth
                   name="password"
+                  type="password"
                   value={formData.password}
                   onChange={handleChange}
+                  error={
+                    validationError && validationMessage.includes('password')
+                  }
+                  helperText={
+                    validationError && validationMessage.includes('password')
+                      ? validationMessage
+                      : ''
+                  }
                 />
               </Grid>
               <Grid item xs={6}>
@@ -148,6 +177,17 @@ const SignupNew = (props) => {
                   name="confirmPassword"
                   value={formData.confirmPassword}
                   onChange={handleChange}
+                  type="password"
+                  error={
+                    validationError &&
+                    validationMessage.includes('confirm password')
+                  }
+                  helperText={
+                    validationError &&
+                    validationMessage.includes('confirm password')
+                      ? validationMessage
+                      : ''
+                  }
                 />
               </Grid>
               <Grid item xs={12}>
@@ -161,7 +201,12 @@ const SignupNew = (props) => {
               </Grid>
               <Grid item xs={12}>
                 {/* Submit button */}
-                <Button variant="contained" color="primary" fullWidth>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  fullWidth
+                  type="submit"
+                >
                   Sign Up
                 </Button>
               </Grid>
@@ -169,7 +214,7 @@ const SignupNew = (props) => {
           </form>
         </Grid>
       </Grid>
-    </Container>
+    </Box>
   );
 };
 
