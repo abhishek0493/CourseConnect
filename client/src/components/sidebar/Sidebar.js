@@ -12,7 +12,6 @@ import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import ArrowRight from '@mui/icons-material/ArrowRight';
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
-import Home from '@mui/icons-material/Home';
 import Settings from '@mui/icons-material/Settings';
 import People from '@mui/icons-material/People';
 import PermMedia from '@mui/icons-material/PermMedia';
@@ -59,7 +58,14 @@ export default function Sidebar() {
           },
         })}
       >
-        <Paper elevation={0} sx={{ maxWidth: 256 }}>
+        <Paper
+          elevation={0}
+          sx={{
+            maxWidth: 256,
+            flexShrink: 0,
+            position: 'fixed',
+          }}
+        >
           <FireNav component="nav" disablePadding>
             {/* <ListItemButton component="a" href="#customized-list">
               <ListItemIcon sx={{ fontSize: 20 }}>🔥</ListItemIcon>

@@ -1,6 +1,7 @@
 const db = require('../db');
 const catchAsync = require('../utils/catchAsync');
 const { communityCreationSchema } = require('../utils/validation');
+const constants = require('../utils/constants');
 const _ = require('lodash');
 const icons = [
   'DatabaseTwoTone',
@@ -36,6 +37,15 @@ const getCategories = catchAsync(async (req, res) => {
   });
 });
 
+const getAccessTypes = catchAsync(async (req, res) => {
+  const accessTypes = await constants.accessTypes;
+  return res.status(200).json({
+    success: true,
+    data: accessTypes,
+  });
+});
+
 module.exports = {
   getCategories,
+  getAccessTypes,
 };

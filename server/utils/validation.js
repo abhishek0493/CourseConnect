@@ -18,8 +18,9 @@ const userCreationSchema = Joi.object({
 
 const communityCreationSchema = Joi.object({
   name: Joi.string().min(3).required(),
+  accessType: Joi.number().required(),
   description: Joi.string().min(5).required(),
-  category: Joi.number().min(1).required(),
+  category: Joi.number().required(),
 });
 
 const verifyPassword = async function (inputPassword, userPassword) {

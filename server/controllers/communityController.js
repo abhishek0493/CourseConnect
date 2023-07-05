@@ -3,8 +3,8 @@ const catchAsync = require('../utils/catchAsync');
 const { communityCreationSchema } = require('../utils/validation');
 const slugify = require('slugify');
 
-const generateSlug = (name, text) => {
-  const string = `${name}-${text}`;
+const generateSlug = (name, id) => {
+  const string = `${name}-${id}-cc`;
   const slug = slugify(string, { lower: true, strict: true });
   return slug;
 };
@@ -32,13 +32,12 @@ const createCommunity = catchAsync(async (req, res) => {
       message: error.details[0].message,
     });
 
-  const { name, category, description, type } = req.body;
-
-  const slug = generateSlug(name, '');
+  const { name, category, description, accessType } = req.body;
 
   const id = await db('communities').insert({
     name: name,
     category_id: category,
+    access_type: accessType,
     description: description,
     created_by: 1,
   });

@@ -6,6 +6,6 @@ const commController = require('../controllers/communityController');
 router
   .route('/')
   .get(protect, commController.getCommunities)
-  .post(protect, commController.createCommunity);
+  .post(commController.createCommunity);
 
 module.exports = router;

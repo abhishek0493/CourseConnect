@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { styled, alpha } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
 import AppBar from '@mui/material/AppBar';
+import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
@@ -15,6 +17,27 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
+import { withStyles, makeStyles } from '@mui/styles';
+
+const styles = (theme) => ({
+  // Load app bar information from the theme
+  toolbar: theme.mixins.toolbar,
+});
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: 'flex',
+  },
+  appBar: {
+    zIndex: theme.zIndex.drawer + 1,
+  },
+  content: {
+    flexGrow: 1,
+    padding: theme.spacing(3),
+    overflow: 'auto',
+    height: '100vh',
+  },
+}));
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -56,7 +79,11 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export default function Header() {
+const Header = (props) => {
+  const { classes } = props;
+
+  const styleClasses = useStyles();
+
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
@@ -156,7 +183,8 @@ export default function Header() {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
+      <CssBaseline />
+      <AppBar position="fixed" className={styleClasses.appBar}>
         <Toolbar>
           <Typography
             variant="h6"
@@ -221,8 +249,13 @@ export default function Header() {
           </Box>
         </Toolbar>
       </AppBar>
+      <Paper>
+        <div className={classes.toolbar} />
+      </Paper>
       {renderMobileMenu}
       {renderMenu}
     </Box>
   );
-}
+};
+
+export default withStyles(styles)(Header);

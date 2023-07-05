@@ -7,13 +7,17 @@ import {
   TextField,
   Select,
   FormControl,
+  FormLabel,
+  FormControlLabel,
+  Radio,
+  RadioGroup,
   InputLabel,
   MenuItem,
   Card,
 } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-const CreateCommunity = () => {
+const CreateCommunity = (props) => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: '',
@@ -38,13 +42,13 @@ const CreateCommunity = () => {
   return (
     <>
       <Card variant="outlined">
-        <Box sx={{ p: 6 }}>
+        <Box sx={{ p: 3 }}>
           <Typography variant="h4" sx={{ my: 3 }}>
             Create a community
           </Typography>
           <form onSubmit={handleCreate}>
             <Grid container spacing={2}>
-              <Grid item xs={12}>
+              <Grid item xs={6}>
                 <TextField
                   label="Community Name"
                   fullWidth
@@ -54,7 +58,7 @@ const CreateCommunity = () => {
                   onChange={handleChange}
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={6}>
                 <FormControl fullWidth>
                   <InputLabel>Category</InputLabel>
                   <Select
@@ -75,6 +79,34 @@ const CreateCommunity = () => {
                     <MenuItem value="0">Creative Arts</MenuItem>
                     <MenuItem value="0">Business & Entrepreneurship</MenuItem>
                   </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12}>
+                <FormControl>
+                  <FormLabel id="demo-radio-buttons-group-label">
+                    Access Type
+                  </FormLabel>
+                  <RadioGroup
+                    aria-labelledby="demo-radio-buttons-group-label"
+                    defaultValue="1"
+                    name="radio-buttons-group"
+                  >
+                    <FormControlLabel
+                      value="1"
+                      control={<Radio />}
+                      label="Public (Anyone can view, post and comment on this community)"
+                    />
+                    <FormControlLabel
+                      value="2"
+                      control={<Radio />}
+                      label="Restricted (Anyone can view this community, but only approved users can post)"
+                    />
+                    <FormControlLabel
+                      value="3"
+                      control={<Radio />}
+                      label="Private (Only approved users can view and submit to this community)"
+                    />
+                  </RadioGroup>
                 </FormControl>
               </Grid>
               <Grid item xs={12}>

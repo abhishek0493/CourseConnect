@@ -12,9 +12,11 @@ import Sidebar from './components/Sidebar/Sidebar';
 import LayoutMain from './components/LayoutMain';
 import LayoutSecondary from './components/LayoutSecondary';
 import CreateCommunity from './pages/Community/Create';
+import Test from './pages/Test/Test';
 
 function App() {
   const [userTypes, setUserTypes] = useState([]);
+  const [accessTypes, setAccessTypes] = useState([]);
   const fetchUserTypes = () => {
     axios
       .get('http://localhost:8000/api/v1/users/categories')
@@ -27,8 +29,21 @@ function App() {
       });
   };
 
+  const fetchAccessTypes = () => {
+    axios
+      .get('http://localhost:8000/api/v1/categories/access-types')
+      .then((response) => {
+        console.log(response.data);
+        setAccessTypes(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   useEffect(() => {
     fetchUserTypes();
+    fetchAccessTypes();
   }, []);
 
   return (
@@ -40,7 +55,10 @@ function App() {
           <Route path="login" element={<Login />} />
           <Route path="sign-up" element={<Signup userTypes={userTypes} />} />
           <Route path="dashboard" element={<LayoutSecondary />}>
-            <Route path="create-community" element={<CreateCommunity />} />
+            <Route
+              path="create-community"
+              element={<CreateCommunity accessTypes={accessTypes} />}
+            />
           </Route>
         </Route>
       </Routes>
