@@ -10,25 +10,25 @@ import { createTheme, ThemeProvider } from '@mui/material';
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#3D1B72',
+      main: '#311b92',
     },
     secondary: {
-      main: '#5D63A0',
+      main: '#333333',
     },
   },
   typography: {
-    h1: {
-      fontSize: '3rem',
-      fontWeight: 600,
-    },
-    h2: {
-      fontSize: '1.75rem',
-      fontWeight: 600,
-    },
-    h3: {
-      fontSize: '1.5rem',
-      fontWeight: 600,
-    },
+    // h1: {
+    //   fontSize: '3rem',
+    //   fontWeight: 600,
+    // },
+    // h2: {
+    //   fontSize: '1.75rem',
+    //   fontWeight: 600,
+    // },
+    // h3: {
+    //   fontSize: '1.5rem',
+    //   fontWeight: 600,
+    // },
   },
   components: {
     MuiListItemText: {

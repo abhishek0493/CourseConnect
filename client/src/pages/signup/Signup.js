@@ -1,10 +1,26 @@
-import './signup.css';
+import React from 'react';
+import {
+  Box,
+  Grid,
+  TextField,
+  FormControlLabel,
+  InputLabel,
+  FormControl,
+  Checkbox,
+  Button,
+  Select,
+  MenuItem,
+  Typography,
+} from '@mui/material';
+
 import { useState } from 'react';
 import { useLocation, Link, useNavigate } from 'react-router-dom';
-import vector from './7606000.jpg';
+import image from './Connected world-amico.png';
 import axios from 'axios';
 
-const Signup = (props) => {
+// import './signup.css';
+
+const SignupNew = (props) => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: '',
@@ -15,7 +31,6 @@ const Signup = (props) => {
     type_value: '',
   });
 
-  // Getting the consent status from the consent page
   const location = useLocation();
   const state = location.state;
 
@@ -25,6 +40,8 @@ const Signup = (props) => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+    setValidationError(false);
+    setValidationMessage('');
   };
 
   const handleSignUp = async (e) => {
@@ -37,169 +54,168 @@ const Signup = (props) => {
       .catch((err) => {
         const response = err.response;
         if (!response.data.success) {
-          // console.log(response.data.message);
           setValidationError(true);
           setValidationMessage(response.data.message);
         }
-        console.log(err);
+        // console.log(err);
       });
   };
 
-  if (state) {
-    return (
-      <section className="signup-super row p-5 m-5">
-        <div className="image-box col-md-6 text-center">
-          <img src={vector} className="illustration" />
-          <a
-            href="https://www.freepik.com/free-vector/college-project-concept-illustration_29659818.htm#query=education%20illustration&position=3&from_view=keyword&track=ais"
-            className="attribution"
+  return (
+    <Box sx={{ p: 8 }}>
+      <Grid container spacing={3}>
+        <Grid item xs={12} sm={6}>
+          <img
+            src={image}
+            style={{ width: '80%', display: 'block', margin: '0 auto' }}
+            alt="Your Image"
+          />
+          <Typography
+            variant="caption"
+            component="p"
+            color="dark"
+            align="center"
           >
-            Image by storyset
-          </a>{' '}
-          <span className="attribution">on Freepik</span>
-          <h5 className="mt-2 p-3 text-dark">
-            "Discover, Connect & Learn together"
-          </h5>
-        </div>
-        <div className="sign-up-form col-md-6 p-3">
-          <h1 className="mb-4">Create an account</h1>
-          <form className="row g-3" onSubmit={handleSignUp}>
-            <div className="col-md-6">
-              <label htmlFor="name" className="form-label">
-                Name
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                id="name"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="col-md-6">
-              <label htmlFor="email" className="form-label">
-                Email
-              </label>
-              <input
-                type="email"
-                className="form-control"
-                id="emailId"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="col-md-12">
-              <label htmlFor="profession" className="form-label">
-                Profession
-              </label>
-              <select
-                id="user_type"
-                className="form-select"
-                name="type"
-                onChange={handleChange}
-              >
-                <option value="0">--- Select ---</option>
-                {Object.values(props.userTypes).map((value) => (
-                  <option key={value.type_id} value={value.type_id}>
-                    {value.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="col-md-12">
-              <label htmlFor="inputCity" className="form-label">
-                University/Company Name (Optional)
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                id="type_value"
-                name="type_value"
-                value={formData.type_value}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="col-6">
-              <label htmlFor="password" className="form-label">
-                Password
-              </label>
-              <input
-                type="password"
-                className="form-control"
-                id="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="col-6">
-              <label htmlFor="confirm_password" className="form-label">
-                Confirm Password
-              </label>
-              <input
-                type="password"
-                className="form-control"
-                id="confirm_password"
-                name="confirmPassword"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-              />
-            </div>
-            <div
-              className={
-                validationError
-                  ? 'alert alert-danger'
-                  : 'd-none alert alert-danger'
-              }
-              id="alert-box"
-              role="alert"
-            >
-              {validationMessage}
-            </div>
-            <div className="col-6 mt-4">
-              <div class="form-check">
-                <input
-                  class="form-check-input"
-                  type="checkbox"
-                  value=""
-                  id="flexCheckChecked"
+            Course Connect
+          </Typography>
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <Typography
+            variant="h2"
+            component="h2"
+            color="primary"
+            align="center"
+            sx={{ marginBottom: '2rem' }}
+          >
+            Create an account
+          </Typography>
+
+          <form onSubmit={handleSignUp}>
+            <Grid container spacing={2}>
+              <Grid item xs={6}>
+                <TextField
+                  label="Name"
+                  fullWidth
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  error={validationError && validationMessage.includes('name')}
+                  helperText={
+                    validationError && validationMessage.includes('name')
+                      ? validationMessage
+                      : ''
+                  }
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  label="Email"
+                  fullWidth
+                  name="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                {/* Type of User row */}
+                <FormControl fullWidth>
+                  <InputLabel>Profession</InputLabel>
+                  <Select
+                    label="User Type"
+                    name="type"
+                    onChange={handleChange}
+                    error={
+                      validationError && validationMessage.includes('type')
+                    }
+                    helperText={
+                      validationError && validationMessage.includes('type')
+                        ? validationMessage
+                        : ''
+                    }
+                  >
+                    <MenuItem value="0">--- Select ----</MenuItem>
+                    {Object.values(props.userTypes).map((value) => (
+                      <MenuItem value={value.type_id}>{value.name}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12}>
+                {/* Profession row */}
+                <TextField
+                  label="Name of the University/Company (Optional)"
+                  fullWidth
+                  name="type_value"
+                  value={formData.type_value}
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                {/* Password and Confirm Password row */}
+                <TextField
+                  label="Password"
+                  fullWidth
+                  name="password"
+                  type="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  error={
+                    validationError && validationMessage.includes('password')
+                  }
+                  helperText={
+                    validationError && validationMessage.includes('password')
+                      ? validationMessage
+                      : ''
+                  }
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  label="Confirm Password"
+                  fullWidth
+                  name="confirmPassword"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  type="password"
+                  error={
+                    validationError &&
+                    validationMessage.includes('confirm password')
+                  }
+                  helperText={
+                    validationError &&
+                    validationMessage.includes('confirm password')
+                      ? validationMessage
+                      : ''
+                  }
+                />
+              </Grid>
+              <Grid item xs={12}>
+                {/* Consent checkbox row */}
+                <FormControlLabel
+                  control={<Checkbox color="primary" />}
+                  label="Consent Received"
                   checked
                   disabled={state}
                 />
-                <label class="form-check-label" for="flexCheckChecked">
-                  Consent Received
-                </label>
-              </div>
-            </div>
-            <div className="col-12">
-              <button type="submit" className="btn btn-primary mt-2">
-                Create account
-              </button>
-            </div>
+              </Grid>
+              <Grid item xs={12}>
+                {/* Submit button */}
+                <Button
+                  variant="contained"
+                  color="primary"
+                  fullWidth
+                  type="submit"
+                >
+                  Sign Up
+                </Button>
+              </Grid>
+            </Grid>
           </form>
-        </div>
-      </section>
-    );
-  } else {
-    return (
-      <>
-        <div className="container m-5 p-5">
-          <div class="alert alert-danger text-center" role="alert">
-            <h4 class="alert-heading display-2">
-              Oops! Looks like something is missing.
-            </h4>
-            <p class="mt-2">
-              Consent is required before signing up to use CourseConnect. You
-              can find all the details about the research project{' '}
-              <Link to={'/consent'}>Here</Link>
-            </p>
-          </div>
-        </div>
-      </>
-    );
-  }
+        </Grid>
+      </Grid>
+    </Box>
+  );
 };
 
-export default Signup;
+export default SignupNew;

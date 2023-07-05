@@ -20,6 +20,7 @@ import Dns from '@mui/icons-material/Dns';
 import Public from '@mui/icons-material/Public';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import GridViewIcon from '@mui/icons-material/GridView';
+import { useNavigate } from 'react-router-dom';
 
 const data = [
   { icon: <People />, label: 'Science & Technology' },
@@ -42,8 +43,9 @@ const FireNav = styled(List)({
   },
 });
 
-export default function CustomizedList() {
+export default function Sidebar() {
   const [open, setOpen] = React.useState(true);
+  const navigate = useNavigate();
   return (
     <Box sx={{ display: 'flex' }}>
       <ThemeProvider
@@ -54,11 +56,6 @@ export default function CustomizedList() {
                 disableTouchRipple: true,
               },
             },
-          },
-          palette: {
-            mode: 'light',
-            primary: { main: 'rgb(102, 157, 246)' },
-            background: { paper: '#E0D9E5' },
           },
         })}
       >
@@ -78,14 +75,16 @@ export default function CustomizedList() {
             </ListItemButton> */}
             <Divider />
             <ListItem component="div" disablePadding>
-              <ListItemButton sx={{ height: 30 }}>
+              <ListItemButton
+                sx={{ height: 30 }}
+                onClick={() => navigate('create-community')}
+              >
                 <ListItemIcon>
                   <AddCircleIcon color="#333333" />
                 </ListItemIcon>
                 <ListItemText
                   primary="Create Community"
                   primaryTypographyProps={{
-                    color: '#333333',
                     fontWeight: 'medium',
                     variant: 'body2',
                   }}

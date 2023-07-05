@@ -7,6 +7,7 @@ exports.up = function (knex) {
     table.increments('id').primary();
     table.string('name').notNullable();
     table.integer('category_id').unsigned().notNullable();
+    table.tinyint('access_type').unsigned().notNullable();
     table.text('description');
     table.bigInteger('created_by').unsigned().notNullable();
     table.timestamps(true, true);

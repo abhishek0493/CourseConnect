@@ -47,7 +47,7 @@ const Home = () => {
             <Button
               variant="contained"
               onClick={() => {
-                navigate('sign-up', { replace: true });
+                navigate('consent', { replace: true });
               }}
             >
               Sign up
@@ -55,11 +55,6 @@ const Home = () => {
           </Box>
         </Grid>
       </Grid>
-      {/* <Box sx={{ width: '450px', display: 'flex', margin: '10px' }}>
-        <img src={image1} style={{ width: '100%' }} />
-        <img src={image2} style={{ width: '100%' }} />
-        <img src={image3} style={{ width: '100%' }} />
-      </Box> */}
     </Box>
   );
 };
