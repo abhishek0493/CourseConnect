@@ -15,8 +15,8 @@ const useStyles = makeStyles((theme) => ({
   content: {
     flexGrow: 1,
     padding: theme.spacing(3),
-    marginLeft: '270px', // Same as the width of the sidebar
-    marginTop: theme.spacing(1), // Adjust the top margin as needed
+    marginLeft: '254px', // Same as the width of the sidebar
+    // marginTop: theme.spacing(0.5)
   },
   card: {
     marginBottom: theme.spacing(3),

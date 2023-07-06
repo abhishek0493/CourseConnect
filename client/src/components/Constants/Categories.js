@@ -1,10 +1,11 @@
+import React from 'react';
 import PsychologyIcon from '@mui/icons-material/Psychology';
 import BusinessIcon from '@mui/icons-material/Business';
 import EmojiObjectsIcon from '@mui/icons-material/EmojiObjects';
 import SettingsAccessibilityIcon from '@mui/icons-material/SettingsAccessibility';
 import GTranslateIcon from '@mui/icons-material/GTranslate';
 
-export const navbarItems = [
+export const Categories = [
   {
     id: 1,
     icon: <PsychologyIcon />,

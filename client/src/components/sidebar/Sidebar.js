@@ -12,7 +12,6 @@ import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import ArrowRight from '@mui/icons-material/ArrowRight';
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
-import Settings from '@mui/icons-material/Settings';
 import People from '@mui/icons-material/People';
 import PermMedia from '@mui/icons-material/PermMedia';
 import Dns from '@mui/icons-material/Dns';
@@ -20,6 +19,7 @@ import Public from '@mui/icons-material/Public';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import GridViewIcon from '@mui/icons-material/GridView';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const data = [
   { icon: <People />, label: 'Science & Technology' },
@@ -42,14 +42,44 @@ const FireNav = styled(List)({
   },
 });
 
-export default function Sidebar() {
+const Sidebar = () => {
   const [open, setOpen] = React.useState(true);
+  const [communities, setCommunities] = React.useState([]);
   const navigate = useNavigate();
+
+  const fetchCommunities = () => {
+    axios
+      .get('http://localhost:8000/api/v1/community')
+      .then((response) => {
+        if (response.data.success) {
+        }
+        setUserTypes(response.data);
+      })
+      .catch((error) => {
+        // Handle the error
+        console.error(error);
+      });
+  };
   return (
     <Box sx={{ display: 'flex' }}>
       <ThemeProvider
         theme={createTheme({
+          palette: {
+            primary: {
+              main: '#45007a',
+            },
+            secondary: {
+              main: '#E6EDFF',
+            },
+          },
           components: {
+            MuiListItemText: {
+              styleOverrides: {
+                root: {
+                  fontSize: '3rem !important',
+                },
+              },
+            },
             MuiListItemButton: {
               defaultProps: {
                 disableTouchRipple: true,
@@ -67,18 +97,6 @@ export default function Sidebar() {
           }}
         >
           <FireNav component="nav" disablePadding>
-            {/* <ListItemButton component="a" href="#customized-list">
-              <ListItemIcon sx={{ fontSize: 20 }}>🔥</ListItemIcon>
-              <ListItemText
-                sx={{ my: 0 }}
-                primary="CourseConnect"
-                primaryTypographyProps={{
-                  fontSize: 20,
-                  fontWeight: 'medium',
-                  letterSpacing: 0,
-                }}
-              />
-            </ListItemButton> */}
             <Divider />
             <ListItem component="div" disablePadding>
               <ListItemButton
@@ -136,7 +154,6 @@ export default function Sidebar() {
             <Divider />
             <Box
               sx={{
-                bgcolor: open ? 'rgba(71, 98, 130, 0.2)' : null,
                 pb: open ? 2 : 0,
                 height: '85vh',
               }}
@@ -152,11 +169,12 @@ export default function Sidebar() {
                 }}
               >
                 <ListItemText
-                  primary="Build"
+                  primary="Trending Communities"
                   primaryTypographyProps={{
-                    fontSize: 15,
-                    fontWeight: 'medium',
+                    fontSize: 12,
+                    fontWeight: 'meduim',
                     lineHeight: '20px',
+                    textAlign: 'center',
                     mb: '2px',
                   }}
                   secondary="Authentication, Firestore Database, Realtime Database, Storage, Hosting, Functions, and Machine Learning"
@@ -181,7 +199,7 @@ export default function Sidebar() {
                 data.map((item) => (
                   <ListItemButton
                     key={item.label}
-                    sx={{ py: 2, minHeight: 32, color: '#333333' }}
+                    sx={{ py: 1, minHeight: 32 }}
                   >
                     <ListItemIcon sx={{ color: 'inherit' }}>
                       {item.icon}
@@ -189,9 +207,8 @@ export default function Sidebar() {
                     <ListItemText
                       primary={item.label}
                       primaryTypographyProps={{
-                        fontSize: 14,
+                        fontSize: 12,
                         fontWeight: 'bold',
-                        color: '#333333',
                       }}
                     />
                   </ListItemButton>
@@ -202,4 +219,6 @@ export default function Sidebar() {
       </ThemeProvider>
     </Box>
   );
-}
+};
+
+export default Sidebar;

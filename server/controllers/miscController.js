@@ -3,13 +3,6 @@ const catchAsync = require('../utils/catchAsync');
 const { communityCreationSchema } = require('../utils/validation');
 const constants = require('../utils/constants');
 const _ = require('lodash');
-const icons = [
-  'DatabaseTwoTone',
-  'BankTwoTone',
-  'HighlightTwoTone',
-  'SmileTwoTone',
-  'AccountBookTwoTone',
-];
 
 const getCategories = catchAsync(async (req, res) => {
   const categories = await db.select().from('categories');
@@ -21,19 +14,19 @@ const getCategories = catchAsync(async (req, res) => {
     });
   }
 
-  const categoriesWithIcons = _.merge(
-    [],
-    categories.map((category, index) => ({
-      ...category,
-      icon: icons[index],
-    }))
-  );
+  // const categoriesWithIcons = _.merge(
+  //   [],
+  //   categories.map((category, index) => ({
+  //     ...category,
+  //     icon: icons[index],
+  //   }))
+  // );
 
-  console.log(categoriesWithIcons);
+  // console.log(categories);
 
   return res.status(200).json({
     success: true,
-    data: categoriesWithIcons,
+    data: categories,
   });
 });
 

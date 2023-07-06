@@ -16,12 +16,14 @@ import {
   Card,
 } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
-const CreateCommunity = (props) => {
+const CreateCommunity = ({ cmCategories }) => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: '',
     category: '',
+    accessType: 1,
     description: '',
   });
   const [validationError, setValidationError] = useState(false);
@@ -37,7 +39,24 @@ const CreateCommunity = (props) => {
     setValidationMessage('');
   };
 
-  const handleCreate = () => {};
+  const handleCreate = async (e) => {
+    e.preventDefault();
+    await axios
+      .post('http://localhost:8000/api/v1/community', formData)
+      .then((res) => {
+        if (res.data.success) {
+          navigate('/dashboard', { replace: true });
+        }
+      })
+      .catch((err) => {
+        const response = err.response;
+        if (!response.data.success) {
+          setValidationError(true);
+          setValidationMessage(response.data.message);
+        }
+        // console.log(err);
+      });
+  };
 
   return (
     <>
@@ -64,32 +83,27 @@ const CreateCommunity = (props) => {
                   <Select
                     label="Category"
                     name="category"
+                    value={formData.category}
                     onChange={handleChange}
-                    error={
-                      validationError && validationMessage.includes('category')
-                    }
-                    helperText={
-                      validationError && validationMessage.includes('category')
-                        ? validationMessage
-                        : ''
-                    }
                   >
                     <MenuItem value="0">--- Select ----</MenuItem>
-                    <MenuItem value="0">Science & Technology</MenuItem>
-                    <MenuItem value="0">Creative Arts</MenuItem>
-                    <MenuItem value="0">Business & Entrepreneurship</MenuItem>
+                    {Object.values(cmCategories).map((value) => (
+                      <MenuItem key={value.id} value={value.id}>
+                        {value.name}
+                      </MenuItem>
+                    ))}
                   </Select>
                 </FormControl>
               </Grid>
               <Grid item xs={12}>
                 <FormControl>
-                  <FormLabel id="demo-radio-buttons-group-label">
-                    Access Type
-                  </FormLabel>
+                  <FormLabel id="accessType">Access Type</FormLabel>
                   <RadioGroup
-                    aria-labelledby="demo-radio-buttons-group-label"
-                    defaultValue="1"
-                    name="radio-buttons-group"
+                    aria-labelledby="accessType"
+                    // defaultValue="1"
+                    name="accessType"
+                    value={formData.accessType}
+                    onChange={handleChange}
                   >
                     <FormControlLabel
                       value="1"

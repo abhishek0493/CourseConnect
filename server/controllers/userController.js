@@ -5,7 +5,10 @@ const catchAsync = require('../utils/catchAsync');
 
 const getUserTypes = catchAsync(async (req, res, next) => {
   const types = await userTypes.user;
-  res.status(200).send(types);
+  res.status(200).json({
+    success: true,
+    data: types,
+  });
 });
 
 const getAllUsers = catchAsync(async (req, res) => {

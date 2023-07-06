@@ -20,7 +20,8 @@ import axios from 'axios';
 
 // import './signup.css';
 
-const SignupNew = (props) => {
+const SignupNew = ({ userTypes }) => {
+  console.log(userTypes);
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: '',
@@ -135,7 +136,7 @@ const SignupNew = (props) => {
                     }
                   >
                     <MenuItem value="0">--- Select ----</MenuItem>
-                    {Object.values(props.userTypes).map((value) => (
+                    {Object.values(userTypes).map((value) => (
                       <MenuItem value={value.type_id}>{value.name}</MenuItem>
                     ))}
                   </Select>
