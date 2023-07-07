@@ -14,6 +14,7 @@ const theme = createTheme({
     },
     secondary: {
       main: '#E6EDFF',
+      dark: '#E5E5E5',
     },
   },
   typography: {
@@ -35,13 +36,6 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           fontSize: '3rem !important',
-        },
-      },
-    },
-    MuiFormControlLabel: {
-      styleOverrides: {
-        root: {
-          fontSize: '5px !important',
         },
       },
     },

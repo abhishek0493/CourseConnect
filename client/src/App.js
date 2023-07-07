@@ -12,6 +12,8 @@ import LayoutSecondary from './components/LayoutSecondary';
 import CreateCommunity from './pages/Community/Create';
 import { Refactor } from './components/Constants/Refactor';
 import { Categories } from './components/Constants/Categories';
+import CreatePostBar from './components/Common/CreatePostBar';
+import CreateThread from './pages/Thread/Create';
 
 function App() {
   const [userTypes, setUserTypes] = useState([]);
@@ -110,6 +112,8 @@ function App() {
             path="dashboard"
             element={<LayoutSecondary communities={communities} />}
           >
+            <Route index element={<CreatePostBar />} />
+            <Route path="create-thread" element={<CreateThread />}></Route>
             <Route
               path="create-community"
               element={

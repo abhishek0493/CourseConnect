@@ -30,7 +30,7 @@ const LayoutSecondary = ({ communities }) => {
 
   return (
     <>
-      <Box sx={{ display: 'flex', bgcolor: '#e3e3e3e3' }}>
+      <Box sx={{ display: 'flex', bgcolor: '#DAE0E6' }}>
         <Sidebar communities={communities} />
         <main className={classes.content}>
           <Grid container spacing={3}>
@@ -38,7 +38,7 @@ const LayoutSecondary = ({ communities }) => {
               <Outlet />
             </Grid>
             <Grid item xs={4}>
-              <Card variant="outlined">
+              <Card variant="outlined" sx={{ position: 'sticky', top: 80 }}>
                 <Box sx={{ height: '80vh' }}>
                   <Typography variant="p">Secondary Siderbar</Typography>
                 </Box>
