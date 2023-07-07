@@ -18,7 +18,7 @@ import {
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-const CreateCommunity = ({ cmCategories }) => {
+const CreateCommunity = ({ cmCategories, onCreateCommunity }) => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: '',
@@ -45,6 +45,7 @@ const CreateCommunity = ({ cmCategories }) => {
       .post('http://localhost:8000/api/v1/community', formData)
       .then((res) => {
         if (res.data.success) {
+          onCreateCommunity(true);
           navigate('/dashboard', { replace: true });
         }
       })
@@ -62,7 +63,7 @@ const CreateCommunity = ({ cmCategories }) => {
     <>
       <Card variant="outlined">
         <Box sx={{ p: 3 }}>
-          <Typography variant="h4" sx={{ my: 3 }}>
+          <Typography variant="h5" sx={{ my: 3 }}>
             Create a community
           </Typography>
           <form onSubmit={handleCreate}>
@@ -108,17 +109,32 @@ const CreateCommunity = ({ cmCategories }) => {
                     <FormControlLabel
                       value="1"
                       control={<Radio />}
-                      label="Public (Anyone can view, post and comment on this community)"
+                      label={
+                        <Typography variant="body2" color="textSecondary">
+                          Public (Anyone can view, post and comment on this
+                          community)
+                        </Typography>
+                      }
                     />
                     <FormControlLabel
                       value="2"
                       control={<Radio />}
-                      label="Restricted (Anyone can view this community, but only approved users can post)"
+                      label={
+                        <Typography variant="body2" color="textSecondary">
+                          Restricted (Anyone can view this community, but only
+                          approved users can post)
+                        </Typography>
+                      }
                     />
                     <FormControlLabel
                       value="3"
                       control={<Radio />}
-                      label="Private (Only approved users can view and submit to this community)"
+                      label={
+                        <Typography variant="body2" color="textSecondary">
+                          Private (Only approved users can view and submit to
+                          this community)
+                        </Typography>
+                      }
                     />
                   </RadioGroup>
                 </FormControl>

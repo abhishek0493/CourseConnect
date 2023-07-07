@@ -25,13 +25,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const LayoutSecondary = () => {
+const LayoutSecondary = ({ communities }) => {
   const classes = useStyles();
 
   return (
     <>
       <Box sx={{ display: 'flex', bgcolor: '#e3e3e3e3' }}>
-        <Sidebar />
+        <Sidebar communities={communities} />
         <main className={classes.content}>
           <Grid container spacing={3}>
             <Grid item xs={8}>

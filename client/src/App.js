@@ -11,24 +11,13 @@ import LayoutMain from './components/LayoutMain';
 import LayoutSecondary from './components/LayoutSecondary';
 import CreateCommunity from './pages/Community/Create';
 import { Refactor } from './components/Constants/Refactor';
-
-// const refactorResponse = (response) => {
-//   const { success, data, message } = response;
-
-//   if (!success) {
-//     return {
-//       success,
-//       error: message,
-//     };
-//   }
-
-//   return data;
-// };
+import { Categories } from './components/Constants/Categories';
 
 function App() {
   const [userTypes, setUserTypes] = useState([]);
   const [accessTypes, setAccessTypes] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [communities, setCommunities] = useState([]);
 
   const fetchUserTypes = () => {
     axios
@@ -58,6 +47,29 @@ function App() {
       });
   };
 
+  const fetchCommunities = () => {
+    axios
+      .get('http://localhost:8000/api/v1/community')
+      .then((response) => {
+        if (response.data.success) {
+          const res = Refactor(response.data);
+          Object.values(res).map((el) => {
+            Categories.map((item) => {
+              if (item.id == el.category_id) {
+                el.icon = item.icon;
+                el.color = item.color;
+              }
+            });
+          });
+          // console.log(res);
+          setCommunities(res);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
   const fetchCategories = () => {
     axios
       .get('http://localhost:8000/api/v1/community/categories')
@@ -73,10 +85,17 @@ function App() {
       });
   };
 
+  const handleCreateCommunity = (bool) => {
+    if (bool) {
+      fetchCommunities();
+    }
+  };
+
   useEffect(() => {
     fetchUserTypes();
     fetchAccessTypes();
     fetchCategories();
+    fetchCommunities();
   }, []);
 
   return (
@@ -87,16 +106,21 @@ function App() {
           <Route path="consent" element={<Consent />} />
           <Route path="login" element={<Login />} />
           <Route path="sign-up" element={<Signup userTypes={userTypes} />} />
-          <Route path="dashboard" element={<LayoutSecondary />}>
+          <Route
+            path="dashboard"
+            element={<LayoutSecondary communities={communities} />}
+          >
             <Route
               path="create-community"
               element={
                 <CreateCommunity
                   accessTypes={accessTypes}
                   cmCategories={categories}
+                  onCreateCommunity={handleCreateCommunity}
                 />
               }
             />
+            <Route path="community" element="" />
           </Route>
         </Route>
       </Routes>

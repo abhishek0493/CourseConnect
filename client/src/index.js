@@ -38,6 +38,13 @@ const theme = createTheme({
         },
       },
     },
+    MuiFormControlLabel: {
+      styleOverrides: {
+        root: {
+          fontSize: '5px !important',
+        },
+      },
+    },
   },
 });
 

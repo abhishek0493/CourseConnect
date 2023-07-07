@@ -18,8 +18,8 @@ import Dns from '@mui/icons-material/Dns';
 import Public from '@mui/icons-material/Public';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import GridViewIcon from '@mui/icons-material/GridView';
+import WhatshotIcon from '@mui/icons-material/Whatshot';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 
 const data = [
   { icon: <People />, label: 'Science & Technology' },
@@ -42,24 +42,10 @@ const FireNav = styled(List)({
   },
 });
 
-const Sidebar = () => {
+const Sidebar = ({ communities }) => {
   const [open, setOpen] = React.useState(true);
-  const [communities, setCommunities] = React.useState([]);
   const navigate = useNavigate();
 
-  const fetchCommunities = () => {
-    axios
-      .get('http://localhost:8000/api/v1/community')
-      .then((response) => {
-        if (response.data.success) {
-        }
-        setUserTypes(response.data);
-      })
-      .catch((error) => {
-        // Handle the error
-        console.error(error);
-      });
-  };
   return (
     <Box sx={{ display: 'flex' }}>
       <ThemeProvider
@@ -174,7 +160,6 @@ const Sidebar = () => {
                     fontSize: 12,
                     fontWeight: 'meduim',
                     lineHeight: '20px',
-                    textAlign: 'center',
                     mb: '2px',
                   }}
                   secondary="Authentication, Firestore Database, Realtime Database, Storage, Hosting, Functions, and Machine Learning"
@@ -196,19 +181,17 @@ const Sidebar = () => {
                 />
               </ListItemButton>
               {open &&
-                data.map((item) => (
-                  <ListItemButton
-                    key={item.label}
-                    sx={{ py: 1, minHeight: 32 }}
-                  >
-                    <ListItemIcon sx={{ color: 'inherit' }}>
+                communities !== null &&
+                communities.map((item) => (
+                  <ListItemButton key={item.id} sx={{ py: 1, minHeight: 32 }}>
+                    <ListItemIcon sx={{ color: item.color }}>
                       {item.icon}
                     </ListItemIcon>
                     <ListItemText
-                      primary={item.label}
+                      primary={item.name}
                       primaryTypographyProps={{
                         fontSize: 12,
-                        fontWeight: 'bold',
+                        fontWeight: 'medium',
                       }}
                     />
                   </ListItemButton>
