@@ -152,7 +152,6 @@ const CourseForm = () => {
 };
 
 const CreatePostCard = () => {
-  const [rating, setRating] = useState(0);
   const [selectedOption, setSelectedOption] = useState(1);
 
   const navigate = useNavigate();

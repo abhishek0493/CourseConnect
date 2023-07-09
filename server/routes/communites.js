@@ -6,8 +6,8 @@ const commController = require('../controllers/communityController');
 
 router
   .route('/')
-  .get(commController.getCommunities)
-  .post(commController.createCommunity);
+  .get(protect, commController.getCommunities)
+  .post(protect, commController.createCommunity);
 
 router.route('/categories').get(miscController.getCategories);
 

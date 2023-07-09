@@ -4,6 +4,7 @@ import { Box, Grid, TextField, Button, Typography } from '@mui/material';
 import { useState } from 'react';
 import { useLocation, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+axios.defaults.withCredentials = true;
 
 const Login = (props) => {
   const navigate = useNavigate();
@@ -13,7 +14,7 @@ const Login = (props) => {
   });
 
   const location = useLocation();
-  const state = location.state;
+  // const state = location.state;
 
   const [validationError, setValidationError] = useState(false);
   const [validationMessage, setValidationMessage] = useState('');
@@ -30,10 +31,15 @@ const Login = (props) => {
     await axios
       .post('http://localhost:8000/api/v1/auth/login', formData)
       .then((res) => {
-        navigate('/dashboard', { replace: true });
+        console.log(res.data);
+        if (res.data.success) {
+          navigate('/dashboard', { replace: true });
+        }
       })
       .catch((err) => {
+        console.log(err);
         const response = err.response;
+        console.log(response);
         if (!response.data.success) {
           setValidationError(true);
           setValidationMessage(response.data.message);

@@ -101,8 +101,9 @@ exports.login = catchAsync(async (req, res) => {
     });
 
   const transform_user = _.pick(user, ['name', 'uuid', 'type']);
-  res.status(200).json({
-    success: true,
-    data: transform_user,
-  });
+  createSendToken(transform_user, 201, req, res);
+  // res.status(200).json({
+  //   success: true,
+  //   data: transform_user,
+  // });
 });

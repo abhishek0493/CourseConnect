@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const catchAsync = require('../utils/catchAsync');
 const { promisify } = require('util');
 const db = require('../db');
+const helpers = require('../utils/helpers');
 
 const protect = catchAsync(async (req, res, next) => {
   // 1) Getting token and check of it's there
@@ -22,7 +23,7 @@ const protect = catchAsync(async (req, res, next) => {
   // 3) Check if user still exists
   const currentUser = await db
     .from('users')
-    .select('name', 'uuid', 'type', 'email')
+    .select('name', 'id', 'uuid', 'type', 'email')
     .where({ uuid: decoded.id });
 
   if (!currentUser) {
@@ -32,10 +33,12 @@ const protect = catchAsync(async (req, res, next) => {
     });
   }
 
+  const refactor = helpers.refactorResponse(currentUser);
+
   // console.log(currentUser);
   // GRANT ACCESS TO PROTECTED ROUTE
-  req.user = currentUser;
-  res.locals.user = currentUser;
+  req.user = refactor[0];
+  res.locals.user = refactor[0];
   next();
 });
 

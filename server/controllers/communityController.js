@@ -24,6 +24,8 @@ const getCommunities = catchAsync(async (req, res) => {
   });
 });
 
+const getUserCommunities = catchAsync(async (req, res) => {});
+
 const createCommunity = catchAsync(async (req, res) => {
   const { error } = communityCreationSchema.validate(req.body);
   if (error)
@@ -33,18 +35,29 @@ const createCommunity = catchAsync(async (req, res) => {
     });
 
   const { name, category, description, accessType } = req.body;
+  const loggedInUser = req.user.id;
 
   const id = await db('communities').insert({
     name: name,
     category_id: category,
     access_type: accessType,
     description: description,
-    created_by: 1,
+    created_by: loggedInUser,
+  });
+
+  const uc_id = await db('user_communities').insert({
+    user_id: loggedInUser,
+    community_id: id,
+    is_author: 1,
+    is_approved: 1,
   });
 
   res.status(200).json({
     success: true,
-    data: id,
+    data: {
+      id,
+      uc_id,
+    },
   });
 });
 

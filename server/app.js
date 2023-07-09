@@ -20,17 +20,15 @@ const app = express();
 
 // 1) GLOBAL MIDDLEWARES
 // Implement CORS
-app.use(cors());
-// Access-Control-Allow-Origin *
-// api.natours.com, front-end natours.com
-app.use(
-  cors({
-    origin: 'http://localhost:3000',
-  })
-);
+const corsOptions = {
+  origin: 'http://localhost:3000',
+  credentials: true, //access-control-allow-credentials:true
+  optionSuccessStatus: 200,
+};
+app.use(cors(corsOptions));
 
-app.options('*', cors());
-// app.options('/api/v1/tours/:id', cors());
+// app.options('*', cors());
+// app.options('/api/v1/threads/:id', cors());
 
 // Serving static files
 app.use(express.static(path.join(__dirname, 'public')));
@@ -64,7 +62,7 @@ app.use(xss());
 // Test middleware
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
-  // console.log(req.cookies);
+  console.log(req.cookies);
   next();
 });
 

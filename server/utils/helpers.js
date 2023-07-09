@@ -10,3 +10,9 @@ exports.checkIfUserExistsByEmail = async (email) => {
 exports.generateRandomKey = (length = 20) => {
   return crypto.randomBytes(length).toString('hex');
 };
+
+exports.refactorResponse = (data) => {
+  return data.map((row) => {
+    return { ...row };
+  });
+};

@@ -51,7 +51,7 @@ function App() {
 
   const fetchCommunities = () => {
     axios
-      .get('http://localhost:8000/api/v1/community')
+      .get('http://localhost:8000/api/v1/community', { withCredentials: true })
       .then((response) => {
         if (response.data.success) {
           const res = Refactor(response.data);
@@ -74,7 +74,9 @@ function App() {
 
   const fetchCategories = () => {
     axios
-      .get('http://localhost:8000/api/v1/community/categories')
+      .get('http://localhost:8000/api/v1/community/categories', {
+        withCredentials: true,
+      })
       .then((response) => {
         if (response.data.success) {
           const res = Refactor(response.data);
