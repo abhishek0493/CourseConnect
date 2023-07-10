@@ -1,16 +1,18 @@
 import * as React from 'react';
 import { styled, alpha } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import AppBar from '@mui/material/AppBar';
-import Paper from '@mui/material/Paper';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import InputBase from '@mui/material/InputBase';
-import Badge from '@mui/material/Badge';
-import MenuItem from '@mui/material/MenuItem';
-import Menu from '@mui/material/Menu';
+import {
+  AppBar,
+  Paper,
+  Box,
+  Toolbar,
+  IconButton,
+  Typography,
+  InputBase,
+  Badge,
+  MenuItem,
+  Menu,
+} from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import AccountCircle from '@mui/icons-material/AccountCircle';
@@ -18,6 +20,8 @@ import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import { withStyles, makeStyles } from '@mui/styles';
+import { Link } from 'react-router-dom';
+import logo from './HeaderLogo.png';
 
 const styles = (theme) => ({
   // Load app bar information from the theme
@@ -74,7 +78,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     transition: theme.transitions.create('width'),
     width: '100%',
     [theme.breakpoints.up('md')]: {
-      width: '20ch',
+      width: '80ch',
     },
   },
 }));
@@ -186,19 +190,20 @@ const Header = (props) => {
       <CssBaseline />
       <AppBar position="fixed" className={styleClasses.appBar}>
         <Toolbar>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ display: { xs: 'none', sm: 'block' } }}
-          >
-            CourseConnect
-          </Typography>
+          <Box>
+            <Link
+              to="/dashboard"
+              style={{ textDecoration: 'none', color: 'inherit' }}
+            >
+              <img src={logo} style={{ width: '180px' }} />
+            </Link>
+          </Box>
           <Search>
             <SearchIconWrapper>
               <SearchIcon />
             </SearchIconWrapper>
             <StyledInputBase
+              fullWidth
               placeholder="Search…"
               inputProps={{ 'aria-label': 'search' }}
             />

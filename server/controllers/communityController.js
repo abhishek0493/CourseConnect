@@ -2,6 +2,7 @@ const db = require('../db');
 const catchAsync = require('../utils/catchAsync');
 const { communityCreationSchema } = require('../utils/validation');
 const slugify = require('slugify');
+const helper = require('../utils/helpers');
 
 const generateSlug = (name, id) => {
   const string = `${name}-${id}-cc`;
@@ -24,7 +25,20 @@ const getCommunities = catchAsync(async (req, res) => {
   });
 });
 
-const getUserCommunities = catchAsync(async (req, res) => {});
+const getUserCommunities = catchAsync(async (req, res) => {
+  const loggedInUser = req.user.id;
+
+  const communities = await db('user_communities')
+    .join('communities', 'communities.id', 'user_communities.community_id')
+    .where('user_communities.user_id', loggedInUser)
+    .where('user_communities.is_author', 1)
+    .orWhere('user_communities.is_approved', 1);
+
+  res.status(200).json({
+    success: true,
+    data: communities,
+  });
+});
 
 const createCommunity = catchAsync(async (req, res) => {
   const { error } = communityCreationSchema.validate(req.body);
@@ -64,4 +78,5 @@ const createCommunity = catchAsync(async (req, res) => {
 module.exports = {
   getCommunities,
   createCommunity,
+  getUserCommunities,
 };

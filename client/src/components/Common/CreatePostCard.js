@@ -1,5 +1,4 @@
 import {
-  Paper,
   Grid,
   FormControl,
   Select,
@@ -10,12 +9,9 @@ import {
   Card,
   FormGroup,
   FormControlLabel,
-  FormLabel,
-  RadioGroup,
-  Radio,
-  Switch,
   Rating,
   Box,
+  ListSubheader,
   Typography,
   Checkbox,
   FormHelperText,
@@ -24,8 +20,6 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const GeneralForm = () => {
-  const [rating, setRating] = useState(0);
-
   return (
     <Card sx={{ p: 2 }}>
       <Grid container spacing={2}>
@@ -78,6 +72,7 @@ const CourseForm = () => {
         <Grid item xs={6}>
           <TextField
             label="Platform on which the course is available"
+            name="source"
             size="small"
             fullWidth
             helperText={
@@ -93,11 +88,15 @@ const CourseForm = () => {
             <Select
               label="Pricing"
               variant="outlined"
-              name="category"
+              name="pricing"
               size="small"
             >
-              <MenuItem value="1">Free</MenuItem>
-              <MenuItem value="2">Paid</MenuItem>
+              <MenuItem key="1" value="1">
+                Free
+              </MenuItem>
+              <MenuItem key="2" value="2">
+                Paid
+              </MenuItem>
             </Select>
           </FormControl>
         </Grid>
@@ -151,9 +150,8 @@ const CourseForm = () => {
   );
 };
 
-const CreatePostCard = () => {
+const CreatePostCard = ({ communities }) => {
   const [selectedOption, setSelectedOption] = useState(1);
-
   const navigate = useNavigate();
 
   const handleChange = (event) => {
@@ -171,11 +169,34 @@ const CreatePostCard = () => {
                 <Select
                   label="Select a community"
                   variant="outlined"
-                  name="category"
+                  name="community"
                 >
-                  <MenuItem value="option1">Option 1</MenuItem>
-                  <MenuItem value="option2">Option 2</MenuItem>
-                  <MenuItem value="option3">Option 3</MenuItem>
+                  <ListSubheader>Created communities</ListSubheader>
+                  {Object.values(communities).map((value) => {
+                    if (value.is_author) {
+                      return (
+                        <MenuItem
+                          key={value.community_id}
+                          value={value.community_id}
+                        >
+                          {value.name}
+                        </MenuItem>
+                      );
+                    }
+                  })}
+                  <ListSubheader>Joined communities</ListSubheader>
+                  {Object.values(communities).map((value) => {
+                    if (!value.is_author && value.is_approved) {
+                      return (
+                        <MenuItem
+                          key={value.community_id}
+                          value={value.community_id}
+                        >
+                          {value.name}
+                        </MenuItem>
+                      );
+                    }
+                  })}
                 </Select>
               </FormControl>
             </Grid>

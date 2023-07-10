@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import { styled, ThemeProvider, createTheme } from '@mui/material/styles';
 import Divider from '@mui/material/Divider';
 import List from '@mui/material/List';
+import Avatar from '@mui/material/Avatar';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -155,7 +156,7 @@ const Sidebar = ({ communities }) => {
                 }}
               >
                 <ListItemText
-                  primary="Trending Communities"
+                  primary="Your Communities"
                   primaryTypographyProps={{
                     fontSize: 12,
                     fontWeight: 'meduim',
@@ -185,12 +186,21 @@ const Sidebar = ({ communities }) => {
                 communities.map((item) => (
                   <ListItemButton key={item.id} sx={{ py: 1, minHeight: 32 }}>
                     <ListItemIcon sx={{ color: item.color }}>
-                      {item.icon}
+                      <Avatar
+                        sx={{
+                          width: 24,
+                          height: 24,
+                          bgcolor: 'primary.main',
+                          p: 1,
+                        }}
+                      >
+                        {item.icon}
+                      </Avatar>
                     </ListItemIcon>
                     <ListItemText
                       primary={item.name}
                       primaryTypographyProps={{
-                        fontSize: 12,
+                        fontSize: 13,
                         fontWeight: 'medium',
                       }}
                     />

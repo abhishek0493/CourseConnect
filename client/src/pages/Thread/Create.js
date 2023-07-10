@@ -1,24 +1,16 @@
-import React from 'react';
-import {
-  Box,
-  MenuItem,
-  Grid,
-  Select,
-  FormControl,
-  InputLabel,
-  Typography,
-  Button,
-} from '@mui/material';
-import PostAddIcon from '@mui/icons-material/PostAdd';
+import React, { useEffect, useState } from 'react';
+import { Box, Typography } from '@mui/material';
 import CreatePostCard from '../../components/Common/CreatePostCard';
+import axios from 'axios';
+import { Refactor } from '../../components/Constants/Refactor';
 
-const CreateThread = () => {
+const CreateThread = ({ communities }) => {
   return (
     <Box sx={{ p: 2 }}>
       <Typography variant="h6" fontWeight={'bold'}>
         Create a thread
       </Typography>
-      <CreatePostCard />
+      <CreatePostCard communities={communities} />
     </Box>
   );
 };

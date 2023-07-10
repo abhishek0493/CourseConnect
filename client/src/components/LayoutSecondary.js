@@ -27,8 +27,6 @@ const useStyles = makeStyles((theme) => ({
 
 const LayoutSecondary = ({ communities }) => {
   const classes = useStyles();
-  // const isCookieSet = document.cookie.includes('jwt');
-  // console.log(isCookieSet);
 
   return (
     <>

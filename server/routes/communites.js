@@ -9,6 +9,8 @@ router
   .get(protect, commController.getCommunities)
   .post(protect, commController.createCommunity);
 
+router.route('/u-list').get(protect, commController.getUserCommunities);
+
 router.route('/categories').get(miscController.getCategories);
 
 module.exports = router;

@@ -27,7 +27,6 @@ function App() {
       .then((response) => {
         if (response.data.success) {
           const res = Refactor(response.data);
-          console.log(res);
           setUserTypes(res);
         }
       })
@@ -49,9 +48,11 @@ function App() {
       });
   };
 
-  const fetchCommunities = () => {
+  const fetchUserCommunities = () => {
     axios
-      .get('http://localhost:8000/api/v1/community', { withCredentials: true })
+      .get('http://localhost:8000/api/v1/community/u-list', {
+        withCredentials: true,
+      })
       .then((response) => {
         if (response.data.success) {
           const res = Refactor(response.data);
@@ -63,7 +64,6 @@ function App() {
               }
             });
           });
-          // console.log(res);
           setCommunities(res);
         }
       })
@@ -80,7 +80,6 @@ function App() {
       .then((response) => {
         if (response.data.success) {
           const res = Refactor(response.data);
-          // console.log(res);
           setCategories(res);
         }
       })
@@ -91,7 +90,7 @@ function App() {
 
   const handleCreateCommunity = (bool) => {
     if (bool) {
-      fetchCommunities();
+      fetchUserCommunities();
     }
   };
 
@@ -99,7 +98,7 @@ function App() {
     fetchUserTypes();
     fetchAccessTypes();
     fetchCategories();
-    fetchCommunities();
+    fetchUserCommunities();
   }, []);
 
   return (
@@ -115,7 +114,10 @@ function App() {
             element={<LayoutSecondary communities={communities} />}
           >
             <Route index element={<CreatePostBar />} />
-            <Route path="create-thread" element={<CreateThread />}></Route>
+            <Route
+              path="create-thread"
+              element={<CreateThread communities={communities} />}
+            ></Route>
             <Route
               path="create-community"
               element={
