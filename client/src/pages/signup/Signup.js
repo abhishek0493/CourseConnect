@@ -21,7 +21,6 @@ import axios from 'axios';
 // import './signup.css';
 
 const SignupNew = ({ userTypes }) => {
-  console.log(userTypes);
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: '',

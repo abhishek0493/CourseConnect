@@ -1,16 +1,19 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { styled, ThemeProvider, createTheme } from '@mui/material/styles';
-import Divider from '@mui/material/Divider';
-import List from '@mui/material/List';
-import Avatar from '@mui/material/Avatar';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import Paper from '@mui/material/Paper';
-import IconButton from '@mui/material/IconButton';
-import Tooltip from '@mui/material/Tooltip';
+import {
+  Divider,
+  List,
+  Avatar,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Paper,
+  IconButton,
+  Tooltip,
+} from '@mui/material';
+
 import ArrowRight from '@mui/icons-material/ArrowRight';
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import People from '@mui/icons-material/People';
@@ -53,10 +56,12 @@ const Sidebar = ({ communities }) => {
         theme={createTheme({
           palette: {
             primary: {
-              main: '#45007a',
+              main: '#4f4fab',
+              dark: '#2e2e78',
             },
             secondary: {
               main: '#E6EDFF',
+              dark: '#E5E5E5',
             },
           },
           components: {
@@ -185,12 +190,13 @@ const Sidebar = ({ communities }) => {
                 communities !== null &&
                 communities.map((item) => (
                   <ListItemButton key={item.id} sx={{ py: 1, minHeight: 32 }}>
-                    <ListItemIcon sx={{ color: item.color }}>
+                    <ListItemIcon>
                       <Avatar
                         sx={{
                           width: 24,
                           height: 24,
-                          bgcolor: 'primary.main',
+                          bgcolor: 'secondary.main',
+                          color: 'primary.dark',
                           p: 1,
                         }}
                       >

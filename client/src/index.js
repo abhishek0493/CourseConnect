@@ -10,32 +10,33 @@ import { createTheme, ThemeProvider } from '@mui/material';
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#45007a',
+      main: '#4f4fab',
+      dark: '#2e2e78',
     },
     secondary: {
       main: '#E6EDFF',
       dark: '#E5E5E5',
     },
   },
-  typography: {
-    // h1: {
-    //   fontSize: '3rem',
-    //   fontWeight: 600,
-    // },
-    // h2: {
-    //   fontSize: '1.75rem',
-    //   fontWeight: 600,
-    // },
-    // h3: {
-    //   fontSize: '1.5rem',
-    //   fontWeight: 600,
-    // },
-  },
   components: {
     MuiListItemText: {
       styleOverrides: {
         root: {
           fontSize: '3rem !important',
+        },
+      },
+    },
+    MuiMenuItem: {
+      styleOverrides: {
+        root: {
+          fontSize: '1rem ',
+        },
+      },
+    },
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          color: 'secondary.main',
         },
       },
     },

@@ -16,151 +16,68 @@ import {
   Checkbox,
   FormHelperText,
 } from '@mui/material';
+import axios from 'axios';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
-const GeneralForm = () => {
-  return (
-    <Card sx={{ p: 2 }}>
-      <Grid container spacing={2}>
-        <Grid item xs={12}>
-          <TextField
-            label="Title"
-            fullWidth
-            size="small"
-            name="title"
-            type="text"
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            label="Write something"
-            fullWidth
-            multiline
-            rows={6}
-            size="small"
-            name="title"
-            type="text"
-          />
-        </Grid>
-        <Grid item xs={12} m={2}>
-          {/* Submit button */}
-          <Button variant="contained" color="primary" fullWidth type="submit">
-            Create
-          </Button>
-        </Grid>
-      </Grid>
-    </Card>
-  );
-};
-
-const CourseForm = () => {
-  const [rating, setRating] = useState(0);
-
-  return (
-    <Card sx={{ p: 2 }}>
-      <Grid container spacing={2}>
-        <Grid item xs={12}>
-          <TextField
-            label="Title"
-            fullWidth
-            size="small"
-            name="title"
-            type="text"
-          />
-        </Grid>
-        <Grid item xs={6}>
-          <TextField
-            label="Platform on which the course is available"
-            name="source"
-            size="small"
-            fullWidth
-            helperText={
-              <Typography variant="caption">
-                For e.g Youtube,Udemy,Skillshare etc
-              </Typography>
-            }
-          ></TextField>
-        </Grid>
-        <Grid item xs={6}>
-          <FormControl fullWidth>
-            <InputLabel size="small">Pricing</InputLabel>
-            <Select
-              label="Pricing"
-              variant="outlined"
-              name="pricing"
-              size="small"
-            >
-              <MenuItem key="1" value="1">
-                Free
-              </MenuItem>
-              <MenuItem key="2" value="2">
-                Paid
-              </MenuItem>
-            </Select>
-          </FormControl>
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            label="Link to the course"
-            fullWidth
-            size="small"
-            name="link"
-            type="text"
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            label="Text (Optional)"
-            fullWidth
-            name="body"
-            multiline
-            rows={6}
-            type="text"
-          />
-        </Grid>
-        <Grid item xs={6}>
-          <FormGroup>
-            <FormControlLabel
-              control={<Checkbox defaultChecked />}
-              label="I have completed this course"
-            />
-          </FormGroup>
-        </Grid>
-        <Grid item xs={6}>
-          <Typography variant="caption">
-            Rate the course based on your experience
-          </Typography>
-          <Rating
-            name="Rating (optional)"
-            value={rating}
-            onChange={(event, newValue) => {
-              setRating(newValue);
-            }}
-          />
-        </Grid>
-        <Grid item xs={12} m={2}>
-          {/* Submit button */}
-          <Button variant="contained" color="primary" fullWidth type="submit">
-            Create
-          </Button>
-        </Grid>
-      </Grid>
-    </Card>
-  );
-};
 
 const CreatePostCard = ({ communities }) => {
   const [selectedOption, setSelectedOption] = useState(1);
   const navigate = useNavigate();
 
-  const handleChange = (event) => {
-    setSelectedOption(event.target.value);
+  const [formData, setFormData] = useState({
+    community: '',
+    type: 0,
+    title: '',
+    source: '',
+    pricing: 0,
+    link: '',
+    body: '',
+    is_completed: 0,
+    rating: 0,
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  // const handleChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setFormData((prevState) => ({
+  //     ...prevState,
+  //     [name]: value,
+  //   }));
+  // };
+
+  const handleTypeChange = (e) => {
+    const { name, value } = e.target;
+    setSelectedOption(value);
+  };
+
+  const handleCreate = async (e) => {
+    e.preventDefault();
+    await axios
+      .post('http://localhost:8000/api/v1/threads', formData, {
+        withCredentials: true,
+      })
+      .then((res) => {
+        if (res.data.success) {
+          console.log(res.data);
+          // navigate('/dashboard', { replace: true });
+        }
+      })
+      .catch((err) => {
+        const response = err.response;
+        if (!response.data.success) {
+          // setValidationError(true);
+          // setValidationMessage(response.data.message);
+        }
+      });
   };
 
   return (
     <>
-      <form>
+      <form onSubmit={handleCreate}>
         <Box sx={{ mt: 2 }}>
           <Grid container>
             <Grid item xs={8}>
@@ -169,7 +86,9 @@ const CreatePostCard = ({ communities }) => {
                 <Select
                   label="Select a community"
                   variant="outlined"
+                  value={formData.community}
                   name="community"
+                  onChange={handleChange}
                 >
                   <ListSubheader>Created communities</ListSubheader>
                   {Object.values(communities).map((value) => {
@@ -209,6 +128,7 @@ const CreatePostCard = ({ communities }) => {
               <Button
                 variant="contained"
                 size="small"
+                color="primary"
                 onClick={() => {
                   navigate('/dashboard/create-community', { replace: true });
                 }}
@@ -231,10 +151,10 @@ const CreatePostCard = ({ communities }) => {
                 <Select
                   label="Type"
                   variant="outlined"
-                  name="category"
+                  name="type"
                   size="small"
                   value={selectedOption}
-                  onChange={handleChange}
+                  onChange={handleTypeChange}
                 >
                   <MenuItem value="1">A course which I want to share</MenuItem>
                   <MenuItem value="2">Ask a question / Post an update</MenuItem>
@@ -244,8 +164,161 @@ const CreatePostCard = ({ communities }) => {
           </Grid>
         </Box>
         <Box>
-          {selectedOption == 1 && <CourseForm />}
-          {selectedOption == 2 && <GeneralForm />}
+          {selectedOption == 1 && (
+            <>
+              <Card sx={{ p: 2 }}>
+                <Grid container spacing={2}>
+                  <Grid item xs={12}>
+                    <TextField
+                      label="Title"
+                      fullWidth
+                      size="small"
+                      name="title"
+                      required
+                      type="text"
+                      value={formData.title}
+                      onChange={(e) => handleChange(e)}
+                    />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <TextField
+                      label="Platform on which the course is available"
+                      name="source"
+                      size="small"
+                      fullWidth
+                      required
+                      value={formData.source}
+                      helperText={
+                        <Typography variant="caption">
+                          For e.g Youtube,Udemy,Skillshare etc
+                        </Typography>
+                      }
+                      onChange={handleChange}
+                    ></TextField>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <FormControl fullWidth>
+                      <InputLabel size="small">Pricing</InputLabel>
+                      <Select
+                        label="Pricing"
+                        variant="outlined"
+                        name="pricing"
+                        size="small"
+                        value={formData.pricing}
+                        required
+                        onChange={handleChange}
+                      >
+                        <MenuItem key="0" value="0">
+                          --- Select ---
+                        </MenuItem>
+                        <MenuItem key="1" value="1">
+                          Free
+                        </MenuItem>
+                        <MenuItem key="2" value="2">
+                          Paid
+                        </MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      label="Link to the course"
+                      fullWidth
+                      size="small"
+                      name="link"
+                      type="text"
+                      value={formData.link}
+                      required
+                      onChange={handleChange}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      label="Text (Optional)"
+                      fullWidth
+                      name="body"
+                      value={formData.body}
+                      multiline
+                      rows={6}
+                      type="text"
+                      onChange={handleChange}
+                    />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <FormGroup>
+                      <FormControlLabel
+                        control={<Checkbox defaultChecked />}
+                        label="I have completed this course"
+                        name="is_completed"
+                        checked={formData.is_completed}
+                        onChange={handleChange}
+                      />
+                    </FormGroup>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Typography variant="caption">
+                      Rate the course based on your experience
+                    </Typography>
+                    <Rating
+                      name="rating"
+                      value={Number(formData.rating)}
+                      onChange={handleChange}
+                    />
+                  </Grid>
+                  <Grid item xs={12} m={2}>
+                    {/* Submit button */}
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      fullWidth
+                      type="submit"
+                    >
+                      Create
+                    </Button>
+                  </Grid>
+                </Grid>
+              </Card>
+            </>
+          )}
+          {selectedOption == 2 && (
+            <>
+              <Card sx={{ p: 2 }}>
+                <Grid container spacing={2}>
+                  <Grid item xs={12}>
+                    <TextField
+                      label="Title"
+                      fullWidth
+                      size="small"
+                      name="title"
+                      type="text"
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      label="Write something"
+                      fullWidth
+                      multiline
+                      rows={6}
+                      size="small"
+                      name="body"
+                      type="text"
+                    />
+                  </Grid>
+                  <Grid item xs={12} m={2}>
+                    {/* Submit button */}
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      fullWidth
+                      type="submit"
+                    >
+                      Create
+                    </Button>
+                  </Grid>
+                </Grid>
+              </Card>
+            </>
+          )}
         </Box>
       </form>
     </>
