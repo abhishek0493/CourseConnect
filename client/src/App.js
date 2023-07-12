@@ -64,7 +64,9 @@ function App() {
               }
             });
           });
-          setCommunities(res);
+          setTimeout(() => {
+            setCommunities(res);
+          }, 1000);
         }
       })
       .catch((error) => {
