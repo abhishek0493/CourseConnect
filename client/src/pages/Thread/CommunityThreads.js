@@ -21,7 +21,11 @@ const CommunityThreads = ({ title, author, score, comments }) => {
               <>
                 <Card variant="outlined">
                   <CardHeader
-                    avatar={<Avatar>{author.charAt(0)}</Avatar>}
+                    avatar={
+                      <Avatar sx={{ color: 'action.main' }}>
+                        {author.charAt(0)}
+                      </Avatar>
+                    }
                     title={title}
                     subheader={`Posted by u/${author}`}
                   />

@@ -7,7 +7,7 @@ import {
   GridItem,
   Button,
 } from '@mui/material';
-import image5 from './Connected world-cuate.png';
+import image5 from './Connected world-cuate.svg';
 import { replace } from 'lodash';
 
 const Home = () => {

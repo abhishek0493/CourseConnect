@@ -17,6 +17,10 @@ const theme = createTheme({
       main: '#E6EDFF',
       dark: '#E5E5E5',
     },
+    action: {
+      main: 'orangered',
+      dark: '#cc3a04',
+    },
   },
   components: {
     MuiListItemText: {
@@ -30,13 +34,6 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           fontSize: '1rem ',
-        },
-      },
-    },
-    MuiButton: {
-      styleOverrides: {
-        root: {
-          color: 'secondary.main',
         },
       },
     },

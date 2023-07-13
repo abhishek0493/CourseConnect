@@ -63,6 +63,9 @@ const Sidebar = ({ communities }) => {
               main: '#E6EDFF',
               dark: '#E5E5E5',
             },
+            action: {
+              main: 'orangered',
+            },
           },
           components: {
             MuiListItemText: {
@@ -196,7 +199,7 @@ const Sidebar = ({ communities }) => {
                           width: 24,
                           height: 24,
                           bgcolor: 'secondary.main',
-                          color: 'primary.dark',
+                          color: 'action.main',
                           p: 1,
                         }}
                       >

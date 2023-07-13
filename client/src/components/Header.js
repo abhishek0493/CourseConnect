@@ -19,9 +19,10 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
+import TripOriginRoundedIcon from '@mui/icons-material/TripOriginRounded';
 import { withStyles, makeStyles } from '@mui/styles';
 import { Link } from 'react-router-dom';
-import logo from './HeaderLogo.png';
+import logo from './HeaderLogoNew.png';
 
 const styles = (theme) => ({
   // Load app bar information from the theme
@@ -191,11 +192,14 @@ const Header = (props) => {
       <AppBar position="fixed" className={styleClasses.appBar}>
         <Toolbar>
           <Box>
+            <TripOriginRoundedIcon
+              sx={{ fontSize: '2.5rem', mx: 1, color: 'orangered' }}
+            />
             <Link
               to="/dashboard"
               style={{ textDecoration: 'none', color: 'inherit' }}
             >
-              <img src={logo} style={{ width: '180px' }} />
+              <img src={logo} style={{ width: '100px' }} />
             </Link>
           </Box>
           <Search>
@@ -215,7 +219,7 @@ const Header = (props) => {
               aria-label="show 4 new mails"
               color="inherit"
             >
-              <Badge badgeContent={4} color="error">
+              <Badge badgeContent={4} color="action">
                 <MailIcon />
               </Badge>
             </IconButton>
@@ -224,7 +228,7 @@ const Header = (props) => {
               aria-label="show 17 new notifications"
               color="inherit"
             >
-              <Badge badgeContent={17} color="error">
+              <Badge badgeContent={17} color="action">
                 <NotificationsIcon />
               </Badge>
             </IconButton>

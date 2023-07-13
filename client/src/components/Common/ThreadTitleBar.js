@@ -1,23 +1,34 @@
-import { Paper, Typography, Box } from '@mui/material';
+import { Paper, Typography, Box, Card, Grid, Divider } from '@mui/material';
+import PsychologyTwoToneIcon from '@mui/icons-material/PsychologyTwoTone';
+
 import React from 'react';
 
 const ThreadTitleBar = () => {
   return (
-    <Paper
-      elevation={3}
+    <Card
       sx={{
         p: 2,
         my: 1,
         bgcolor: 'paper',
       }}
     >
-      <Box>
-        <Typography variant="h5" fontWeight={'bold'}>
-          React.js
-        </Typography>
-        <Typography variant="caption">Science & Technology</Typography>
-      </Box>
-    </Paper>
+      <Grid container gap={3} alignItems={'center'}>
+        <Grid item xs={1}>
+          <PsychologyTwoToneIcon
+            sx={{ fontSize: '60px', color: 'action.main' }}
+          />
+        </Grid>
+        <Grid item xs={8} alignItems={'center'}>
+          <Typography variant="h4" fontWeight={'bold'} letterSpacing={1}>
+            LearnJapanese
+          </Typography>
+          <Divider />
+          <Typography variant="caption" sx={{ my: 1 }}>
+            Created by u/Abhishek
+          </Typography>
+        </Grid>
+      </Grid>
+    </Card>
   );
 };
 

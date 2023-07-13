@@ -1,6 +1,13 @@
 import React from 'react';
-import { Card, Avatar, Grid, Badge, TextField } from '@mui/material';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import {
+  Card,
+  Avatar,
+  Grid,
+  Badge,
+  TextField,
+  Typography,
+} from '@mui/material';
+import PagesRoundedIcon from '@mui/icons-material/PagesRounded';
 import AccountCircleTwoToneIcon from '@mui/icons-material/AccountCircleTwoTone';
 import { useNavigate } from 'react-router-dom';
 
@@ -31,16 +38,24 @@ const CreatePostBar = () => {
             </Avatar>
           </Badge>
         </Grid>
-        <Grid item xs={11}>
+        <Grid item xs={10}>
           <TextField
             variant="outlined"
-            label="Create a thread / post"
+            label={
+              <Typography color="primary.dark">
+                Create a thread / post
+              </Typography>
+            }
+            sx={{ bgcolor: 'secondary.main' }}
             size="small"
             fullWidth
             onFocus={() => {
               navigate('/dashboard/create-thread', { replace: true });
             }}
           ></TextField>
+        </Grid>
+        <Grid item xs={1}>
+          <PagesRoundedIcon sx={{ fontSize: '40px', color: 'orangered' }} />
         </Grid>
       </Grid>
     </Card>
