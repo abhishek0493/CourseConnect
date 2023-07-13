@@ -16,21 +16,9 @@ import {
 
 import ArrowRight from '@mui/icons-material/ArrowRight';
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
-import People from '@mui/icons-material/People';
-import PermMedia from '@mui/icons-material/PermMedia';
-import Dns from '@mui/icons-material/Dns';
-import Public from '@mui/icons-material/Public';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import GridViewIcon from '@mui/icons-material/GridView';
-import WhatshotIcon from '@mui/icons-material/Whatshot';
 import { useNavigate } from 'react-router-dom';
-
-const data = [
-  { icon: <People />, label: 'Science & Technology' },
-  { icon: <Dns />, label: 'Business & Entreprenuership' },
-  { icon: <PermMedia />, label: 'Creative Arts' },
-  { icon: <Public />, label: 'Language Learning' },
-];
 
 const FireNav = styled(List)({
   '& .MuiListItemButton-root': {
@@ -49,6 +37,10 @@ const FireNav = styled(List)({
 const Sidebar = ({ communities }) => {
   const [open, setOpen] = React.useState(true);
   const navigate = useNavigate();
+
+  const handleCommunityClick = (communityId) => {
+    navigate(`/dashboard/c/${communityId}`);
+  };
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -151,6 +143,7 @@ const Sidebar = ({ communities }) => {
               sx={{
                 pb: open ? 2 : 0,
                 height: '85vh',
+                overflowY: 'auto', // Add this to make the content scrollable
               }}
             >
               <ListItemButton
@@ -167,7 +160,7 @@ const Sidebar = ({ communities }) => {
                   primary="Your Communities"
                   primaryTypographyProps={{
                     fontSize: 12,
-                    fontWeight: 'meduim',
+                    fontWeight: 'medium',
                     lineHeight: '20px',
                     mb: '2px',
                   }}
@@ -192,15 +185,22 @@ const Sidebar = ({ communities }) => {
               {open &&
                 communities !== null &&
                 communities.map((item) => (
-                  <ListItemButton key={item.id} sx={{ py: 1, minHeight: 32 }}>
+                  <ListItemButton
+                    key={item.id}
+                    sx={{ py: 1, minHeight: 32 }}
+                    onClick={() => {
+                      navigate(`/dashboard/c/${item.name}`);
+                    }}
+                  >
                     <ListItemIcon>
                       <Avatar
                         sx={{
                           width: 24,
                           height: 24,
-                          bgcolor: 'secondary.main',
-                          color: 'action.main',
-                          p: 1,
+                          bgcolor: '#2e2e78',
+                          // border: '2px solid #2e2e78',
+                          color: 'paper',
+                          p: 1.5,
                         }}
                       >
                         {item.icon}

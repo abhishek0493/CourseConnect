@@ -46,7 +46,6 @@ const CreatePostBar = () => {
                 Create a thread / post
               </Typography>
             }
-            sx={{ bgcolor: 'secondary.main' }}
             size="small"
             fullWidth
             onFocus={() => {

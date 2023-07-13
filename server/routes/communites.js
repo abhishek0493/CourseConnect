@@ -10,6 +10,9 @@ router
   .post(protect, commController.createCommunity);
 
 router.route('/u-list').get(protect, commController.getUserCommunities);
+router
+  .route('/check-availability')
+  .post(protect, commController.checkCommunityNameAvailability);
 
 router.route('/categories').get(miscController.getCategories);
 

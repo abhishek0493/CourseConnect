@@ -19,7 +19,14 @@ const CommunityThreads = ({ title, author, score, comments }) => {
           (element) => {
             return (
               <>
-                <Card variant="outlined">
+                <Card
+                  sx={{
+                    '&:hover': {
+                      border: '1px solid orangered', // Replace 'red' with the desired border color
+                    },
+                  }}
+                  variant="outlined"
+                >
                   <CardHeader
                     avatar={
                       <Avatar sx={{ color: 'action.main' }}>

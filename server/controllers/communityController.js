@@ -40,6 +40,24 @@ const getUserCommunities = catchAsync(async (req, res) => {
   });
 });
 
+const checkCommunityNameAvailability = catchAsync(async (req, res) => {
+  const { name } = req.body;
+
+  const existingCommunity = await db('communities').where('name', name).first();
+
+  if (existingCommunity) {
+    return res.status(200).json({
+      success: true,
+      exists: true,
+    });
+  }
+
+  return res.status(200).json({
+    success: true,
+    exists: false,
+  });
+});
+
 const createCommunity = catchAsync(async (req, res) => {
   const { error } = communityCreationSchema.validate(req.body);
   if (error)
@@ -79,4 +97,5 @@ module.exports = {
   getCommunities,
   createCommunity,
   getUserCommunities,
+  checkCommunityNameAvailability,
 };

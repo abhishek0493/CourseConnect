@@ -4,22 +4,27 @@ import {
   Typography,
   Grid,
   Button,
+  IconButton,
+  Tooltip,
   TextField,
   Select,
   FormControl,
   FormLabel,
   FormControlLabel,
+  InputAdornment,
   Radio,
   RadioGroup,
   InputLabel,
   MenuItem,
   Card,
 } from '@mui/material';
+import InfoIcon from '@mui/icons-material/Info';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const CreateCommunity = ({ cmCategories, onCreateCommunity }) => {
   const navigate = useNavigate();
+  const [nameAvailability, setNameAvailability] = useState(null);
   const [formData, setFormData] = useState({
     name: '',
     category: '',
@@ -37,6 +42,22 @@ const CreateCommunity = ({ cmCategories, onCreateCommunity }) => {
     setFormData({ ...formData, [name]: value });
     setValidationError(false);
     setValidationMessage('');
+  };
+
+  const handleCommunityNameBlur = async () => {
+    try {
+      const response = await axios.post(
+        'http://localhost:8000/api/v1/community/check-availability',
+        {
+          name: formData.name,
+        },
+        { withCredentials: true }
+      );
+
+      setNameAvailability(response.data.exists);
+    } catch (error) {
+      // Handle error if API request fails
+    }
   };
 
   const handleCreate = async (e) => {
@@ -74,8 +95,27 @@ const CreateCommunity = ({ cmCategories, onCreateCommunity }) => {
                   fullWidth
                   name="name"
                   type="text"
+                  required
                   value={formData.name}
                   onChange={handleChange}
+                  error={nameAvailability} // Set error prop based on nameAvailability value
+                  onBlur={handleCommunityNameBlur}
+                  helperText={
+                    nameAvailability === true
+                      ? 'Community name is already taken'
+                      : ''
+                  }
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <Tooltip title="Community name must be at least 3 characters long and can contain letters, numbers, and hyphens.">
+                          <IconButton size="small">
+                            <InfoIcon sx={{ color: 'primary.main' }} />
+                          </IconButton>
+                        </Tooltip>
+                      </InputAdornment>
+                    ),
+                  }}
                 />
               </Grid>
               <Grid item xs={6}>
@@ -84,6 +124,7 @@ const CreateCommunity = ({ cmCategories, onCreateCommunity }) => {
                   <Select
                     label="Category"
                     name="category"
+                    required
                     value={formData.category}
                     onChange={handleChange}
                   >
@@ -97,7 +138,7 @@ const CreateCommunity = ({ cmCategories, onCreateCommunity }) => {
                 </FormControl>
               </Grid>
               <Grid item xs={12}>
-                <FormControl>
+                <FormControl required>
                   <FormLabel id="accessType">Access Type</FormLabel>
                   <RadioGroup
                     aria-labelledby="accessType"
