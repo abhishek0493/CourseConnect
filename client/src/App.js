@@ -14,6 +14,9 @@ import { Refactor } from './components/Constants/Refactor';
 import { Categories } from './components/Constants/Categories';
 import CreatePostBar from './components/Common/CreatePostBar';
 import CreateThread from './pages/Thread/Create';
+import ThreadsLayout from './pages/Thread/ThreadsLayout';
+import CommunityThreads from './pages/Thread/CommunityThreads';
+import ThreadTitleBar from './components/Common/ThreadTitleBar';
 
 function App() {
   const [userTypes, setUserTypes] = useState([]);
@@ -66,7 +69,7 @@ function App() {
           });
           setTimeout(() => {
             setCommunities(res);
-          }, 1000);
+          }, 0);
         }
       })
       .catch((error) => {
@@ -119,7 +122,7 @@ function App() {
             <Route
               path="create-thread"
               element={<CreateThread communities={communities} />}
-            ></Route>
+            />
             <Route
               path="create-community"
               element={
@@ -130,7 +133,20 @@ function App() {
                 />
               }
             />
-            <Route path="community" element="" />
+            <Route path="c" element={<ThreadsLayout />}>
+              <Route
+                path=":id"
+                index
+                element={
+                  <CommunityThreads
+                    title="Threads Test"
+                    author="Abhsihek"
+                    score="34"
+                    comments="kansdknaksnd"
+                  />
+                }
+              ></Route>
+            </Route>
           </Route>
         </Route>
       </Routes>

@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
   },
   content: {
     flexGrow: 1,
-    padding: theme.spacing(3),
+    padding: `${theme.spacing(2)} ${theme.spacing(5)}`,
     marginLeft: '254px', // Same as the width of the sidebar
     // marginTop: theme.spacing(0.5)
   },

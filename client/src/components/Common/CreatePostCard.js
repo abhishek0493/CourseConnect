@@ -21,37 +21,28 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const CreatePostCard = ({ communities }) => {
-  const [selectedOption, setSelectedOption] = useState(1);
+  // const [selectedOption, setSelectedOption] = useState(1);
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     community: '',
-    type: 0,
+    type: 1,
     title: '',
     source: '',
     pricing: 0,
     link: '',
     body: '',
-    is_completed: 0,
+    is_completed: false,
     rating: 0,
   });
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
-  // const handleChange = (e) => {
-  //   const { name, value } = e.target;
-  //   setFormData((prevState) => ({
-  //     ...prevState,
-  //     [name]: value,
-  //   }));
-  // };
-
-  const handleTypeChange = (e) => {
-    const { name, value } = e.target;
-    setSelectedOption(value);
+    const { name, value, type, checked } = e.target;
+    const newValue = type === 'checkbox' ? checked : value;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: newValue,
+    }));
   };
 
   const handleCreate = async (e) => {
@@ -63,7 +54,7 @@ const CreatePostCard = ({ communities }) => {
       .then((res) => {
         if (res.data.success) {
           console.log(res.data);
-          // navigate('/dashboard', { replace: true });
+          navigate('/dashboard', { replace: true });
         }
       })
       .catch((err) => {
@@ -86,7 +77,7 @@ const CreatePostCard = ({ communities }) => {
                 <Select
                   label="Select a community"
                   variant="outlined"
-                  value={formData.community}
+                  value={Number(formData.community)}
                   name="community"
                   onChange={handleChange}
                 >
@@ -153,18 +144,22 @@ const CreatePostCard = ({ communities }) => {
                   variant="outlined"
                   name="type"
                   size="small"
-                  value={selectedOption}
-                  onChange={handleTypeChange}
+                  value={formData.type}
+                  onChange={handleChange}
                 >
-                  <MenuItem value="1">A course which I want to share</MenuItem>
-                  <MenuItem value="2">Ask a question / Post an update</MenuItem>
+                  <MenuItem key={1} value={1}>
+                    A course which I want to share
+                  </MenuItem>
+                  <MenuItem key={2} value={2}>
+                    Ask a question / Post an update
+                  </MenuItem>
                 </Select>
               </FormControl>
             </Grid>
           </Grid>
         </Box>
         <Box>
-          {selectedOption == 1 && (
+          {formData.type == 1 && (
             <>
               <Card sx={{ p: 2 }}>
                 <Grid container spacing={2}>
@@ -247,11 +242,14 @@ const CreatePostCard = ({ communities }) => {
                   <Grid item xs={6}>
                     <FormGroup>
                       <FormControlLabel
-                        control={<Checkbox defaultChecked />}
+                        control={
+                          <Checkbox
+                            checked={formData.is_completed}
+                            onChange={handleChange}
+                            name="is_completed"
+                          />
+                        }
                         label="I have completed this course"
-                        name="is_completed"
-                        checked={formData.is_completed}
-                        onChange={handleChange}
                       />
                     </FormGroup>
                   </Grid>
@@ -280,7 +278,7 @@ const CreatePostCard = ({ communities }) => {
               </Card>
             </>
           )}
-          {selectedOption == 2 && (
+          {formData.type == 2 && (
             <>
               <Card sx={{ p: 2 }}>
                 <Grid container spacing={2}>

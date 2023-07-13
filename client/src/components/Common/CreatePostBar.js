@@ -1,13 +1,20 @@
 import React from 'react';
 import { Card, Avatar, Grid, Badge, TextField } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import AccountCircleTwoToneIcon from '@mui/icons-material/AccountCircleTwoTone';
 import { useNavigate } from 'react-router-dom';
 
 const CreatePostBar = () => {
   const navigate = useNavigate();
   return (
     <Card
-      sx={{ display: 'flex', p: 1, maxHeight: '60px', alignItems: 'center' }}
+      sx={{
+        display: 'flex',
+        px: 1,
+        py: 3,
+        maxHeight: '60px',
+        alignItems: 'center',
+      }}
     >
       <Grid container columnSpacing={2}>
         <Grid item xs={1}>
@@ -17,8 +24,10 @@ const CreatePostBar = () => {
             variant="dot"
             color="success"
           >
-            <Avatar sx={{ bgcolor: 'primary.main', ml: 1 }}>
-              <AccountCircleIcon />
+            <Avatar
+              sx={{ bgcolor: 'secondary.main', color: 'primary.dark', ml: 1 }}
+            >
+              <AccountCircleTwoToneIcon />
             </Avatar>
           </Badge>
         </Grid>
@@ -29,7 +38,7 @@ const CreatePostBar = () => {
             size="small"
             fullWidth
             onFocus={() => {
-              navigate('create-thread');
+              navigate('/dashboard/create-thread', { replace: true });
             }}
           ></TextField>
         </Grid>

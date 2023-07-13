@@ -23,6 +23,38 @@ const communityCreationSchema = Joi.object({
   category: Joi.number().required(),
 });
 
+const threadCreationSchema = Joi.object({
+  community: Joi.number().required(),
+  title: Joi.string().required(),
+  type: Joi.number().valid(1, 2).required(),
+  source: Joi.string().when('type', {
+    is: '1',
+    then: Joi.string().required(),
+    otherwise: Joi.string().optional(),
+  }),
+  pricing: Joi.number().when('type', {
+    is: '1',
+    then: Joi.number().valid('1', '2').required(),
+    otherwise: Joi.number().optional(),
+  }),
+  link: Joi.string().when('type', {
+    is: '1',
+    then: Joi.string().required(),
+    otherwise: Joi.string().optional(),
+  }),
+  body: Joi.string(),
+  is_completed: Joi.boolean().when('type', {
+    is: '1',
+    then: Joi.boolean().required(),
+    otherwise: Joi.boolean().optional(),
+  }),
+  rating: Joi.number().when('type', {
+    is: '1',
+    then: Joi.number(),
+    otherwise: Joi.number().optional(),
+  }),
+});
+
 const verifyPassword = async function (inputPassword, userPassword) {
   return await bcrypt.compare(inputPassword, userPassword);
 };
@@ -35,6 +67,7 @@ const login = Joi.object({
 module.exports = {
   userCreationSchema,
   communityCreationSchema,
+  threadCreationSchema,
   verifyPassword,
   login,
 };
