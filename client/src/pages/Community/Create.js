@@ -66,8 +66,9 @@ const CreateCommunity = ({ cmCategories, onCreateCommunity }) => {
       .post('http://localhost:8000/api/v1/community', formData)
       .then((res) => {
         if (res.data.success) {
+          const result = res.data.data;
           onCreateCommunity(true);
-          navigate('/dashboard', { replace: true });
+          navigate(`/dashboard/c/${result.name}`, { replace: true });
         }
       })
       .catch((err) => {

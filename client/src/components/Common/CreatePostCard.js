@@ -53,8 +53,8 @@ const CreatePostCard = ({ communities, selectedId }) => {
       })
       .then((res) => {
         if (res.data.success) {
-          console.log(res.data);
-          navigate('/dashboard', { replace: true });
+          let name = res.data.data.name;
+          navigate(`/dashboard/c/${name}`, { replace: true });
         }
       })
       .catch((err) => {

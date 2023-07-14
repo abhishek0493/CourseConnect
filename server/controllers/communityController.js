@@ -90,8 +90,9 @@ const createCommunity = catchAsync(async (req, res) => {
   res.status(200).json({
     success: true,
     data: {
-      id,
-      uc_id,
+      id: id,
+      user_comm_id: uc_id,
+      name: name,
     },
   });
 });

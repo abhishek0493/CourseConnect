@@ -22,7 +22,7 @@ import MoreIcon from '@mui/icons-material/MoreVert';
 import TripOriginRoundedIcon from '@mui/icons-material/TripOriginRounded';
 import { withStyles, makeStyles } from '@mui/styles';
 import { Link } from 'react-router-dom';
-import logo from './HeaderLogoNew.png';
+import logo from './HeaderLogo.png';
 
 const styles = (theme) => ({
   // Load app bar information from the theme

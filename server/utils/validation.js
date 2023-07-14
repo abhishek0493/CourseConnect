@@ -46,7 +46,7 @@ const threadCreationSchema = Joi.object({
     then: Joi.string().required(),
     otherwise: Joi.string().optional(),
   }),
-  body: Joi.string(),
+  body: Joi.string().optional().allow(''),
   is_completed: Joi.boolean().when('type', {
     is: '1',
     then: Joi.boolean().required(),

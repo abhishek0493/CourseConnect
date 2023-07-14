@@ -9,6 +9,7 @@ import {
   Stack,
   IconButton,
   Alert,
+  Chip,
 } from '@mui/material';
 import { ThumbUp, ThumbDown, Comment, InfoOutlined } from '@mui/icons-material';
 import { useOutletContext } from 'react-router-dom';
@@ -51,8 +52,14 @@ const CommunityThreads = () => {
               />
               <CardContent>
                 <Typography variant="body1" color="text.secondary">
-                  {item.description}
+                  {item.body}
                 </Typography>
+                <Chip
+                  label={item.link}
+                  onClick={() => {
+                    console.log('Hello');
+                  }}
+                />
               </CardContent>
               <CardContent>
                 <Typography variant="body2" color="text.secondary">

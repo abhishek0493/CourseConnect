@@ -26,7 +26,8 @@ const getCommunityUserThreads = catchAsync(async (req, res) => {
     .andWhere(function () {
       this.where('uc.is_author', 1).orWhere('uc.is_approved', 1);
     })
-    .andWhere('c.name', community);
+    .andWhere('c.name', community)
+    .orderBy('t.id', 'desc');
 
   if (threads) {
     res.status(200).json({
@@ -60,9 +61,14 @@ const createThread = catchAsync(async (req, res) => {
     author_rating: data.rating,
   });
 
+  const community = await db('communities').where('id', data.community).first();
+
   return res.status(200).json({
     success: true,
-    data: id,
+    data: {
+      id: id,
+      name: community.name,
+    },
   });
 });
 
