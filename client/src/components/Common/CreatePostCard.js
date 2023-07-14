@@ -17,15 +17,15 @@ import {
   FormHelperText,
 } from '@mui/material';
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const CreatePostCard = ({ communities }) => {
+const CreatePostCard = ({ communities, selectedId }) => {
   // const [selectedOption, setSelectedOption] = useState(1);
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    community: '',
+    community: selectedId ? selectedId : '',
     type: 1,
     title: '',
     source: '',

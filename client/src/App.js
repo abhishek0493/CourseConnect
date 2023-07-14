@@ -16,7 +16,7 @@ import CreatePostBar from './components/Common/CreatePostBar';
 import CreateThread from './pages/Thread/Create';
 import ThreadsLayout from './pages/Thread/ThreadsLayout';
 import CommunityThreads from './pages/Thread/CommunityThreads';
-import ThreadTitleBar from './components/Common/ThreadTitleBar';
+import { AddCategoryIcon } from './utils/AddCategoryIcon';
 
 function App() {
   const [userTypes, setUserTypes] = useState([]);
@@ -53,22 +53,15 @@ function App() {
 
   const fetchUserCommunities = () => {
     axios
-      .get('http://localhost:8000/api/v1/community/u-list', {
+      .get('http://localhost:8000/api/v1/community', {
         withCredentials: true,
       })
       .then((response) => {
         if (response.data.success) {
           const res = Refactor(response.data);
-          Object.values(res).map((el) => {
-            Categories.map((item) => {
-              if (item.id == el.category_id) {
-                el.icon = item.icon;
-                el.color = item.color;
-              }
-            });
-          });
+          const resWithIcons = AddCategoryIcon(res);
           setTimeout(() => {
-            setCommunities(res);
+            setCommunities(resWithIcons);
           }, 0);
         }
       })
@@ -114,6 +107,7 @@ function App() {
           <Route path="consent" element={<Consent />} />
           <Route path="login" element={<Login />} />
           <Route path="sign-up" element={<Signup userTypes={userTypes} />} />
+          {/* Post Login Routes */}
           <Route
             path="dashboard"
             element={<LayoutSecondary communities={communities} />}
@@ -134,18 +128,7 @@ function App() {
               }
             />
             <Route path="c" element={<ThreadsLayout />}>
-              <Route
-                path=":id"
-                index
-                element={
-                  <CommunityThreads
-                    title="Threads Test"
-                    author="Abhsihek"
-                    score="34"
-                    comments="kansdknaksnd"
-                  />
-                }
-              ></Route>
+              <Route path=":name" index element={<CommunityThreads />}></Route>
             </Route>
           </Route>
         </Route>

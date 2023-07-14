@@ -11,8 +11,19 @@ import PagesRoundedIcon from '@mui/icons-material/PagesRounded';
 import AccountCircleTwoToneIcon from '@mui/icons-material/AccountCircleTwoTone';
 import { useNavigate } from 'react-router-dom';
 
-const CreatePostBar = () => {
+const CreatePostBar = ({ community }) => {
   const navigate = useNavigate();
+
+  const onFocus = () => {
+    if (community) {
+      navigate(`/dashboard/create-thread?id=${community.id}`, {
+        replace: true,
+      });
+    } else {
+      navigate('/dashboard/create-thread', { replace: true });
+    }
+  };
+
   return (
     <Card
       sx={{
@@ -48,9 +59,7 @@ const CreatePostBar = () => {
             }
             size="small"
             fullWidth
-            onFocus={() => {
-              navigate('/dashboard/create-thread', { replace: true });
-            }}
+            onFocus={onFocus}
           ></TextField>
         </Grid>
         <Grid item xs={1}>

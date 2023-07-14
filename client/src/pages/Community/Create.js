@@ -102,7 +102,7 @@ const CreateCommunity = ({ cmCategories, onCreateCommunity }) => {
                   onBlur={handleCommunityNameBlur}
                   helperText={
                     nameAvailability === true
-                      ? 'Community name is already taken'
+                      ? 'A Community with this name already exists.'
                       : ''
                   }
                   InputProps={{

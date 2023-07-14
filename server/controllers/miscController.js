@@ -14,16 +14,6 @@ const getCategories = catchAsync(async (req, res) => {
     });
   }
 
-  // const categoriesWithIcons = _.merge(
-  //   [],
-  //   categories.map((category, index) => ({
-  //     ...category,
-  //     icon: icons[index],
-  //   }))
-  // );
-
-  // console.log(categories);
-
   return res.status(200).json({
     success: true,
     data: categories,

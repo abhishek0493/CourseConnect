@@ -6,14 +6,14 @@ const commController = require('../controllers/communityController');
 
 router
   .route('/')
-  .get(protect, commController.getCommunities)
+  .get(protect, commController.getUserCommunities)
   .post(protect, commController.createCommunity);
 
-router.route('/u-list').get(protect, commController.getUserCommunities);
 router
   .route('/check-availability')
   .post(protect, commController.checkCommunityNameAvailability);
 
 router.route('/categories').get(miscController.getCategories);
+router.route('/:name').get(protect, commController.getCommunityByName);
 
 module.exports = router;

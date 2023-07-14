@@ -10,18 +10,21 @@ const generateSlug = (name, id) => {
   return slug;
 };
 
-const getCommunities = catchAsync(async (req, res) => {
-  const communities = await db.select().from('communities');
-  if (!communities) {
+const getCommunityByName = catchAsync(async (req, res) => {
+  const community = await db('communities')
+    .where('name', req.params.name)
+    .first();
+
+  if (!community) {
     return res.status(400).json({
       success: false,
       message: 'No results found',
     });
   }
 
-  return res.status(200).json({
+  res.status(200).json({
     success: true,
-    data: communities,
+    data: community,
   });
 });
 
@@ -94,7 +97,7 @@ const createCommunity = catchAsync(async (req, res) => {
 });
 
 module.exports = {
-  getCommunities,
+  getCommunityByName,
   createCommunity,
   getUserCommunities,
   checkCommunityNameAvailability,

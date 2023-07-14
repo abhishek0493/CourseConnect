@@ -38,10 +38,6 @@ const Sidebar = ({ communities }) => {
   const [open, setOpen] = React.useState(true);
   const navigate = useNavigate();
 
-  const handleCommunityClick = (communityId) => {
-    navigate(`/dashboard/c/${communityId}`);
-  };
-
   return (
     <Box sx={{ display: 'flex' }}>
       <ThemeProvider

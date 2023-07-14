@@ -39,8 +39,25 @@ const LayoutSecondary = ({ communities }) => {
             </Grid>
             <Grid item xs={4}>
               <Card variant="outlined" sx={{ position: 'sticky', top: 80 }}>
-                <Box sx={{ height: '80vh' }}>
-                  <Typography variant="p">Secondary Siderbar</Typography>
+                <Box sx={{ height: '80vh', p: 4 }}>
+                  <Typography variant="h6">Secondary Sidebar</Typography>
+                  {[1, 1, 1].map((el) => {
+                    return (
+                      <>
+                        <Card
+                          sx={{
+                            minHeight: '100px',
+                            bgcolor: 'secondary.dark',
+                            my: 2,
+                            color: 'primary.dark',
+                            p: 5,
+                          }}
+                        >
+                          Coming Soon #1
+                        </Card>
+                      </>
+                    );
+                  })}
                 </Box>
               </Card>
             </Grid>
