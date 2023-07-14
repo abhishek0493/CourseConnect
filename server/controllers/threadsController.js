@@ -15,7 +15,8 @@ const getCommunityUserThreads = catchAsync(async (req, res) => {
       'uc.is_author',
       'uc.is_approved',
       'c.name',
-      'c.description'
+      'c.description',
+      'c.access_type'
     )
     .join('communities as c', 'c.id', '=', 't.community_id')
     .join('user_communities as uc', 'uc.community_id', '=', 'c.id')

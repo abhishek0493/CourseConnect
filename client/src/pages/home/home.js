@@ -24,7 +24,7 @@ const Home = () => {
           </Box>
         </Grid>
         <Grid item xs={6} sx={{ padding: '45px' }}>
-          <Typography variant="h2" color="primary.main">
+          <Typography variant="h2" color="action.main">
             Welcome to CourseConnect
           </Typography>
           <Box sx={{ mt: 3 }}>

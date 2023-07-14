@@ -1,8 +1,48 @@
 import React from 'react';
-import { Typography, Card, Grid, Divider, Avatar, Button } from '@mui/material';
+import {
+  Typography,
+  Card,
+  Grid,
+  Divider,
+  Avatar,
+  Button,
+  Box,
+  Tooltip,
+} from '@mui/material';
+
+import AllInclusiveIcon from '@mui/icons-material/AllInclusive';
+import AddModeratorIcon from '@mui/icons-material/AddModerator';
+import LockPersonIcon from '@mui/icons-material/LockPerson';
+
+const getAccessIcon = (type) => {
+  let icon = null;
+  let message = '';
+  switch (type) {
+    case 1:
+      icon = <AllInclusiveIcon htmlColor="green" />;
+      message =
+        'This community is open. Anyone can join and post in this community';
+      break;
+    case 2:
+      icon = <AddModeratorIcon htmlColor="orange" />;
+      message =
+        'This community is restricted. Threads can be viewed but requires creator approval for posting in this community';
+      break;
+    case 3:
+      icon = <LockPersonIcon htmlColor="red" />;
+      message =
+        'This community is protected. Viewing and creating threads requires creator approval';
+      break;
+    default:
+      break;
+  }
+  return {
+    icon: icon,
+    message: message,
+  };
+};
 
 const ThreadTitleBar = ({ community, name }) => {
-  console.log(community);
   return (
     <Card
       sx={{
@@ -30,11 +70,15 @@ const ThreadTitleBar = ({ community, name }) => {
         <Grid item xs={8} alignItems={'center'}>
           <Typography variant="h5" fontWeight={'bold'} letterSpacing={1}>
             {name}
+            <Tooltip
+              sx={{ mx: 1 }}
+              title={getAccessIcon(community.access_type).message}
+            >
+              {getAccessIcon(community.access_type).icon}
+            </Tooltip>
           </Typography>
           <Divider />
-          <Typography variant="caption" sx={{ my: 1 }}>
-            Created by u/Abhishek
-          </Typography>
+          <Typography variant="caption">Created by u/Abhishek</Typography>
           <Typography
             variant="caption"
             sx={{ my: 1, display: 'block', fontStyle: 'italic' }}
