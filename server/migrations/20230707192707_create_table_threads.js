@@ -14,17 +14,17 @@ exports.up = function (knex) {
       .comment('1:Course|2:General');
 
     table.string('title').notNullable();
-    table.string('source');
-    table.tinyint('pricing').unsigned().notNullable().comment('0:Free|1:Paid');
-    table.string('link');
+    table.string('source').nullable();
+    table.tinyint('pricing').unsigned().comment('0:Free|1:Paid').nullable();
+    table.string('link').nullable();
     table
       .tinyint('is_course_completed')
       .unsigned()
       .defaultTo(0)
       .comment('0:Not Completed|1:Completed');
 
-    table.text('body');
-    table.tinyint('author_rating').unsigned();
+    table.text('body').nullable();
+    table.tinyint('author_rating').unsigned().defaultTo(0);
     table.integer('total_upvotes').unsigned().defaultTo(0);
     table.integer('total_downvotes').unsigned().defaultTo(0);
     table.timestamps(true, true);
