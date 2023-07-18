@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Typography,
   Card,
@@ -43,6 +43,27 @@ const getAccessIcon = (type) => {
 };
 
 const ThreadTitleBar = ({ community, name }) => {
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  };
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+  };
+
+  const renderButtonContent = () => {
+    if (community.is_author) {
+      return isHovered ? 'Delete' : 'Created';
+    } else {
+      return isHovered ? 'Leave' : 'Joined';
+    }
+  };
+
+  const handleTitleClick = () => {
+    alert('Are you sure ?');
+  };
+
   return (
     <Card
       sx={{
@@ -87,7 +108,15 @@ const ThreadTitleBar = ({ community, name }) => {
           </Typography>
         </Grid>
         <Grid item xs={1} alignItems={'center'}>
-          <Button variant="outlined">created</Button>
+          <Button
+            variant="contained"
+            size="small"
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+            onClick={handleTitleClick}
+          >
+            {renderButtonContent()}
+          </Button>
         </Grid>
       </Grid>
     </Card>

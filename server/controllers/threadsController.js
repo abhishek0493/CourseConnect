@@ -4,7 +4,6 @@ const catchAsync = require('../utils/catchAsync');
 const { threadCreationSchema } = require('../utils/validation');
 
 const getCommunityUserThreads = catchAsync(async (req, res) => {
-  const loggedInUser = req.user.id;
   const community = req.params.community;
 
   const threads = await db('threads as t')
@@ -21,8 +20,6 @@ const getCommunityUserThreads = catchAsync(async (req, res) => {
     .join('communities as c', 'c.id', '=', 't.community_id')
     .join('user_communities as uc', 'uc.community_id', '=', 'c.id')
     .join('users as u', 'u.id', '=', 't.user_id')
-    .where('t.user_id', loggedInUser)
-    .andWhere('uc.user_id', loggedInUser)
     .andWhere(function () {
       this.where('uc.is_author', 1).orWhere('uc.is_approved', 1);
     })
@@ -72,7 +69,43 @@ const createThread = catchAsync(async (req, res) => {
   });
 });
 
+const getThreadDetails = catchAsync(async (req, res) => {
+  const loggedInUser = req.user.id;
+  const id = req.params.id;
+  const thread = await db('threads').where('id', id).first();
+
+  if (!thread) {
+    res.status(401).json({
+      success: false,
+      message: 'No result found',
+    });
+  }
+
+  res.status(200).json({
+    success: true,
+    data: thread,
+  });
+});
+
+const createThreadComment = catchAsync(async (req, res) => {
+  const loggedInUser = req.user.id;
+  const id = req.params.id;
+
+  const thread = await db('threads').where('id', id).first();
+  const comment = await db('comments').insert({
+    thread_id: thread.id,
+    user_id: loggedInUser,
+    comment: req.body.comment,
+  });
+  res.status(200).json({
+    success: true,
+    data: comment,
+  });
+});
+
 module.exports = {
   getCommunityUserThreads,
+  getThreadDetails,
+  createThreadComment,
   createThread,
 };

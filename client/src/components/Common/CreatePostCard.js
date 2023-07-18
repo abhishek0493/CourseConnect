@@ -14,7 +14,6 @@ import {
   ListSubheader,
   Typography,
   Checkbox,
-  FormHelperText,
 } from '@mui/material';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
@@ -47,8 +46,19 @@ const CreatePostCard = ({ communities, selectedId }) => {
 
   const handleCreate = async (e) => {
     e.preventDefault();
+
+    let reqData =
+      formData.type == 2
+        ? {
+            title: formData.title,
+            body: formData.body,
+            community: formData.community,
+            type: formData.type,
+          }
+        : formData;
+
     await axios
-      .post('http://localhost:8000/api/v1/threads', formData, {
+      .post('http://localhost:8000/api/v1/threads', reqData, {
         withCredentials: true,
       })
       .then((res) => {
@@ -287,6 +297,8 @@ const CreatePostCard = ({ communities, selectedId }) => {
                       label="Title"
                       fullWidth
                       size="small"
+                      value={formData.title}
+                      onChange={handleChange}
                       name="title"
                       type="text"
                     />
@@ -299,6 +311,8 @@ const CreatePostCard = ({ communities, selectedId }) => {
                       rows={6}
                       size="small"
                       name="body"
+                      value={formData.body}
+                      onChange={handleChange}
                       type="text"
                     />
                   </Grid>

@@ -17,6 +17,9 @@ import CreateThread from './pages/Thread/Create';
 import ThreadsLayout from './pages/Thread/ThreadsLayout';
 import CommunityThreads from './pages/Thread/CommunityThreads';
 import { AddCategoryIcon } from './utils/AddCategoryIcon';
+import ThreadDetails from './pages/Thread/ThreadDetails';
+import { DashboardRounded } from '@mui/icons-material';
+import Dashboard from './pages/Dashboard/Dashboard';
 
 function App() {
   const [userTypes, setUserTypes] = useState([]);
@@ -112,7 +115,7 @@ function App() {
             path="dashboard"
             element={<LayoutSecondary communities={communities} />}
           >
-            <Route index element={<CreatePostBar />} />
+            <Route index element={<Dashboard />} />
             <Route
               path="create-thread"
               element={<CreateThread communities={communities} />}
@@ -130,6 +133,10 @@ function App() {
             <Route path="c" element={<ThreadsLayout />}>
               <Route path=":name" index element={<CommunityThreads />}></Route>
             </Route>
+            <Route
+              path="c/:name/:thread_id/comments"
+              element={<ThreadDetails />}
+            ></Route>
           </Route>
         </Route>
       </Routes>

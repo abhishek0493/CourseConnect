@@ -7,7 +7,6 @@ const CreateThread = ({ communities }) => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const id = searchParams.get('id') !== null ? searchParams.get('id') : 0;
-  console.log(id);
   return (
     <Box sx={{ p: 2 }}>
       <Typography variant="h6" fontWeight={'bold'}>

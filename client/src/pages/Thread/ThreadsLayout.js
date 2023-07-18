@@ -20,7 +20,6 @@ const ThreadsLayout = () => {
         if (res.data.success) {
           const result = Refactor(res.data);
           const resultWithIcon = AddCategoryIcon(result);
-          console.log(resultWithIcon);
           setCommunity(result);
         }
       })
@@ -31,7 +30,7 @@ const ThreadsLayout = () => {
 
   const fetchCommunityThreads = async () => {
     await axios
-      .get(`http://localhost:8000/api/v1/threads/${name}`)
+      .get(`http://localhost:8000/api/v1/threads/${name}/get-threads`)
       .then((res) => {
         if (res.data.success) {
           const result = Refactor(res.data);

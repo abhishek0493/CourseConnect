@@ -11,6 +11,7 @@ const generateSlug = (name, id) => {
 };
 
 const getCommunityByName = catchAsync(async (req, res) => {
+  const loggedInUser = req.user.id;
   const community = await db('communities')
     .where('name', req.params.name)
     .first();
@@ -22,6 +23,7 @@ const getCommunityByName = catchAsync(async (req, res) => {
     });
   }
 
+  community.is_author = loggedInUser == community.created_by;
   res.status(200).json({
     success: true,
     data: community,
