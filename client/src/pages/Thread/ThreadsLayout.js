@@ -2,7 +2,7 @@ import { Box } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import CreatePostBar from '../../components/Common/CreatePostBar';
 import { Outlet, useLocation, useParams } from 'react-router-dom';
-import ThreadTitleBar from '../../components/Common/ThreadTitleBar';
+import ThreadTitleBar from '../../components/Thread/ThreadTitleBar';
 import axios from 'axios';
 import { Refactor } from '../../components/Constants/Refactor';
 import { AddCategoryIcon } from '../../utils/AddCategoryIcon';

@@ -12,8 +12,10 @@ const generateSlug = (name, id) => {
 
 const getCommunityByName = catchAsync(async (req, res) => {
   const loggedInUser = req.user.id;
-  const community = await db('communities')
-    .where('name', req.params.name)
+  const community = await db('communities as c')
+    .join('users as u', 'u.id', '=', 'c.created_by')
+    .select('c.*', 'u.name as author_name')
+    .where('c.name', req.params.name)
     .first();
 
   if (!community) {
@@ -71,11 +73,12 @@ const createCommunity = catchAsync(async (req, res) => {
       message: error.details[0].message,
     });
 
-  const { name, category, description, accessType } = req.body;
+  const { name, title, category, description, accessType } = req.body;
   const loggedInUser = req.user.id;
 
   const id = await db('communities').insert({
     name: name,
+    title: title,
     category_id: category,
     access_type: accessType,
     description: description,

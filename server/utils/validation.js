@@ -22,6 +22,7 @@ const communityCreationSchema = Joi.object({
     .min(3)
     .max(20)
     .required(),
+  title: Joi.string().required(),
   accessType: Joi.number().required(),
   description: Joi.string().min(5).required(),
   category: Joi.number().required(),

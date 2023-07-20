@@ -9,8 +9,7 @@ router
 
 router
   .route('/:id')
-  .get(protect, threadsController.getThreadDetails)
-  .post(protect, threadsController.createThreadComment);
+  .get(protect, threadsController.getThreadWithNestedComments);
 
 router.route('/').post(protect, threadsController.createThread);
 

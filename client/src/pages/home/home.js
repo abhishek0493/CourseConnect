@@ -1,14 +1,6 @@
-import { useParams, useNavigate } from 'react-router-dom';
-import {
-  Container,
-  Box,
-  Typography,
-  Grid,
-  GridItem,
-  Button,
-} from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { Box, Typography, Grid, Button } from '@mui/material';
 import image5 from './Connected world-cuate.svg';
-import { replace } from 'lodash';
 
 const Home = () => {
   const navigate = useNavigate();

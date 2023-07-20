@@ -6,6 +6,7 @@ exports.up = function (knex) {
   return knex.schema.createTable('communities', (table) => {
     table.increments('id').primary();
     table.string('name').notNullable();
+    table.string('title').notNullable();
     table.integer('category_id').unsigned().notNullable();
     table.tinyint('access_type').unsigned().notNullable();
     table.text('description');

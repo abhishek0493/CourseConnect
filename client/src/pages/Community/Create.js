@@ -27,6 +27,7 @@ const CreateCommunity = ({ cmCategories, onCreateCommunity }) => {
   const [nameAvailability, setNameAvailability] = useState(null);
   const [formData, setFormData] = useState({
     name: '',
+    title: '',
     category: '',
     accessType: 1,
     description: '',
@@ -96,6 +97,7 @@ const CreateCommunity = ({ cmCategories, onCreateCommunity }) => {
                   fullWidth
                   name="name"
                   type="text"
+                  size="small"
                   required
                   value={formData.name}
                   onChange={handleChange}
@@ -121,9 +123,10 @@ const CreateCommunity = ({ cmCategories, onCreateCommunity }) => {
               </Grid>
               <Grid item xs={6}>
                 <FormControl fullWidth>
-                  <InputLabel>Category</InputLabel>
+                  <InputLabel size="small">Category</InputLabel>
                   <Select
                     label="Category"
+                    size="small"
                     name="category"
                     required
                     value={formData.category}
@@ -137,6 +140,29 @@ const CreateCommunity = ({ cmCategories, onCreateCommunity }) => {
                     ))}
                   </Select>
                 </FormControl>
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  label="Title"
+                  fullWidth
+                  name="title"
+                  size="small"
+                  type="text"
+                  required
+                  value={formData.title}
+                  onChange={handleChange}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <Tooltip title="Community name must be at least 3 characters long and can contain letters, numbers, and hyphens.">
+                          <IconButton size="small">
+                            <InfoIcon sx={{ color: 'primary.main' }} />
+                          </IconButton>
+                        </Tooltip>
+                      </InputAdornment>
+                    ),
+                  }}
+                />
               </Grid>
               <Grid item xs={12}>
                 <FormControl required>
@@ -198,6 +224,7 @@ const CreateCommunity = ({ cmCategories, onCreateCommunity }) => {
                 <Button
                   variant="contained"
                   color="primary"
+                  size="small"
                   fullWidth
                   type="submit"
                 >

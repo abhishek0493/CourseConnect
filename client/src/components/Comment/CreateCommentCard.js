@@ -25,6 +25,7 @@ const CreateCommentCard = ({ onSubmit }) => {
         <CardContent>
           <TextField
             multiline
+            required
             rows={4}
             variant="outlined"
             placeholder="Have something to say?"

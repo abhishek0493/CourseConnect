@@ -90,7 +90,7 @@ const ThreadTitleBar = ({ community, name }) => {
         </Grid>
         <Grid item xs={8} alignItems={'center'}>
           <Typography variant="h5" fontWeight={'bold'} letterSpacing={1}>
-            {name}
+            {community.name}
             <Tooltip
               sx={{ mx: 1 }}
               title={getAccessIcon(community.access_type).message}
@@ -99,7 +99,15 @@ const ThreadTitleBar = ({ community, name }) => {
             </Tooltip>
           </Typography>
           <Divider />
-          <Typography variant="caption">Created by u/Abhishek</Typography>
+          <Typography
+            variant="caption"
+            sx={{ display: 'block', color: 'gray' }}
+          >
+            c/{community.name}
+          </Typography>
+          <Typography variant="caption">
+            Created by u/{community.author_name}
+          </Typography>
           <Typography
             variant="caption"
             sx={{ my: 1, display: 'block', fontStyle: 'italic' }}

@@ -15,6 +15,7 @@ const authRouter = require('./routes/auth');
 const commRouter = require('./routes/communites');
 const miscRouter = require('./routes/misc');
 const threadsRouter = require('./routes/threads');
+const commentRouter = require('./routes/comments');
 
 // Start express app
 const app = express();
@@ -73,6 +74,7 @@ app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/community', commRouter);
 app.use('/api/v1/categories', miscRouter);
 app.use('/api/v1/threads', threadsRouter);
+app.use('/api/v1/comments', commentRouter);
 
 // app.all('*', (req, res, next) => {
 //   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));

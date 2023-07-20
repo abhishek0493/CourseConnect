@@ -73,7 +73,6 @@ const getThreadDetails = catchAsync(async (req, res) => {
   const loggedInUser = req.user.id;
   const id = req.params.id;
   const thread = await db('threads').where('id', id).first();
-
   if (!thread) {
     res.status(401).json({
       success: false,
@@ -81,31 +80,110 @@ const getThreadDetails = catchAsync(async (req, res) => {
     });
   }
 
+  const comments = await db('comments').where('thread_id', thread.id);
+  let arr = [];
+
   res.status(200).json({
     success: true,
     data: thread,
   });
 });
 
-const createThreadComment = catchAsync(async (req, res) => {
-  const loggedInUser = req.user.id;
-  const id = req.params.id;
+const getThreadWithNestedComments = async (req, res) => {
+  // Execute the SQL query to retrieve the comments and their hierarchy
+  let commentsData = await db.raw(`
+    WITH RECURSIVE comment_hierarchy AS (
+      SELECT
+        c.id,
+        c.user_id,
+        c.created_at,
+        c.comment,
+        c.parent_comment_id,
+        0 AS depth,
+        u.name AS user_name
+      FROM
+        comments c
+        INNER JOIN users u ON c.user_id = u.id
+      WHERE
+        c.thread_id = ${req.params.id} AND c.parent_comment_id = 0
+      UNION ALL
+      SELECT
+        c.id,
+        c.user_id,
+        c.created_at,
+        c.comment,
+        c.parent_comment_id,
+        ch.depth + 1,
+        u.name AS user_name
+      FROM
+        comments c
+        INNER JOIN comment_hierarchy ch ON c.parent_comment_id = ch.id
+        INNER JOIN users u ON c.user_id = u.id
+    )
+    SELECT
+      id,
+      user_id,
+      parent_comment_id,
+      created_at,
+      comment,
+      depth,
+      user_name
+    FROM
+      comment_hierarchy
+    ORDER BY
+      depth, created_at DESC;
+  `);
 
-  const thread = await db('threads').where('id', id).first();
-  const comment = await db('comments').insert({
-    thread_id: thread.id,
-    user_id: loggedInUser,
-    comment: req.body.comment,
-  });
+  commentsData = commentsData[0];
+
+  // Create a dictionary/map to store comments based on their IDs
+  const commentsMap = new Map();
+  for (const comment of commentsData) {
+    commentsMap.set(comment.id, {
+      id: comment.id,
+      parent_comment_id: comment.parent_comment_id,
+      author: comment.user_name,
+      depth: comment.depth,
+      created_at: comment.created_at,
+      comment: comment.comment,
+      comments: [], // Initialize an empty array for nested comments
+    });
+  }
+
+  let rootComments = [];
+  for (const comment of commentsData) {
+    if (comment.parent_comment_id === 0) {
+      // If the comment is a root comment (no parent), add it directly to the rootComments array
+      rootComments.push(commentsMap.get(comment.id));
+    } else {
+      // If the comment has a parent, add it as a nested comment to its parent
+      const parentComment = commentsMap.get(comment.parent_comment_id);
+      if (parentComment) {
+        parentComment.comments.push(commentsMap.get(comment.id));
+      }
+    }
+  }
+
+  let thread = await db('threads as t')
+    .select('t.*', 'u.name as creator')
+    .join('users as u', 'u.id', '=', 't.user_id')
+    .where('t.id', req.params.id)
+    .first();
+
+  const transformedRes = {
+    thread: thread,
+    comments: rootComments,
+  };
+
   res.status(200).json({
     success: true,
-    data: comment,
+    data: transformedRes,
   });
-});
+};
 
 module.exports = {
   getCommunityUserThreads,
+  getThreadWithNestedComments,
   getThreadDetails,
-  createThreadComment,
   createThread,
 };

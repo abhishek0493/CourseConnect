@@ -15,155 +15,48 @@ import {
 import ThumbUpAltOutlinedIcon from '@mui/icons-material/ThumbUpAltOutlined';
 import ThumbDownOffAltOutlinedIcon from '@mui/icons-material/ThumbDownOffAltOutlined';
 import QuestionAnswerRoundedIcon from '@mui/icons-material/QuestionAnswerRounded';
-import { styled } from '@mui/system';
-import CreateCommentCard from '../../components/Common/CreateCommentCard';
+
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Refactor } from '../../components/Constants/Refactor';
 
-const Indentation = styled(Box)(({ theme }) => ({
-  borderLeft: `1px solid ${theme.palette.divider}`,
-  paddingLeft: '1rem',
-}));
-
-const comments = [
-  {
-    id: 1,
-    author: 'user1',
-    timestamp: '2 hours ago',
-    text: 'This is the first comment.',
-    replies: [
-      {
-        id: 11,
-        author: 'user2',
-        timestamp: '1 hour ago',
-        text: 'Reply to the first comment.',
-        replies: [
-          {
-            id: 111,
-            author: 'user1',
-            timestamp: '30 minutes ago',
-            text: 'Reply to the reply.',
-            replies: [],
-          },
-        ],
-      },
-    ],
-  },
-  {
-    id: 2,
-    author: 'user3',
-    timestamp: '1 day ago',
-    text: 'This is the second comment.',
-    replies: [],
-  },
-  {
-    id: 3,
-    author: 'user4',
-    timestamp: '3 days ago',
-    text: 'This is the third comment.',
-    replies: [
-      {
-        id: 31,
-        author: 'user2',
-        timestamp: '2 days ago',
-        text: 'Reply to the third comment.',
-        replies: [],
-      },
-    ],
-  },
-];
-
-const CommentItem = ({ comment }) => {
-  return (
-    <Box sx={{ marginLeft: '2rem' }}>
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          marginBottom: '0.5rem',
-          p: 1,
-        }}
-      >
-        <Avatar sx={{ width: '1.5rem', height: '1.5rem' }}>
-          {comment.author.charAt(0)}
-        </Avatar>
-        <Typography variant="body2" fontWeight="bold" sx={{ ml: '0.5rem' }}>
-          {comment.author}
-        </Typography>
-        <Typography variant="body2" color="textSecondary" sx={{ ml: '0.5rem' }}>
-          {comment.timestamp}
-        </Typography>
-      </Box>
-      <Typography variant="body1" sx={{ mb: '0.5rem' }}>
-        {comment.text}
-      </Typography>
-      <Box sx={{ paddingLeft: '2rem' }}>
-        <Indentation>
-          {comment.replies.map((reply) => (
-            <CommentItem key={reply.id} comment={reply} />
-          ))}
-        </Indentation>
-      </Box>
-    </Box>
-  );
-};
+import CreateCommentCard from '../../components/Comment/CreateCommentCard';
+import CommentItem from '../../components/Comment/CommentItem';
 
 const ThreadDetails = () => {
   const { name, thread_id } = useParams();
-  const [threadDetail, setThreadDetail] = useState([]);
-  const fetchThreadDetails = async () => {
+  const [thread, setthread] = useState([]);
+  const [comments, setcomments] = useState([]);
+
+  const fetchthreads = async () => {
     await axios
       .get(`http://localhost:8000/api/v1/threads/${thread_id}`)
       .then((res) => {
         const result = Refactor(res.data);
-        setThreadDetail(result);
+        setthread(result.thread);
+        setcomments(result.comments);
       });
   };
 
   useEffect(() => {
-    fetchThreadDetails();
+    fetchthreads();
   }, []);
 
   const handleCreateComment = async (comment) => {
     await axios
       .post(
-        `http://localhost:8000/api/v1/threads/${comment}`,
+        `http://localhost:8000/api/v1/comments/${thread_id}`,
         { comment: comment },
         { withCredentials: true }
       )
       .then((res) => {
         if (res.data.success) {
-          console.log(res);
+          fetchthreads();
         }
       })
       .catch((err) => {
         console.log(err);
       });
-  };
-
-  const thread = {
-    id: 1,
-    author: 'user1',
-    timestamp: '2 hours ago',
-    text: 'This is the main thread comment.',
-    replies: [
-      {
-        id: 11,
-        author: 'user2',
-        timestamp: '1 hour ago',
-        text: 'Reply to the main thread comment.',
-        replies: [
-          {
-            id: 111,
-            author: 'user1',
-            timestamp: '30 minutes ago',
-            text: 'Reply to the reply.',
-            replies: [],
-          },
-        ],
-      },
-    ],
   };
 
   return (
@@ -202,11 +95,11 @@ const ThreadDetails = () => {
             <CardHeader
               avatar={
                 <Avatar sx={{ color: 'action.main' }}>
-                  {thread.author.charAt(0)}
+                  {thread.creator && thread.creator.charAt(0)}
                 </Avatar>
               }
               title={thread.title}
-              subheader={`Posted by u/${thread.author}`}
+              subheader={`Posted by u/${thread.creator}`}
             />
             <CardContent>
               <Typography variant="body2" color="text.secondary" sx={{ my: 1 }}>
