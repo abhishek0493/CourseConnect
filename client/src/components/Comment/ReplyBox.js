@@ -24,7 +24,7 @@ const ReplyBox = ({ commentId, onSubmit }) => {
             value={reply}
             onChange={(e) => setReply(e.target.value)}
           />
-          <Button sx={{ mt: 1 }} type="submit" size="small">
+          <Button variant="contained" sx={{ mt: 1 }} type="submit" size="small">
             Submit
           </Button>
         </form>
