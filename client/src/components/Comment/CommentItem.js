@@ -1,19 +1,9 @@
 import React, { useState } from 'react';
-import {
-  Typography,
-  Avatar,
-  Box,
-  Button,
-  IconButton,
-  TextField,
-} from '@mui/material';
-
-import ThumbUpAltTwoToneIcon from '@mui/icons-material/ThumbUpAltTwoTone';
-import ThumbDownOffAltTwoToneIcon from '@mui/icons-material/ThumbDownOffAltTwoTone';
-import SendTwoToneIcon from '@mui/icons-material/SendTwoTone';
-import MarkChatUnreadOutlinedIcon from '@mui/icons-material/MarkChatUnreadOutlined';
-import ReplyAllRoundedIcon from '@mui/icons-material/ReplyAllRounded';
+import { Typography, Avatar, Box, Button } from '@mui/material';
 import { styled } from '@mui/system';
+
+import ReplyBox from './ReplyBox';
+import ActionBox from './ActionBox';
 
 const Indentation = styled(Box)(({ theme }) => ({
   borderLeft: `1.5px solid ${theme.palette.divider}`,
@@ -23,13 +13,14 @@ const Indentation = styled(Box)(({ theme }) => ({
 const CommentItem = ({ comment }) => {
   const [showNestedComments, setShowNestedComments] = useState(false);
   const [showReplyBox, setShowReplyBox] = useState(false);
+  const [showReplyBoxId, setShowReplyBoxId] = useState(null);
+
+  const handleReplyButtonClick = (commentId) => {
+    setShowReplyBoxId((prevId) => (prevId === commentId ? null : commentId));
+  };
 
   const handleToggleNestedComments = () => {
     setShowNestedComments((prevShowNested) => !prevShowNested);
-  };
-
-  const handleReplyButtonClick = () => {
-    setShowReplyBox((prevShowReply) => !prevShowReply);
   };
 
   const handleSubmitReply = (event) => {
@@ -38,70 +29,6 @@ const CommentItem = ({ comment }) => {
     // You can send the reply to the backend or handle it locally
     // Reset the reply box state after submission
     setShowReplyBox(false);
-  };
-
-  const renderReplyBox = () => {
-    if (showReplyBox) {
-      return (
-        <form onSubmit={handleSubmitReply}>
-          <Box sx={{ display: 'flex', alignItems: 'center', my: 2 }}>
-            <Avatar sx={{ width: '1.5rem', height: '1.5rem' }}>
-              {/* Replace with the logged-in user's avatar */}
-              {comment.author && comment.author.charAt(0)}
-            </Avatar>
-            <Box sx={{ flexGrow: 1, ml: '0.5rem' }}>
-              <TextField
-                id="outlined-basic"
-                multiline
-                fullWidth
-                rows={4}
-                label="Post a reply.."
-                variant="outlined"
-              />
-            </Box>
-            <Button type="submit" size="small">
-              Reply
-            </Button>
-          </Box>
-        </form>
-      );
-    } else {
-      return null;
-    }
-  };
-
-  const renderActionBox = () => {
-    return (
-      <>
-        <Box sx={{ mb: 2, color: 'primary.dark' }}>
-          <Typography variant="caption" sx={{ mr: 0.5, fontSize: '0.7rem' }}>
-            14
-          </Typography>
-          <IconButton size="small" aria-label="Reply">
-            <ThumbUpAltTwoToneIcon
-              color="primary"
-              sx={{ fontSize: '1rem', mr: 1 }}
-            />
-          </IconButton>
-          <IconButton size="small" aria-label="Reply">
-            <ThumbDownOffAltTwoToneIcon
-              color="primary"
-              sx={{ fontSize: '1rem', mr: 0.5 }}
-            />
-          </IconButton>
-          <Typography variant="caption" sx={{ mr: 1, fontSize: '0.7rem' }}>
-            14
-          </Typography>
-          <IconButton
-            size="small"
-            aria-label="Reply"
-            onClick={handleReplyButtonClick}
-          >
-            <ReplyAllRoundedIcon color="success" fontSize="1rem" />
-          </IconButton>
-        </Box>
-      </>
-    );
   };
 
   const renderNestedComments = (comments, depth) => {
@@ -134,7 +61,14 @@ const CommentItem = ({ comment }) => {
             <Typography variant="body1" sx={{ mb: '0.5rem' }}>
               {el.comment}
             </Typography>
-            {renderActionBox()}
+            <ActionBox
+              commentId={el.id}
+              handleReplyButtonClick={handleReplyButtonClick}
+            />
+            {el.id === showReplyBoxId && (
+              <ReplyBox commentId={el.id} onSubmit={handleSubmitReply} />
+            )}
+
             {el.comments.length > 0 && (
               <>
                 {renderNestedComments(el.comments, depth + 1)}
@@ -170,9 +104,14 @@ const CommentItem = ({ comment }) => {
       <Typography variant="body1" sx={{ mb: '0.5rem' }}>
         {comment.comment}
       </Typography>
-      {renderActionBox()}
+      <ActionBox
+        commentId={comment.id}
+        handleReplyButtonClick={handleReplyButtonClick}
+      />
       {renderNestedComments(comment.comments, 1)}
-      {renderReplyBox()}
+      {comment.id === showReplyBoxId && (
+        <ReplyBox commentId={comment.id} onSubmit={handleSubmitReply} />
+      )}
     </Box>
   );
 };
