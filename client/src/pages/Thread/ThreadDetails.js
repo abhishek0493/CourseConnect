@@ -28,7 +28,7 @@ const ThreadDetails = () => {
   const [thread, setthread] = useState([]);
   const [comments, setcomments] = useState([]);
 
-  const fetchthreads = async () => {
+  const fetchthreadDetails = async () => {
     await axios
       .get(`http://localhost:8000/api/v1/threads/${thread_id}`)
       .then((res) => {
@@ -39,7 +39,7 @@ const ThreadDetails = () => {
   };
 
   useEffect(() => {
-    fetchthreads();
+    fetchthreadDetails();
   }, []);
 
   const handleCreateComment = async (comment) => {
@@ -51,7 +51,25 @@ const ThreadDetails = () => {
       )
       .then((res) => {
         if (res.data.success) {
-          fetchthreads();
+          fetchthreadDetails();
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const handleSubmitReply = (reply, commentId) => {
+    axios
+      .post(
+        `http://localhost:8000/api/v1/comments/${thread_id}/${commentId}`,
+        { comment: reply },
+        { withCredentials: true }
+      )
+      .then((res) => {
+        if (res.data.success) {
+          fetchthreadDetails();
+          // console.log(res.data.data);
         }
       })
       .catch((err) => {
@@ -147,7 +165,11 @@ const ThreadDetails = () => {
         <Card sx={{ p: 2 }}>
           {comments && comments.length > 0 ? (
             comments.map((comment) => (
-              <CommentItem key={comment.id} comment={comment} />
+              <CommentItem
+                key={comment.id}
+                comment={comment}
+                handleSubmitReply={handleSubmitReply}
+              />
             ))
           ) : (
             <Alert severity="info">No comments on this thread yet!</Alert>

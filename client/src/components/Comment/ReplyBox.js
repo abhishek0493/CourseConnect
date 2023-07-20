@@ -6,7 +6,7 @@ const ReplyBox = ({ commentId, onSubmit }) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    onSubmit(reply);
+    onSubmit(reply, commentId);
     setReply('');
   };
 

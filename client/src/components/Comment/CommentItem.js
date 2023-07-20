@@ -5,14 +5,15 @@ import { styled } from '@mui/system';
 import ReplyBox from './ReplyBox';
 import ActionBox from './ActionBox';
 
+import axios from 'axios';
+
 const Indentation = styled(Box)(({ theme }) => ({
   borderLeft: `1.5px solid ${theme.palette.divider}`,
   paddingLeft: '1rem',
 }));
 
-const CommentItem = ({ comment }) => {
+const CommentItem = ({ comment, handleSubmitReply }) => {
   const [showNestedComments, setShowNestedComments] = useState(false);
-  const [showReplyBox, setShowReplyBox] = useState(false);
   const [showReplyBoxId, setShowReplyBoxId] = useState(null);
 
   const handleReplyButtonClick = (commentId) => {
@@ -21,14 +22,6 @@ const CommentItem = ({ comment }) => {
 
   const handleToggleNestedComments = () => {
     setShowNestedComments((prevShowNested) => !prevShowNested);
-  };
-
-  const handleSubmitReply = (event) => {
-    event.preventDefault();
-    // Add your logic to handle the reply submission here
-    // You can send the reply to the backend or handle it locally
-    // Reset the reply box state after submission
-    setShowReplyBox(false);
   };
 
   const renderNestedComments = (comments, depth) => {
@@ -47,7 +40,13 @@ const CommentItem = ({ comment }) => {
                 p: 1,
               }}
             >
-              <Avatar sx={{ width: '1.5rem', height: '1.5rem' }}>
+              <Avatar
+                sx={{
+                  width: '1.5rem',
+                  height: '1.5rem',
+                  bgcolor: 'primary.dark',
+                }}
+              >
                 {el.author && el.author.charAt(0)}
               </Avatar>
               <Typography
@@ -94,7 +93,13 @@ const CommentItem = ({ comment }) => {
           p: 1,
         }}
       >
-        <Avatar sx={{ width: '1.5rem', height: '1.5rem' }}>
+        <Avatar
+          sx={{
+            width: '1.5rem',
+            height: '1.5rem',
+            bgcolor: 'primary.dark',
+          }}
+        >
           {comment.author && comment.author.charAt(0)}
         </Avatar>
         <Typography variant="body2" color="textSecondary" sx={{ ml: '0.5rem' }}>

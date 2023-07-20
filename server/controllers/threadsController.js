@@ -96,6 +96,7 @@ const getThreadWithNestedComments = async (req, res) => {
       SELECT
         c.id,
         c.user_id,
+        c.thread_id,
         c.created_at,
         c.comment,
         c.parent_comment_id,
@@ -110,6 +111,7 @@ const getThreadWithNestedComments = async (req, res) => {
       SELECT
         c.id,
         c.user_id,
+        c.thread_id,
         c.created_at,
         c.comment,
         c.parent_comment_id,
@@ -123,6 +125,7 @@ const getThreadWithNestedComments = async (req, res) => {
     SELECT
       id,
       user_id,
+      thread_id,
       parent_comment_id,
       created_at,
       comment,
@@ -131,7 +134,7 @@ const getThreadWithNestedComments = async (req, res) => {
     FROM
       comment_hierarchy
     ORDER BY
-      depth, created_at DESC;
+      depth DESC;
   `);
 
   commentsData = commentsData[0];
@@ -141,6 +144,7 @@ const getThreadWithNestedComments = async (req, res) => {
   for (const comment of commentsData) {
     commentsMap.set(comment.id, {
       id: comment.id,
+      thread_id: comment.thread_id,
       parent_comment_id: comment.parent_comment_id,
       author: comment.user_name,
       depth: comment.depth,
