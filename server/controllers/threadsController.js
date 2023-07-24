@@ -17,13 +17,25 @@ const getCommunityUserThreads = catchAsync(async (req, res) => {
       'c.description',
       'c.access_type'
     )
+    .select(db.raw('COUNT(comments.id) as total_comments'))
     .join('communities as c', 'c.id', '=', 't.community_id')
     .join('user_communities as uc', 'uc.community_id', '=', 'c.id')
     .join('users as u', 'u.id', '=', 't.user_id')
+    .leftJoin('comments', 'comments.thread_id', '=', 't.id')
     .andWhere(function () {
       this.where('uc.is_author', 1).orWhere('uc.is_approved', 1);
     })
     .andWhere('c.name', community)
+    .groupBy(
+      't.id',
+      'u.name',
+      'c.category_id',
+      'uc.is_author',
+      'uc.is_approved',
+      'c.name',
+      'c.description',
+      'c.access_type'
+    )
     .orderBy('t.id', 'desc');
 
   if (threads) {

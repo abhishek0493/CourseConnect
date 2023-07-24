@@ -1,8 +1,17 @@
 const db = require('../db');
 const catchAsync = require('../utils/catchAsync');
 const helper = require('../utils/helpers');
+const { commentCreationSchema } = require('../utils/validation');
 
 const createTheadComment = catchAsync(async (req, res) => {
+  const { error } = commentCreationSchema.validate(req.body);
+
+  if (error)
+    res.status(400).json({
+      success: false,
+      message: error.details[0].message,
+    });
+
   const loggedInUser = req.user.id;
   const threadID = req.params.thread_id;
 
@@ -12,6 +21,7 @@ const createTheadComment = catchAsync(async (req, res) => {
     user_id: loggedInUser,
     comment: req.body.comment,
   });
+
   res.status(200).json({
     success: true,
     data: comment,

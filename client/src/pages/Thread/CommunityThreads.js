@@ -12,16 +12,9 @@ import {
   Alert,
   Chip,
 } from '@mui/material';
-import {
-  ThumbUp,
-  ThumbDown,
-  Comment,
-  InfoOutlined,
-  Face,
-} from '@mui/icons-material';
+import { InfoOutlined } from '@mui/icons-material';
 import ThumbUpAltOutlinedIcon from '@mui/icons-material/ThumbUpAltOutlined';
 import ThumbDownOffAltOutlinedIcon from '@mui/icons-material/ThumbDownOffAltOutlined';
-import ChatBubbleOutlineRoundedIcon from '@mui/icons-material/ChatBubbleOutlineRounded';
 import QuestionAnswerRoundedIcon from '@mui/icons-material/QuestionAnswerRounded';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 import image from './empty2.svg';
@@ -68,15 +61,23 @@ const CommunityThreads = () => {
                       flexDirection: 'column',
                     }}
                   >
-                    <Box>
-                      <ThumbUpAltOutlinedIcon sx={{ fontSize: '1.2rem' }} />
-                      <Typography variant="caption">232</Typography>
+                    <Box textAlign={'center'}>
+                      <IconButton size="small">
+                        <ThumbUpAltOutlinedIcon sx={{ fontSize: '1.2rem' }} />
+                      </IconButton>
+                      <Typography variant="caption">
+                        {item.total_upvotes}
+                      </Typography>
                     </Box>
-                    <Box>
-                      <Typography variant="caption">232</Typography>
-                      <ThumbDownOffAltOutlinedIcon
-                        sx={{ fontSize: '1.2rem' }}
-                      />
+                    <Box textAlign={'center'}>
+                      <Typography variant="caption">
+                        {item.total_downvotes}
+                      </Typography>
+                      <IconButton size="small">
+                        <ThumbDownOffAltOutlinedIcon
+                          sx={{ fontSize: '1.2rem' }}
+                        />
+                      </IconButton>
                     </Box>
                   </Box>
                 </Grid>
@@ -134,7 +135,7 @@ const CommunityThreads = () => {
                           variant="caption"
                           sx={{ mx: 1, color: '#333333' }}
                         >
-                          23 Comments
+                          {item.total_comments} Comments
                         </Typography>
                       </IconButton>
                     </Box>

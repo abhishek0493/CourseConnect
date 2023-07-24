@@ -27,6 +27,10 @@ const ThreadDetails = () => {
   const { name, thread_id } = useParams();
   const [thread, setthread] = useState([]);
   const [comments, setcomments] = useState([]);
+  const [commentError, setCommentError] = useState({
+    state: false,
+    message: '',
+  });
 
   const fetchthreadDetails = async () => {
     await axios
@@ -55,6 +59,10 @@ const ThreadDetails = () => {
         }
       })
       .catch((err) => {
+        const response = err.response;
+        if (!response.data.success) {
+          setCommentError({ state: true, message: response.data.message });
+        }
         console.log(err);
       });
   };
@@ -156,7 +164,13 @@ const ThreadDetails = () => {
 
       <Stack spacing={2} sx={{ marginTop: '2rem' }}>
         <Box>
-          <CreateCommentCard onSubmit={handleCreateComment} />
+          <CreateCommentCard
+            onSubmit={handleCreateComment}
+            commentError={commentError}
+            onChange={(val) => {
+              setCommentError({ state: val, message: '' });
+            }}
+          />
         </Box>
         <Typography variant="h6" fontWeight="bold">
           Comments

@@ -60,6 +60,10 @@ const threadCreationSchema = Joi.object({
   }),
 });
 
+const commentCreationSchema = Joi.object({
+  comment: Joi.string().required(),
+});
+
 const verifyPassword = async function (inputPassword, userPassword) {
   return await bcrypt.compare(inputPassword, userPassword);
 };
@@ -74,5 +78,6 @@ module.exports = {
   communityCreationSchema,
   threadCreationSchema,
   verifyPassword,
+  commentCreationSchema,
   login,
 };

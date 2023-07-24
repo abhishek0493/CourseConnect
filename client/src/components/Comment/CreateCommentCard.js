@@ -7,7 +7,7 @@ import {
   Button,
 } from '@mui/material';
 
-const CreateCommentCard = ({ onSubmit }) => {
+const CreateCommentCard = ({ onSubmit, commentError, onChange }) => {
   const [comment, setComment] = useState('');
 
   const handleCommentChange = (event) => {
@@ -17,6 +17,7 @@ const CreateCommentCard = ({ onSubmit }) => {
   const handleSubmit = () => {
     onSubmit(comment);
     setComment('');
+    onChange(false);
   };
 
   return (
@@ -32,6 +33,8 @@ const CreateCommentCard = ({ onSubmit }) => {
             value={comment}
             onChange={handleCommentChange}
             fullWidth
+            error={commentError.state}
+            helperText={commentError.state ? commentError.message : ''}
           />
           <Button
             variant="contained"
