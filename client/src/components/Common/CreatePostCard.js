@@ -16,7 +16,7 @@ import {
   Checkbox,
 } from '@mui/material';
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const CreatePostCard = ({ communities, selectedId }) => {
@@ -269,6 +269,7 @@ const CreatePostCard = ({ communities, selectedId }) => {
                     </Typography>
                     <Rating
                       name="rating"
+                      precision={0.5}
                       value={Number(formData.rating)}
                       onChange={handleChange}
                     />

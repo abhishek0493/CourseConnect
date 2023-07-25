@@ -6,7 +6,7 @@ import { useLocation, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 axios.defaults.withCredentials = true;
 
-const Login = (props) => {
+const Login = ({ isLoggedIn }) => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
@@ -31,13 +31,14 @@ const Login = (props) => {
     await axios
       .post('http://localhost:8000/api/v1/auth/login', formData)
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         if (res.data.success) {
+          isLoggedIn(true);
           navigate('/dashboard', { replace: true });
         }
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
         const response = err.response;
         console.log(response);
         if (!response.data.success) {

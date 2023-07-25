@@ -16,3 +16,12 @@ exports.refactorResponse = (data) => {
     return { ...row };
   });
 };
+
+exports.checkIfUserCommunityExists = async (user_id, thread_id) => {
+  const community = await db('user_communities')
+    .where('thread_id', thread_id)
+    .andWhere('user_id', user_id)
+    .andWhere(function () {
+      this.where('is_author', 1).orWhere('is_');
+    });
+};

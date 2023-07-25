@@ -1,27 +1,14 @@
 import React from 'react';
-import {
-  Card,
-  CardHeader,
-  CardContent,
-  Typography,
-  Avatar,
-  Box,
-  Stack,
-  Grid,
-  IconButton,
-  Alert,
-  Chip,
-} from '@mui/material';
+import { Box, Stack, Alert } from '@mui/material';
 import { InfoOutlined } from '@mui/icons-material';
-import ThumbUpAltOutlinedIcon from '@mui/icons-material/ThumbUpAltOutlined';
-import ThumbDownOffAltOutlinedIcon from '@mui/icons-material/ThumbDownOffAltOutlined';
-import QuestionAnswerRoundedIcon from '@mui/icons-material/QuestionAnswerRounded';
-import { useNavigate, useOutletContext } from 'react-router-dom';
+
+import { useNavigate, useOutlet, useOutletContext } from 'react-router-dom';
 import image from './empty2.svg';
+import ThreadCard from '../../components/Thread/ThreadCard';
 
 const CommunityThreads = () => {
-  const navigate = useNavigate();
   const [threads, setThreads] = useOutletContext();
+
   return (
     <Box>
       {threads.length === 0 ? (
@@ -41,108 +28,7 @@ const CommunityThreads = () => {
       ) : (
         <Stack spacing={2}>
           {threads.map((item) => (
-            <Card
-              key={item.id}
-              sx={{
-                borderLeft: item.type == 1 ? `4px solid orangered` : ``,
-                display: 'flex',
-              }}
-              variant="outlined"
-            >
-              <Grid container>
-                <Grid item xs={0.6}>
-                  <Box
-                    sx={{
-                      height: '100%',
-                      bgcolor: 'secondary.light',
-                      p: 1,
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      flexDirection: 'column',
-                    }}
-                  >
-                    <Box textAlign={'center'}>
-                      <IconButton size="small">
-                        <ThumbUpAltOutlinedIcon sx={{ fontSize: '1.2rem' }} />
-                      </IconButton>
-                      <Typography variant="caption">
-                        {item.total_upvotes}
-                      </Typography>
-                    </Box>
-                    <Box textAlign={'center'}>
-                      <Typography variant="caption">
-                        {item.total_downvotes}
-                      </Typography>
-                      <IconButton size="small">
-                        <ThumbDownOffAltOutlinedIcon
-                          sx={{ fontSize: '1.2rem' }}
-                        />
-                      </IconButton>
-                    </Box>
-                  </Box>
-                </Grid>
-                <Grid item xs={11.4}>
-                  <CardHeader
-                    avatar={
-                      <Avatar sx={{ color: 'action.main' }}>
-                        {item.author.charAt(0)}
-                      </Avatar>
-                    }
-                    title={item.title}
-                    subheader={`Posted by u/${item.author}`}
-                  />
-                  <CardContent>
-                    <Typography
-                      variant="body2"
-                      color="text.secondary"
-                      sx={{ my: 1 }}
-                    >
-                      {item.body}
-                    </Typography>
-                    {item.type == 1 && (
-                      <>
-                        <Chip
-                          label={item.link}
-                          onClick={() => {
-                            console.log('Hello');
-                          }}
-                        />
-                      </>
-                    )}
-                  </CardContent>
-                  <CardContent
-                    sx={{
-                      display: 'flex',
-                      p: 1.2,
-                      maxHeight: '3rem',
-                      borderTop: '1px solid #e3e3e3',
-                    }}
-                  >
-                    <Box>
-                      <IconButton
-                        sx={{ borderRadius: 2 }}
-                        onClick={() => {
-                          navigate(
-                            `/dashboard/c/${item.name}/${item.id}/comments`
-                          );
-                        }}
-                      >
-                        <QuestionAnswerRoundedIcon
-                          sx={{ fontSize: '1.2rem' }}
-                          htmlColor="#333333"
-                        />
-                        <Typography
-                          variant="caption"
-                          sx={{ mx: 1, color: '#333333' }}
-                        >
-                          {item.total_comments} Comments
-                        </Typography>
-                      </IconButton>
-                    </Box>
-                  </CardContent>
-                </Grid>
-              </Grid>
-            </Card>
+            <ThreadCard thread={item} />
           ))}
         </Stack>
       )}

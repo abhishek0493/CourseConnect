@@ -14,7 +14,7 @@ import {
 } from '@mui/material';
 
 import { useState } from 'react';
-import { useLocation, Link, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import image from './Connected world-amico.png';
 import axios from 'axios';
 

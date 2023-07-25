@@ -17,7 +17,7 @@ import ThumbDownOffAltOutlinedIcon from '@mui/icons-material/ThumbDownOffAltOutl
 import QuestionAnswerRoundedIcon from '@mui/icons-material/QuestionAnswerRounded';
 
 import axios from 'axios';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Refactor } from '../../components/Constants/Refactor';
 
 import CreateCommentCard from '../../components/Comment/CreateCommentCard';

@@ -8,6 +8,10 @@ router
   .get(protect, threadsController.getCommunityUserThreads);
 
 router
+  .route('/:id/up-vote-thread')
+  .post(protect, threadsController.threadUpVote);
+
+router
   .route('/:id')
   .get(protect, threadsController.getThreadWithNestedComments);
 

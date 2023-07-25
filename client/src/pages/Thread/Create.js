@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Box, Typography } from '@mui/material';
 import CreatePostCard from '../../components/Common/CreatePostCard';
 import { useLocation } from 'react-router-dom';

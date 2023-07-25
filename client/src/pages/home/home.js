@@ -1,3 +1,4 @@
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Typography, Grid, Button } from '@mui/material';
 import image5 from './Connected world-cuate.svg';
@@ -11,6 +12,7 @@ const Home = () => {
           <Box sx={{ display: 'flex' }}>
             <img
               src={image5}
+              alt="logo"
               style={{ width: '85%', display: 'block', margin: '0 auto' }}
             ></img>
           </Box>

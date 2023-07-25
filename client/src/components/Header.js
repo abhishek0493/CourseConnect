@@ -7,13 +7,11 @@ import {
   Box,
   Toolbar,
   IconButton,
-  Typography,
   InputBase,
   Badge,
   MenuItem,
   Menu,
 } from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
@@ -21,8 +19,9 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import TripOriginRoundedIcon from '@mui/icons-material/TripOriginRounded';
 import { withStyles, makeStyles } from '@mui/styles';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import logo from './HeaderLogo.png';
+import axios from 'axios';
 
 const styles = (theme) => ({
   // Load app bar information from the theme
@@ -88,12 +87,25 @@ const Header = (props) => {
   const { classes } = props;
 
   const styleClasses = useStyles();
+  const navigate = useNavigate();
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+
+  const handleLogout = async () => {
+    await axios
+      .get('http://localhost:8000/api/v1/auth/logout', {
+        withCredentials: true,
+      })
+      .then((res) => {
+        if (res.data.success) {
+          navigate('/', { replace: true });
+        }
+      });
+  };
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -129,7 +141,7 @@ const Header = (props) => {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+      <MenuItem onClick={handleLogout}>Logout</MenuItem>
       <MenuItem onClick={handleMenuClose}>My account</MenuItem>
     </Menu>
   );
@@ -199,7 +211,7 @@ const Header = (props) => {
               to="/dashboard"
               style={{ textDecoration: 'none', color: 'inherit' }}
             >
-              <img src={logo} style={{ width: '100px' }} />
+              <img alt="logo" src={logo} style={{ width: '100px' }} />
             </Link>
           </Box>
           <Search>

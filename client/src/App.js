@@ -1,4 +1,5 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import React from 'react';
+import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
 
 import { useState, useEffect } from 'react';
 import axios from 'axios';
@@ -11,24 +12,42 @@ import LayoutMain from './components/LayoutMain';
 import LayoutSecondary from './components/LayoutSecondary';
 import CreateCommunity from './pages/Community/Create';
 import { Refactor } from './components/Constants/Refactor';
-import { Categories } from './components/Constants/Categories';
-import CreatePostBar from './components/Common/CreatePostBar';
 import CreateThread from './pages/Thread/Create';
 import ThreadsLayout from './pages/Thread/ThreadsLayout';
 import CommunityThreads from './pages/Thread/CommunityThreads';
 import { AddCategoryIcon } from './utils/AddCategoryIcon';
 import ThreadDetails from './pages/Thread/ThreadDetails';
-import { DashboardRounded } from '@mui/icons-material';
 import Dashboard from './pages/Dashboard/Dashboard';
+import ParentContext from './ParentContext';
 
 function App() {
   const [userTypes, setUserTypes] = useState([]);
   const [accessTypes, setAccessTypes] = useState([]);
   const [categories, setCategories] = useState([]);
   const [communities, setCommunities] = useState([]);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState({});
 
-  const fetchUserTypes = () => {
-    axios
+  const fetchLoggedInStatus = async () => {
+    await axios
+      .get('http://localhost:8000/api/v1/auth/check-login', {
+        withCredentials: true,
+      })
+      .then((res) => {
+        if (res.data.success) {
+          setIsLoggedIn(true);
+          setUser(res.data.data);
+        }
+      });
+  };
+
+  const updateLoginStatus = (bool) => {
+    setIsLoggedIn(bool);
+    if (bool) fetchUserCommunities();
+  };
+
+  const fetchUserTypes = async () => {
+    await axios
       .get('http://localhost:8000/api/v1/users/categories')
       .then((response) => {
         if (response.data.success) {
@@ -42,11 +61,10 @@ function App() {
       });
   };
 
-  const fetchAccessTypes = () => {
-    axios
+  const fetchAccessTypes = async () => {
+    await axios
       .get('http://localhost:8000/api/v1/categories/access-types')
       .then((response) => {
-        // console.log(response.data);
         setAccessTypes(response.data);
       })
       .catch((error) => {
@@ -54,8 +72,8 @@ function App() {
       });
   };
 
-  const fetchUserCommunities = () => {
-    axios
+  const fetchUserCommunities = async () => {
+    await axios
       .get('http://localhost:8000/api/v1/community', {
         withCredentials: true,
       })
@@ -63,9 +81,7 @@ function App() {
         if (response.data.success) {
           const res = Refactor(response.data);
           const resWithIcons = AddCategoryIcon(res);
-          setTimeout(() => {
-            setCommunities(resWithIcons);
-          }, 0);
+          setCommunities(resWithIcons);
         }
       })
       .catch((error) => {
@@ -73,8 +89,8 @@ function App() {
       });
   };
 
-  const fetchCategories = () => {
-    axios
+  const fetchCategories = async () => {
+    await axios
       .get('http://localhost:8000/api/v1/community/categories', {
         withCredentials: true,
       })
@@ -96,6 +112,7 @@ function App() {
   };
 
   useEffect(() => {
+    fetchLoggedInStatus();
     fetchUserTypes();
     fetchAccessTypes();
     fetchCategories();
@@ -104,42 +121,56 @@ function App() {
 
   return (
     <BrowserRouter>
-      <Routes>
-        <Route element={<LayoutMain />}>
-          <Route path="/" element={<Home />} />
-          <Route path="consent" element={<Consent />} />
-          <Route path="login" element={<Login />} />
-          <Route path="sign-up" element={<Signup userTypes={userTypes} />} />
-          {/* Post Login Routes */}
-          <Route
-            path="dashboard"
-            element={<LayoutSecondary communities={communities} />}
-          >
-            <Route index element={<Dashboard />} />
+      <ParentContext.Provider
+        value={{
+          isLoggedIn,
+          user,
+        }}
+      >
+        <Routes>
+          <Route element={<LayoutMain />}>
+            <Route path="/" element={<Home />} />
+            <Route path="consent" element={<Consent />} />
             <Route
-              path="create-thread"
-              element={<CreateThread communities={communities} />}
+              path="login"
+              element={<Login isLoggedIn={updateLoginStatus} />}
             />
+            <Route path="sign-up" element={<Signup userTypes={userTypes} />} />
+            {/* Post Login Routes */}
             <Route
-              path="create-community"
-              element={
-                <CreateCommunity
-                  accessTypes={accessTypes}
-                  cmCategories={categories}
-                  onCreateCommunity={handleCreateCommunity}
-                />
-              }
-            />
-            <Route path="c" element={<ThreadsLayout />}>
-              <Route path=":name" index element={<CommunityThreads />}></Route>
+              path="dashboard"
+              element={<LayoutSecondary communities={communities} />}
+            >
+              <Route index element={<Dashboard />} />
+              <Route
+                path="create-thread"
+                element={<CreateThread communities={communities} />}
+              />
+              <Route
+                path="create-community"
+                element={
+                  <CreateCommunity
+                    accessTypes={accessTypes}
+                    cmCategories={categories}
+                    onCreateCommunity={handleCreateCommunity}
+                  />
+                }
+              />
+              <Route path="c" element={<ThreadsLayout />}>
+                <Route
+                  path=":name"
+                  index
+                  element={<CommunityThreads />}
+                ></Route>
+              </Route>
+              <Route
+                path="c/:name/:thread_id/comments"
+                element={<ThreadDetails />}
+              ></Route>
             </Route>
-            <Route
-              path="c/:name/:thread_id/comments"
-              element={<ThreadDetails />}
-            ></Route>
           </Route>
-        </Route>
-      </Routes>
+        </Routes>
+      </ParentContext.Provider>
     </BrowserRouter>
   );
 }

@@ -197,9 +197,19 @@ const getThreadWithNestedComments = async (req, res) => {
   });
 };
 
+const threadUpVote = catchAsync(async (req, res) => {
+  const loggedInUser = req.user.id;
+  const thread = req.params.id;
+  res.status(200).json({
+    message: 'Its working',
+    data: req.params.id,
+  });
+});
+
 module.exports = {
   getCommunityUserThreads,
   getThreadWithNestedComments,
   getThreadDetails,
   createThread,
+  threadUpVote,
 };

@@ -102,8 +102,20 @@ exports.login = catchAsync(async (req, res) => {
 
   const transform_user = _.pick(user, ['name', 'uuid', 'type']);
   createSendToken(transform_user, 201, req, res);
-  // res.status(200).json({
-  //   success: true,
-  //   data: transform_user,
-  // });
 });
+
+exports.isLoggedIn = catchAsync(async (req, res) => {
+  const loggedInUser = req.user;
+  res.status(200).json({
+    success: true,
+    data: loggedInUser,
+  });
+});
+
+exports.logout = (req, res) => {
+  res.cookie('jwt', 'loggedout', {
+    expires: new Date(Date.now() + 10 * 1000),
+    httpOnly: true,
+  });
+  res.status(200).json({ success: true });
+};

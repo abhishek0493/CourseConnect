@@ -41,10 +41,11 @@ const LayoutSecondary = ({ communities }) => {
               <Card variant="outlined" sx={{ position: 'sticky', top: 80 }}>
                 <Box sx={{ height: '80vh', p: 4 }}>
                   <Typography variant="h6">Secondary Sidebar</Typography>
-                  {[1, 1, 1].map((el) => {
+                  {[1, 2, 3].map((el) => {
                     return (
                       <>
                         <Card
+                          key={el}
                           sx={{
                             minHeight: '100px',
                             bgcolor: 'secondary.dark',
