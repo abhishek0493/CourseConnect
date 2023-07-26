@@ -11,22 +11,58 @@ import {
   Grid,
   IconButton,
   Chip,
-  Rating,
-  Tooltip,
 } from '@mui/material';
 
 import ThumbUpAltTwoToneIcon from '@mui/icons-material/ThumbUpAltTwoTone';
 import ThumbDownOffAltTwoToneIcon from '@mui/icons-material/ThumbDownOffAltTwoTone';
 import BookmarkTwoToneIcon from '@mui/icons-material/BookmarkTwoTone';
 import MarkChatUnreadTwoToneIcon from '@mui/icons-material/MarkChatUnreadTwoTone';
-import FactCheckTwoToneIcon from '@mui/icons-material/FactCheckTwoTone';
-import HourglassTopTwoToneIcon from '@mui/icons-material/HourglassTopTwoTone';
+// import FactCheckTwoToneIcon from '@mui/icons-material/FactCheckTwoTone';
+// import HourglassTopTwoToneIcon from '@mui/icons-material/HourglassTopTwoTone';
 import ParentContext from '../../ParentContext';
+import axios from 'axios';
+import { FormatCount } from '../Constants/RefactorCount';
 
-const ThreadCard = ({ thread }) => {
-  console.log(thread);
+const ThreadCard = ({ thread, upVoteTrigger, downVoteTrigger }) => {
   const navigate = useNavigate();
   const user = useContext(ParentContext);
+
+  const handleUpVote = async () => {
+    await axios
+      .get(`http://localhost:8000/api/v1/threads/${thread.id}/up-vote-thread`, {
+        withCredentials: true,
+      })
+      .then((res) => {
+        if (res.data.success) {
+          upVoteTrigger(thread.id);
+        }
+      })
+      .catch((err) => {
+        const res = err.response;
+        alert(res.data.message);
+        console.log(err);
+      });
+  };
+
+  const handleDownVote = async () => {
+    await axios
+      .get(
+        `http://localhost:8000/api/v1/threads/${thread.id}/down-vote-thread`,
+        {
+          withCredentials: true,
+        }
+      )
+      .then((res) => {
+        if (res.data.success) {
+          downVoteTrigger(thread.id);
+        }
+      })
+      .catch((err) => {
+        const res = err.response;
+        alert(res.data.message);
+        console.log(err);
+      });
+  };
 
   return (
     <>
@@ -54,6 +90,7 @@ const ThreadCard = ({ thread }) => {
               <Box textAlign={'center'}>
                 <IconButton
                   size="small"
+                  onClick={handleUpVote}
                   sx={{
                     '&:hover': {
                       color: 'primary.main',
@@ -67,15 +104,16 @@ const ThreadCard = ({ thread }) => {
                   />
                 </IconButton>
                 <Typography variant="caption">
-                  {thread.total_upvotes}
+                  {FormatCount(thread.total_upvotes)}
                 </Typography>
               </Box>
               <Box textAlign={'center'}>
                 <Typography variant="caption">
-                  {thread.total_downvotes}
+                  {FormatCount(thread.total_downvotes)}
                 </Typography>
                 <IconButton
                   size="small"
+                  onClick={handleDownVote}
                   sx={{
                     '&:hover': {
                       color: 'primary.main',

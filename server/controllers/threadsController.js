@@ -197,12 +197,89 @@ const getThreadWithNestedComments = async (req, res) => {
   });
 };
 
-const threadUpVote = catchAsync(async (req, res) => {
+const upVoteThread = catchAsync(async (req, res) => {
   const loggedInUser = req.user.id;
   const thread = req.params.id;
-  res.status(200).json({
-    message: 'Its working',
-    data: req.params.id,
+  const threadAction = await db('user_thread_actions')
+    .where({ user_id: loggedInUser, thread_id: thread })
+    .first();
+
+  if (!threadAction) {
+    const newRow = await db('user_thread_actions').insert({
+      user_id: loggedInUser,
+      thread_id: thread,
+      is_upvoted: 1,
+    });
+
+    const incrementThreadCount = await db('threads')
+      .where({ id: thread })
+      .increment('total_upvotes', 1);
+
+    res.status(200).json({
+      success: true,
+      data: newRow,
+    });
+  }
+
+  if (!threadAction.is_upvoted) {
+    await db('user_thread_actions')
+      .where({ user_id: loggedInUser, thread_id: thread })
+      .update({ is_upvoted: 1, is_downvoted: 0 });
+
+    await db('threads').where({ id: thread }).increment('total_upvotes', 1);
+
+    res.status(200).json({
+      success: true,
+      data: 'Thread up-voted successfully',
+    });
+  }
+
+  res.status(401).json({
+    success: false,
+    message: 'This thread is already up-voted by you',
+  });
+});
+
+const downVoteThread = catchAsync(async (req, res) => {
+  const loggedInUser = req.user.id;
+  const thread = req.params.id;
+  const threadAction = await db('user_thread_actions')
+    .where({ user_id: loggedInUser, thread_id: thread })
+    .first();
+
+  if (!threadAction) {
+    const newRow = await db('user_thread_actions').insert({
+      user_id: loggedInUser,
+      thread_id: thread,
+      is_downvoted: 1,
+    });
+
+    const incrementDownVoteCount = await db('threads')
+      .where({ id: thread })
+      .increment('total_downvotes', 1);
+
+    res.status(200).json({
+      success: true,
+      data: newRow,
+    });
+  }
+
+  if (!threadAction.is_downvoted) {
+    await db('user_thread_actions')
+      .where({ user_id: loggedInUser, thread_id: thread })
+      .update({ is_downvoted: 1, is_upvoted: 0 });
+
+    await db('threads').where({ id: thread }).increment('total_downvotes', 1);
+
+    res.status(200).json({
+      success: true,
+      data: 'Thread down-voted successfully',
+    });
+  }
+
+  res.status(401).json({
+    success: false,
+    message: 'This thread is already down-voted by you',
   });
 });
 
@@ -211,5 +288,6 @@ module.exports = {
   getThreadWithNestedComments,
   getThreadDetails,
   createThread,
-  threadUpVote,
+  upVoteThread,
+  downVoteThread,
 };

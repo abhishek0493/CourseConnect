@@ -5,8 +5,6 @@ import { styled } from '@mui/system';
 import ReplyBox from './ReplyBox';
 import ActionBox from './ActionBox';
 
-import axios from 'axios';
-
 const Indentation = styled(Box)(({ theme }) => ({
   borderLeft: `1.5px solid ${theme.palette.divider}`,
   paddingLeft: '1rem',

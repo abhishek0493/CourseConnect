@@ -9,7 +9,11 @@ router
 
 router
   .route('/:id/up-vote-thread')
-  .post(protect, threadsController.threadUpVote);
+  .get(protect, threadsController.upVoteThread);
+
+router
+  .route('/:id/down-vote-thread')
+  .get(protect, threadsController.downVoteThread);
 
 router
   .route('/:id')
