@@ -153,6 +153,14 @@ const joinCommunity = catchAsync(async (req, res) => {
       success: true,
       data: newRow,
     });
+  } else {
+    if (userCommunity && userCommunity.status == -1) {
+      await db('user_communities').where(whereObj).update('status', 0);
+      return res.status(200).json({
+        success: true,
+        data: 'Request sent to the creator for approval',
+      });
+    }
   }
 
   const request = await db('user_community_requests').insert({
@@ -162,7 +170,7 @@ const joinCommunity = catchAsync(async (req, res) => {
 
   return res.status(200).json({
     success: true,
-    data: request,
+    data: 'Request sent to the creator for approval',
   });
 });
 
@@ -170,12 +178,41 @@ const leaveCommunity = catchAsync(async (req, res) => {
   const loggedInUser = req.user.id;
   const community_id = req.params.id;
 
-  const userCommunity = await db('user_communities')
-    .where({
-      community_id: community_id,
-      user_id: loggedInUser,
-    })
-    .first();
+  const whereObj = {
+    user_id: loggedInUser,
+    community_id: community_id,
+  };
+
+  const userCommunity = await db('user_communities').where(whereObj).first();
+
+  if (userCommunity) {
+    if (userCommunity.status == -1) {
+      return res.status(401).json({
+        success: false,
+        message: 'You have already left the community',
+      });
+    }
+
+    if (userCommunity.status == 0) {
+      return res.status(401).json({
+        success: false,
+        message: 'Your request has not been approved to join the community yet',
+      });
+    }
+
+    if (userCommunity.status == 1) {
+      await db('user_communities').where(whereObj).update('status', -1);
+      return res.status(200).json({
+        success: true,
+        data: 'Community left successfully',
+      });
+    }
+  }
+
+  res.status(400).json({
+    success: false,
+    message: 'Oops! Something went wrong',
+  });
 });
 
 module.exports = {
@@ -184,4 +221,5 @@ module.exports = {
   getUserCommunities,
   checkCommunityNameAvailability,
   joinCommunity,
+  leaveCommunity,
 };

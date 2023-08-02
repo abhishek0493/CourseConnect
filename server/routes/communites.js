@@ -16,5 +16,6 @@ router
 router.route('/categories').get(miscController.getCategories);
 router.route('/:name').get(protect, commController.getCommunityByName);
 router.route('/:id/join').get(protect, commController.joinCommunity);
+router.route('/:id/leave').get(protect, commController.leaveCommunity);
 
 module.exports = router;
