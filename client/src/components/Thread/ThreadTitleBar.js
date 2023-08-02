@@ -89,8 +89,8 @@ const ThreadTitleBar = ({ community, name }) => {
           </Avatar>
         </Grid>
         <Grid item xs={8} alignItems={'center'}>
-          <Typography variant="h5" fontWeight={'bold'} letterSpacing={1}>
-            {community.name}
+          <Typography variant="title" fontWeight={'bold'}>
+            {community.title}
             <Tooltip
               sx={{ mx: 1 }}
               title={getAccessIcon(community.access_type).message}

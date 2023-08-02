@@ -55,7 +55,7 @@ const CommentItem = ({ comment, handleSubmitReply }) => {
                 {el.author}
               </Typography>
             </Box>
-            <Typography variant="body1" sx={{ mb: '0.5rem' }}>
+            <Typography variant="body2" sx={{ mb: '0.5rem' }}>
               {el.comment}
             </Typography>
             <ActionBox
@@ -104,7 +104,7 @@ const CommentItem = ({ comment, handleSubmitReply }) => {
           {comment.author}
         </Typography>
       </Box>
-      <Typography variant="body1" sx={{ mb: '0.5rem' }}>
+      <Typography variant="body2" sx={{ mb: '0.5rem' }}>
         {comment.comment}
       </Typography>
       <ActionBox

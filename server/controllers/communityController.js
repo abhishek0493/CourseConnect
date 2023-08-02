@@ -35,11 +35,12 @@ const getCommunityByName = catchAsync(async (req, res) => {
 const getUserCommunities = catchAsync(async (req, res) => {
   const loggedInUser = req.user.id;
 
-  const communities = await db('user_communities')
-    .join('communities', 'communities.id', 'user_communities.community_id')
-    .where('user_communities.user_id', loggedInUser)
-    .where('user_communities.is_author', 1)
-    .orWhere('user_communities.is_approved', 1);
+  const communities = await db('user_communities as uc')
+    .join('communities as c', 'c.id', 'uc.community_id')
+    .where('uc.user_id', '=', loggedInUser)
+    .andWhere(function () {
+      this.where('uc.is_author', '=', 1).orWhere('uc.is_approved', '=', 1);
+    });
 
   res.status(200).json({
     success: true,

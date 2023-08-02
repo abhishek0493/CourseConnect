@@ -43,10 +43,6 @@ const ThreadsLayout = () => {
       });
   };
 
-  const handleUpVote = (id) => {
-    console.log(id);
-  };
-
   useEffect(() => {
     fetchCommunityThreads();
     fetchCommunityDetails();

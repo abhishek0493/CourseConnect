@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
   },
   content: {
     flexGrow: 1,
-    padding: `${theme.spacing(2)} ${theme.spacing(6)}`,
+    padding: `${theme.spacing(2)} ${theme.spacing(9)}`,
     marginLeft: '254px', // Same as the width of the sidebar
     // marginTop: theme.spacing(0.5)
   },
@@ -33,11 +33,13 @@ const LayoutSecondary = ({ communities }) => {
       <Box sx={{ display: 'flex', bgcolor: '#DAE0E6' }}>
         <Sidebar communities={communities} />
         <main className={classes.content}>
-          <Grid container spacing={3}>
+          <Grid container spacing={2}>
             <Grid item xs={8}>
-              <Outlet />
+              <Box>
+                <Outlet />
+              </Box>
             </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={4} sx={{ p: 6 }}>
               <Card variant="outlined" sx={{ position: 'sticky', top: 80 }}>
                 <Box sx={{ height: '80vh', p: 4 }}>
                   <Typography variant="h6">Secondary Sidebar</Typography>

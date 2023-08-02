@@ -51,7 +51,6 @@ const CreatePostBar = ({ community }) => {
         </Grid>
         <Grid item xs={10}>
           <TextField
-            variant="outlined"
             label={<Typography variant="body2">Create a thread</Typography>}
             size="small"
             fullWidth

@@ -5,6 +5,7 @@ import {
   Divider,
   List,
   Avatar,
+  Alert,
   ListItem,
   ListItemButton,
   ListItemIcon,
@@ -178,39 +179,45 @@ const Sidebar = ({ communities }) => {
                   }}
                 />
               </ListItemButton>
-              {open &&
-                communities !== null &&
-                communities.map((item) => (
-                  <ListItemButton
-                    key={item.id}
-                    sx={{ py: 1, minHeight: 32 }}
-                    onClick={() => {
-                      navigate(`/dashboard/c/${item.name}`);
-                    }}
-                  >
-                    <ListItemIcon>
-                      <Avatar
-                        sx={{
-                          width: 24,
-                          height: 24,
-                          bgcolor: '#2e2e78',
-                          // border: '2px solid #2e2e78',
-                          color: 'paper',
-                          p: 1.5,
-                        }}
-                      >
-                        {item.icon}
-                      </Avatar>
-                    </ListItemIcon>
-                    <ListItemText
-                      primary={item.name}
-                      primaryTypographyProps={{
-                        fontSize: 13,
-                        fontWeight: 'medium',
+              {open && communities !== null ? (
+                communities.length > 0 ? (
+                  communities.map((item) => (
+                    <ListItemButton
+                      key={item.id}
+                      sx={{ py: 1, minHeight: 32 }}
+                      onClick={() => {
+                        navigate(`/dashboard/c/${item.name}`);
                       }}
-                    />
-                  </ListItemButton>
-                ))}
+                    >
+                      <ListItemIcon>
+                        <Avatar
+                          sx={{
+                            width: 24,
+                            height: 24,
+                            bgcolor: '#2e2e78',
+                            // border: '2px solid #2e2e78',
+                            color: 'paper',
+                            p: 1.5,
+                          }}
+                        >
+                          {item.icon}
+                        </Avatar>
+                      </ListItemIcon>
+                      <ListItemText
+                        primary={`c/${item.name}`}
+                        primaryTypographyProps={{
+                          fontSize: 13,
+                          fontWeight: 'medium',
+                        }}
+                      />
+                    </ListItemButton>
+                  ))
+                ) : (
+                  <Alert severity="info">
+                    No communities created or joined!
+                  </Alert>
+                )
+              ) : null}
             </Box>
           </FireNav>
         </Paper>

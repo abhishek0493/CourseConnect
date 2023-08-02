@@ -13,12 +13,12 @@ import {
   Chip,
 } from '@mui/material';
 
+import ArrowCircleUpTwoToneIcon from '@mui/icons-material/ArrowCircleUpTwoTone';
+import ArrowCircleDownTwoToneIcon from '@mui/icons-material/ArrowCircleDownTwoTone';
 import ThumbUpAltTwoToneIcon from '@mui/icons-material/ThumbUpAltTwoTone';
 import ThumbDownOffAltTwoToneIcon from '@mui/icons-material/ThumbDownOffAltTwoTone';
 import BookmarkTwoToneIcon from '@mui/icons-material/BookmarkTwoTone';
 import MarkChatUnreadTwoToneIcon from '@mui/icons-material/MarkChatUnreadTwoTone';
-// import FactCheckTwoToneIcon from '@mui/icons-material/FactCheckTwoTone';
-// import HourglassTopTwoToneIcon from '@mui/icons-material/HourglassTopTwoTone';
 import ParentContext from '../../ParentContext';
 import axios from 'axios';
 import { FormatCount } from '../Constants/RefactorCount';
@@ -81,7 +81,7 @@ const ThreadCard = ({ thread, upVoteTrigger, downVoteTrigger }) => {
               sx={{
                 height: '100%',
                 bgcolor: 'secondary.light',
-                p: 1,
+                py: 1,
                 display: 'flex',
                 justifyContent: 'space-between',
                 flexDirection: 'column',
@@ -92,23 +92,20 @@ const ThreadCard = ({ thread, upVoteTrigger, downVoteTrigger }) => {
                   size="small"
                   onClick={handleUpVote}
                   sx={{
+                    m: 0,
                     '&:hover': {
                       color: 'primary.main',
                     },
                   }}
                 >
-                  <ThumbUpAltTwoToneIcon
-                    sx={{
-                      fontSize: '1.2rem',
-                    }}
-                  />
+                  <ArrowCircleUpTwoToneIcon />
                 </IconButton>
-                <Typography variant="caption">
+                <Typography variant="caption" fontWeight={'bold'}>
                   {FormatCount(thread.total_upvotes)}
                 </Typography>
               </Box>
               <Box textAlign={'center'}>
-                <Typography variant="caption">
+                <Typography variant="caption" fontWeight={'bold'}>
                   {FormatCount(thread.total_downvotes)}
                 </Typography>
                 <IconButton
@@ -116,11 +113,11 @@ const ThreadCard = ({ thread, upVoteTrigger, downVoteTrigger }) => {
                   onClick={handleDownVote}
                   sx={{
                     '&:hover': {
-                      color: 'primary.main',
+                      color: 'warning.main',
                     },
                   }}
                 >
-                  <ThumbDownOffAltTwoToneIcon sx={{ fontSize: '1.2rem' }} />
+                  <ArrowCircleDownTwoToneIcon />
                 </IconButton>
               </Box>
             </Box>
@@ -131,7 +128,7 @@ const ThreadCard = ({ thread, upVoteTrigger, downVoteTrigger }) => {
           <Grid item xs={11.4}>
             <CardHeader
               avatar={
-                <Avatar sx={{ color: 'action.main' }}>
+                <Avatar sx={{ color: 'action.main', width: 34, height: 34 }}>
                   {thread.author.charAt(0)}
                 </Avatar>
               }
@@ -144,7 +141,7 @@ const ThreadCard = ({ thread, upVoteTrigger, downVoteTrigger }) => {
                       label="You"
                       color="primary"
                       size="small"
-                      sx={{ ml: 1 }}
+                      sx={{ ml: 0.5, height: 18 }}
                     />
                   </Typography>
                 ) : (
