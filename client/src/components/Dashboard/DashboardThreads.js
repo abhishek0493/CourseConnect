@@ -20,6 +20,11 @@ import { useNavigate } from 'react-router-dom';
 
 const DashboardThreads = ({ thread }) => {
   const navigate = useNavigate();
+
+  const { is_joined, is_request_pending } = thread;
+  const label =
+    is_joined === 1 ? 'Joined' : is_request_pending === 1 ? 'Pending' : 'Join';
+
   return (
     <Card
       key={thread.id}
@@ -110,7 +115,7 @@ const DashboardThreads = ({ thread }) => {
             </Box>
             <Box>
               <Chip
-                label="Join"
+                label={label}
                 variant="outlined"
                 onClick={() => {
                   alert('Joined');
