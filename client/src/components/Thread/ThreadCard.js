@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 
 import {
   Card,
-  CardHeader,
   CardContent,
   Typography,
   Avatar,
@@ -15,8 +14,6 @@ import {
 
 import ArrowCircleUpTwoToneIcon from '@mui/icons-material/ArrowCircleUpTwoTone';
 import ArrowCircleDownTwoToneIcon from '@mui/icons-material/ArrowCircleDownTwoTone';
-import ThumbUpAltTwoToneIcon from '@mui/icons-material/ThumbUpAltTwoTone';
-import ThumbDownOffAltTwoToneIcon from '@mui/icons-material/ThumbDownOffAltTwoTone';
 import BookmarkTwoToneIcon from '@mui/icons-material/BookmarkTwoTone';
 import MarkChatUnreadTwoToneIcon from '@mui/icons-material/MarkChatUnreadTwoTone';
 import ParentContext from '../../ParentContext';
@@ -126,31 +123,58 @@ const ThreadCard = ({ thread, upVoteTrigger, downVoteTrigger }) => {
 
           {/* Main body starts */}
           <Grid item xs={11.4}>
-            <CardHeader
-              avatar={
-                <Avatar sx={{ color: 'action.main', width: 34, height: 34 }}>
-                  {thread.author.charAt(0)}
-                </Avatar>
-              }
-              title={thread.title}
-              subheader={
-                thread.is_author === 1 ? (
-                  <Typography variant="caption">
-                    Posted by
-                    <Chip
-                      label="You"
-                      color="primary"
-                      size="small"
-                      sx={{ ml: 0.5, height: 18 }}
-                    />
+            <Box
+              sx={{
+                p: 1,
+                display: 'flex',
+                alignItems: 'center',
+                borderBottom: '0.5px solid #e3e3e3',
+              }}
+            >
+              <Avatar
+                sx={{
+                  width: 24,
+                  height: 24,
+                  bgcolor: '#2e2e78',
+                  // border: '2px solid #2e2e78',
+                  color: 'paper',
+                  p: 1.5,
+                }}
+              >
+                {thread.author.charAt(0)}
+              </Avatar>
+              <Typography
+                variant="caption"
+                fontWeight="light"
+                color="gray"
+                sx={{ mx: 1 }}
+              >
+                Posted By
+                {thread.is_author === 1 ? (
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      color: 'primary.dark',
+                      borderRadius: 4,
+                      p: 0.5,
+                      fontWeight: 'bold',
+                    }}
+                  >
+                    You
                   </Typography>
                 ) : (
-                  <Typography variant="caption">
-                    Posted by {thread.author}
-                  </Typography>
-                )
-              }
-            />
+                  <Typography variant="caption">u/{thread.author}</Typography>
+                )}
+              </Typography>
+              <Typography variant="caption" color={'gray'}>
+                {thread.created_at}
+              </Typography>
+            </Box>
+            <Box sx={{ p: 1.5 }}>
+              <Typography variant="body1" sx={{ ml: 1 }}>
+                {thread.title}
+              </Typography>
+            </Box>
             <CardContent>
               <Typography variant="body2" color="text.secondary" sx={{ my: 1 }}>
                 {thread.body}
@@ -159,6 +183,7 @@ const ThreadCard = ({ thread, upVoteTrigger, downVoteTrigger }) => {
                 <>
                   <Chip
                     label={thread.link}
+                    sx={{ my: 1 }}
                     onClick={() => {
                       alert(thread.link);
                     }}

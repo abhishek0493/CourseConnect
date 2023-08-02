@@ -84,27 +84,42 @@ const DashboardThreads = ({ thread }) => {
               p: 1,
               display: 'flex',
               alignItems: 'center',
+              justifyContent: 'space-between',
               borderBottom: '0.5px solid #e3e3e3',
             }}
           >
-            <Avatar
-              sx={{
-                width: 24,
-                height: 24,
-                bgcolor: '#2e2e78',
-                // border: '2px solid #2e2e78',
-                color: 'paper',
-                p: 1.5,
-              }}
-            >
-              <BookmarkTwoToneIcon fontSize="1rem" />
-            </Avatar>
-            <Typography variant="caption" sx={{ mx: 1, fontWeight: 'bold' }}>
-              c/{thread.community_name}
-            </Typography>
-            <Typography variant="caption" fontWeight="light" color="gray">
-              Posted by {thread.author}
-            </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Avatar
+                sx={{
+                  width: 24,
+                  height: 24,
+                  bgcolor: '#2e2e78',
+                  // border: '2px solid #2e2e78',
+                  color: 'paper',
+                  p: 1.5,
+                }}
+              >
+                <BookmarkTwoToneIcon fontSize="1rem" />
+              </Avatar>
+              <Typography variant="caption" sx={{ mx: 1, fontWeight: 'bold' }}>
+                c/{thread.community_name}
+              </Typography>
+              <Typography variant="caption" fontWeight="light" color="gray">
+                Posted by {thread.author}
+              </Typography>
+            </Box>
+            <Box>
+              <Chip
+                label="Join"
+                variant="outlined"
+                onClick={() => {
+                  alert('Joined');
+                }}
+              />
+            </Box>
+          </Box>
+          <Box sx={{ p: 1.5 }}>
+            <Typography variant="body1">{thread.title}</Typography>
           </Box>
           <CardContent>
             <Typography variant="body2" color="text.secondary" sx={{ my: 1 }}>
@@ -114,6 +129,7 @@ const DashboardThreads = ({ thread }) => {
               <>
                 <Chip
                   label={thread.link}
+                  sx={{ my: 1 }}
                   onClick={() => {
                     alert(thread.link);
                   }}
