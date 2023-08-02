@@ -12,7 +12,7 @@ const getCommunityUserThreads = catchAsync(async (req, res) => {
       'u.name as author',
       'c.category_id',
       'uc.is_author',
-      'uc.is_approved',
+      'uc.status',
       'c.name',
       'c.description',
       'c.access_type'
@@ -23,7 +23,7 @@ const getCommunityUserThreads = catchAsync(async (req, res) => {
     .join('users as u', 'u.id', '=', 't.user_id')
     .leftJoin('comments', 'comments.thread_id', '=', 't.id')
     .andWhere(function () {
-      this.where('uc.is_author', 1).orWhere('uc.is_approved', 1);
+      this.where('uc.is_author', 1);
     })
     .andWhere('c.name', community)
     .groupBy(
@@ -31,7 +31,7 @@ const getCommunityUserThreads = catchAsync(async (req, res) => {
       'u.name',
       'c.category_id',
       'uc.is_author',
-      'uc.is_approved',
+      'uc.status',
       'c.name',
       'c.description',
       'c.access_type'

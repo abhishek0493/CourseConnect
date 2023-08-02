@@ -1,14 +1,6 @@
 const db = require('../db');
 const catchAsync = require('../utils/catchAsync');
 const { communityCreationSchema } = require('../utils/validation');
-const slugify = require('slugify');
-const helper = require('../utils/helpers');
-
-const generateSlug = (name, id) => {
-  const string = `${name}-${id}-cc`;
-  const slug = slugify(string, { lower: true, strict: true });
-  return slug;
-};
 
 const getCommunityByName = catchAsync(async (req, res) => {
   const loggedInUser = req.user.id;
@@ -39,7 +31,7 @@ const getUserCommunities = catchAsync(async (req, res) => {
     .join('communities as c', 'c.id', 'uc.community_id')
     .where('uc.user_id', '=', loggedInUser)
     .andWhere(function () {
-      this.where('uc.is_author', '=', 1).orWhere('uc.is_approved', '=', 1);
+      this.where('uc.is_author', '=', 1).orWhere('uc.status', '=', 1);
     });
 
   res.status(200).json({
@@ -90,7 +82,7 @@ const createCommunity = catchAsync(async (req, res) => {
     user_id: loggedInUser,
     community_id: id,
     is_author: 1,
-    is_approved: 1,
+    status: 2,
   });
 
   res.status(200).json({
@@ -103,9 +95,93 @@ const createCommunity = catchAsync(async (req, res) => {
   });
 });
 
+const joinCommunity = catchAsync(async (req, res) => {
+  const community_id = req.params.id;
+  const loggedInUser = req.user.id;
+
+  const whereObj = {
+    community_id: community_id,
+    user_id: loggedInUser,
+  };
+
+  const community = await db('communities').where('id', community_id).first();
+  const userCommunity = await db('user_communities').where(whereObj).first();
+
+  /* Check is user is author */
+  if (userCommunity && userCommunity.is_author == 1) {
+    return res.status(201).json({
+      success: false,
+      message: 'You are the creator of this community',
+    });
+  }
+
+  /* Check if user has already joined or is pending request */
+  if (userCommunity) {
+    if (userCommunity.status == 1) {
+      return res.status(201).json({
+        success: false,
+        message: 'You already are a member of this community',
+      });
+    }
+
+    if (userCommunity.status == 0) {
+      return res.status(201).json({
+        success: false,
+        message: 'Request to join this community is already created',
+      });
+    }
+  }
+
+  // For Public (open) community
+  if (community.access_type == 1) {
+    if (userCommunity && userCommunity.status != 1) {
+      await db('user_communities').where(whereObj).update('status', 1);
+      return res.status(200).json({
+        success: true,
+        data: 'Community Joined Successfully',
+      });
+    }
+
+    const newRow = await db('user_communities').insert({
+      user_id: loggedInUser,
+      community_id: community.id,
+      status: 1,
+      is_author: 0,
+    });
+
+    res.status(200).json({
+      success: true,
+      data: newRow,
+    });
+  }
+
+  const request = await db('user_community_requests').insert({
+    user_id: loggedInUser,
+    community_id: community.id,
+  });
+
+  return res.status(200).json({
+    success: true,
+    data: request,
+  });
+});
+
+const leaveCommunity = catchAsync(async (req, res) => {
+  const loggedInUser = req.user.id;
+  const community_id = req.params.id;
+
+  const userCommunity = await db('user_communities')
+    .where({
+      community_id: community_id,
+      user_id: loggedInUser,
+    })
+    .first();
+});
+
 module.exports = {
   getCommunityByName,
   createCommunity,
   getUserCommunities,
   checkCommunityNameAvailability,
+  joinCommunity,
 };

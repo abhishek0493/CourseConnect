@@ -9,7 +9,7 @@ const getTrendingThreads = catchAsync(async (req, res) => {
       'u.name as author',
       'c.category_id',
       'uc.is_author',
-      'uc.is_approved',
+      'uc.status',
       'c.name',
       'c.description',
       'c.access_type',
@@ -26,12 +26,12 @@ const getTrendingThreads = catchAsync(async (req, res) => {
       'u.name',
       'c.category_id',
       'uc.is_author',
-      'uc.is_approved',
+      'uc.status',
       'c.name',
       'c.description',
       'c.access_type'
     )
-    .having('total_comments', '>', 1)
+    .having('total_comments', '>', 2)
     .orderBy('t.id', 'desc');
 
   res.status(200).json({

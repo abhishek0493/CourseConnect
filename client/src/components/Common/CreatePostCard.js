@@ -106,7 +106,7 @@ const CreatePostCard = ({ communities, selectedId }) => {
                   })}
                   <ListSubheader>Joined communities</ListSubheader>
                   {Object.values(communities).map((value) => {
-                    if (!value.is_author && value.is_approved) {
+                    if (!value.is_author && value.status == 1) {
                       return (
                         <MenuItem
                           key={value.community_id}
