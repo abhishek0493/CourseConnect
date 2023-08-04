@@ -16,11 +16,12 @@ import {
 import ArrowCircleUpTwoToneIcon from '@mui/icons-material/ArrowCircleUpTwoTone';
 import ArrowCircleDownTwoToneIcon from '@mui/icons-material/ArrowCircleDownTwoTone';
 import PersonPinIcon from '@mui/icons-material/PersonPin';
-import MarkChatUnreadTwoToneIcon from '@mui/icons-material/MarkChatUnreadTwoTone';
 import OutboundRoundedIcon from '@mui/icons-material/OutboundRounded';
 import LanguageRoundedIcon from '@mui/icons-material/LanguageRounded';
 import StarsRoundedIcon from '@mui/icons-material/StarsRounded';
 import ForumRoundedIcon from '@mui/icons-material/ForumRounded';
+
+import MarkChatUnreadIcon from '@mui/icons-material/MarkChatUnread';
 
 import { FormatCount } from '../Constants/RefactorCount';
 import { useNavigate } from 'react-router-dom';
@@ -73,7 +74,7 @@ const DashboardThreads = ({ thread }) => {
     <Card
       key={thread.id}
       sx={{
-        borderLeft: thread.type == 1 ? `4px solid orangered` : ``,
+        // borderLeft: thread.type == 1 ? `4px solid orangered` : ``,
         display: 'flex',
       }}
       variant="outlined"
@@ -257,11 +258,10 @@ const DashboardThreads = ({ thread }) => {
               )}
             </Box>
           </CardContent>
-          <CardContent
+          <Box
             sx={{
               display: 'flex',
-              p: 1.2,
-              maxHeight: '3rem',
+              p: 1,
               borderTop: '1px solid #e3e3e3',
             }}
           >
@@ -281,9 +281,7 @@ const DashboardThreads = ({ thread }) => {
                     );
                   }}
                 >
-                  <MarkChatUnreadTwoToneIcon
-                    sx={{ fontSize: '1.2rem', color: 'primary.main' }}
-                  />
+                  <MarkChatUnreadIcon sx={{ fontSize: '1.2rem' }} />
                   <Typography
                     variant="caption"
                     sx={{ mx: 1, color: '#333333' }}
@@ -293,7 +291,7 @@ const DashboardThreads = ({ thread }) => {
                 </IconButton>
               </Box>
             </Box>
-          </CardContent>
+          </Box>
         </Grid>
       </Grid>
     </Card>

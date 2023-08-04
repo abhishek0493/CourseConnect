@@ -20,6 +20,9 @@ import MarkChatUnreadTwoToneIcon from '@mui/icons-material/MarkChatUnreadTwoTone
 import StarsRoundedIcon from '@mui/icons-material/StarsRounded';
 import LanguageRoundedIcon from '@mui/icons-material/LanguageRounded';
 
+import MarkChatUnreadIcon from '@mui/icons-material/MarkChatUnread';
+import BookmarkIcon from '@mui/icons-material/Bookmark';
+
 import ParentContext from '../../ParentContext';
 import axios from 'axios';
 import { FormatCount } from '../Constants/RefactorCount';
@@ -70,7 +73,7 @@ const ThreadCard = ({ thread, upVoteTrigger, downVoteTrigger }) => {
       <Card
         key={thread.id}
         sx={{
-          borderLeft: thread.type == 1 ? `4px solid orangered` : ``,
+          // borderLeft: thread.type == 1 ? `4px solid orangered` : ``,
           display: 'flex',
         }}
         variant="outlined"
@@ -210,11 +213,10 @@ const ThreadCard = ({ thread, upVoteTrigger, downVoteTrigger }) => {
                 </>
               )}
             </CardContent>
-            <CardContent
+            <Box
               sx={{
                 display: 'flex',
-                p: 1.2,
-                maxHeight: '3rem',
+                p: 1,
                 borderTop: '1px solid #e3e3e3',
               }}
             >
@@ -234,9 +236,7 @@ const ThreadCard = ({ thread, upVoteTrigger, downVoteTrigger }) => {
                       );
                     }}
                   >
-                    <MarkChatUnreadTwoToneIcon
-                      sx={{ fontSize: '1.2rem', color: 'primary.main' }}
-                    />
+                    <MarkChatUnreadIcon sx={{ fontSize: '1.2rem' }} />
                     <Typography
                       variant="caption"
                       sx={{ mx: 1, color: '#333333' }}
@@ -252,10 +252,7 @@ const ThreadCard = ({ thread, upVoteTrigger, downVoteTrigger }) => {
                       );
                     }}
                   >
-                    <BookmarkTwoToneIcon
-                      sx={{ fontSize: '1.2rem' }}
-                      htmlColor="green"
-                    />
+                    <BookmarkIcon sx={{ fontSize: '1.2rem', color: 'green' }} />
                     <Typography
                       variant="caption"
                       sx={{ mx: 1, color: '#333333' }}
@@ -265,7 +262,7 @@ const ThreadCard = ({ thread, upVoteTrigger, downVoteTrigger }) => {
                   </IconButton>
                 </Box>
               </Box>
-            </CardContent>
+            </Box>
           </Grid>
         </Grid>
       </Card>
