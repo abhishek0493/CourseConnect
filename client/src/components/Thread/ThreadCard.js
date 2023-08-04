@@ -15,8 +15,6 @@ import {
 
 import ArrowCircleUpTwoToneIcon from '@mui/icons-material/ArrowCircleUpTwoTone';
 import ArrowCircleDownTwoToneIcon from '@mui/icons-material/ArrowCircleDownTwoTone';
-import BookmarkTwoToneIcon from '@mui/icons-material/BookmarkTwoTone';
-import MarkChatUnreadTwoToneIcon from '@mui/icons-material/MarkChatUnreadTwoTone';
 import StarsRoundedIcon from '@mui/icons-material/StarsRounded';
 import LanguageRoundedIcon from '@mui/icons-material/LanguageRounded';
 
@@ -38,7 +36,7 @@ const ThreadCard = ({ thread, upVoteTrigger, downVoteTrigger }) => {
       })
       .then((res) => {
         if (res.data.success) {
-          upVoteTrigger(thread.id);
+          upVoteTrigger(thread.id, res.data.data.toggle);
         }
       })
       .catch((err) => {
@@ -58,7 +56,7 @@ const ThreadCard = ({ thread, upVoteTrigger, downVoteTrigger }) => {
       )
       .then((res) => {
         if (res.data.success) {
-          downVoteTrigger(thread.id);
+          downVoteTrigger(thread.id, res.data.data.toggle);
         }
       })
       .catch((err) => {

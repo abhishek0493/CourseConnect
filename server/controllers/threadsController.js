@@ -226,20 +226,28 @@ const upVoteThread = catchAsync(async (req, res) => {
 
     res.status(200).json({
       success: true,
-      data: newRow,
+      data: {
+        toggle: false,
+        message: 'Thread up-voted successfully',
+      },
     });
   }
 
-  if (!threadAction.is_upvoted) {
+  if (!threadAction.is_upvoted && threadAction.is_downvoted) {
     await db('user_thread_actions')
       .where({ user_id: loggedInUser, thread_id: thread })
       .update({ is_upvoted: 1, is_downvoted: 0 });
 
-    await db('threads').where({ id: thread }).increment('total_upvotes', 1);
+    await db('threads')
+      .where({ id: thread })
+      .increment({ total_upvotes: 1, total_downvotes: -1 });
 
     res.status(200).json({
       success: true,
-      data: 'Thread up-voted successfully',
+      data: {
+        toggle: true,
+        message: 'Thread up-voted successfully',
+      },
     });
   }
 
@@ -269,20 +277,28 @@ const downVoteThread = catchAsync(async (req, res) => {
 
     res.status(200).json({
       success: true,
-      data: newRow,
+      data: {
+        toggle: false,
+        message: 'Thread down-voted successfully',
+      },
     });
   }
 
-  if (!threadAction.is_downvoted) {
+  if (!threadAction.is_downvoted && threadAction.is_upvoted) {
     await db('user_thread_actions')
       .where({ user_id: loggedInUser, thread_id: thread })
       .update({ is_downvoted: 1, is_upvoted: 0 });
 
-    await db('threads').where({ id: thread }).increment('total_downvotes', 1);
+    await db('threads')
+      .where({ id: thread })
+      .increment({ total_downvotes: 1, total_upvotes: -1 });
 
     res.status(200).json({
       success: true,
-      data: 'Thread down-voted successfully',
+      data: {
+        toggle: true,
+        message: 'Thread down-voted successfully',
+      },
     });
   }
 

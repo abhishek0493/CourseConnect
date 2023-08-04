@@ -9,12 +9,13 @@ import ThreadCard from '../../components/Thread/ThreadCard';
 const CommunityThreads = () => {
   const [threads, setThreads] = useOutletContext();
 
-  const incrementUpvotes = (threadId) => {
+  const incrementUpvotes = (threadId, toggle) => {
     const updatedThreads = threads.map((thread) => {
       if (thread.id === threadId) {
         return {
           ...thread,
           total_upvotes: thread.total_upvotes + 1,
+          total_downvotes: thread.total_downvotes - (toggle ? 1 : 0),
         };
       }
       return thread;
@@ -22,12 +23,13 @@ const CommunityThreads = () => {
     setThreads(updatedThreads);
   };
 
-  const incrementDownvotes = (threadId) => {
+  const incrementDownvotes = (threadId, toggle) => {
     const updatedThreads = threads.map((thread) => {
       if (thread.id === threadId) {
         return {
           ...thread,
           total_downvotes: thread.total_downvotes + 1,
+          total_upvotes: thread.total_upvotes - (toggle ? 1 : 0), // Decrement downvotes only if toggle is true
         };
       }
       return thread;
