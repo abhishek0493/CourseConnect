@@ -20,6 +20,8 @@ import OutboundRoundedIcon from '@mui/icons-material/OutboundRounded';
 import LanguageRoundedIcon from '@mui/icons-material/LanguageRounded';
 import StarsRoundedIcon from '@mui/icons-material/StarsRounded';
 import ForumRoundedIcon from '@mui/icons-material/ForumRounded';
+import VerifiedRoundedIcon from '@mui/icons-material/VerifiedRounded';
+import LeaderboardRoundedIcon from '@mui/icons-material/LeaderboardRounded';
 
 import MarkChatUnreadIcon from '@mui/icons-material/MarkChatUnread';
 
@@ -247,8 +249,21 @@ const DashboardThreads = ({ thread }) => {
               {thread.type == 1 && (
                 <>
                   <Chip
+                    icon={<VerifiedRoundedIcon />}
+                    size="small"
+                    sx={{ mx: 1 }}
+                    label="I have completed the course"
+                  />
+                  <Chip
+                    icon={<LeaderboardRoundedIcon />}
+                    size="small"
+                    sx={{ mx: 1, alignItems: 'center' }}
+                    label={`Rating ${thread.author_rating}/5`}
+                  />
+                  <Chip
                     icon={<LanguageRoundedIcon />}
                     label={thread.link}
+                    size="small"
                     sx={{ my: 1 }}
                     onClick={() => {
                       alert(thread.link);

@@ -55,9 +55,9 @@ const ThreadTitleBar = ({ community }) => {
     <Card
       sx={{
         p: 2,
-        my: 1,
-        bgcolor: 'paper',
+        mb: 1.5,
       }}
+      elevation={0}
     >
       <Grid container gap={4} alignItems={'center'}>
         <Grid item xs={1}>

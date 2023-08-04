@@ -9,6 +9,7 @@ import {
   Box,
   Grid,
   IconButton,
+  Rating,
   Tooltip,
   Chip,
 } from '@mui/material';
@@ -21,13 +22,24 @@ import LanguageRoundedIcon from '@mui/icons-material/LanguageRounded';
 import MarkChatUnreadIcon from '@mui/icons-material/MarkChatUnread';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 
-import ParentContext from '../../ParentContext';
+import VerifiedRoundedIcon from '@mui/icons-material/VerifiedRounded';
+import LeaderboardRoundedIcon from '@mui/icons-material/LeaderboardRounded';
+
 import axios from 'axios';
 import { FormatCount } from '../Constants/RefactorCount';
 
-const ThreadCard = ({ thread, upVoteTrigger, downVoteTrigger }) => {
+const ThreadCard = ({
+  thread,
+  upVoteTrigger,
+  downVoteTrigger,
+  saveTrigger,
+}) => {
   const navigate = useNavigate();
-  const user = useContext(ParentContext);
+  const savedColour = thread.is_saved ? 'green' : '';
+  const savedText = thread.is_saved ? 'Saved' : 'Save';
+
+  const upVoteColor = thread.is_upvoted == 1 ? 'green' : '';
+  const downVoteColor = thread.is_downvoted == 1 ? 'orangered' : '';
 
   const handleUpVote = async () => {
     await axios
@@ -57,6 +69,23 @@ const ThreadCard = ({ thread, upVoteTrigger, downVoteTrigger }) => {
       .then((res) => {
         if (res.data.success) {
           downVoteTrigger(thread.id, res.data.data.toggle);
+        }
+      })
+      .catch((err) => {
+        const res = err.response;
+        alert(res.data.message);
+        console.log(err);
+      });
+  };
+
+  const handleSave = async () => {
+    await axios
+      .get(`http://localhost:8000/api/v1/threads/${thread.id}/save`, {
+        withCredentials: true,
+      })
+      .then((res) => {
+        if (res.data.success) {
+          saveTrigger(thread.id, res.data.data.toggle);
         }
       })
       .catch((err) => {
@@ -100,7 +129,7 @@ const ThreadCard = ({ thread, upVoteTrigger, downVoteTrigger }) => {
                     },
                   }}
                 >
-                  <ArrowCircleUpTwoToneIcon />
+                  <ArrowCircleUpTwoToneIcon htmlColor={upVoteColor} />
                 </IconButton>
                 <Typography variant="caption" fontWeight={'bold'}>
                   {FormatCount(thread.total_upvotes)}
@@ -119,7 +148,7 @@ const ThreadCard = ({ thread, upVoteTrigger, downVoteTrigger }) => {
                     },
                   }}
                 >
-                  <ArrowCircleDownTwoToneIcon />
+                  <ArrowCircleDownTwoToneIcon htmlColor={downVoteColor} />
                 </IconButton>
               </Box>
             </Box>
@@ -201,8 +230,21 @@ const ThreadCard = ({ thread, upVoteTrigger, downVoteTrigger }) => {
               {thread.type == 1 && (
                 <>
                   <Chip
+                    icon={<VerifiedRoundedIcon />}
+                    size="small"
+                    sx={{ mx: 1 }}
+                    label="I have completed the course"
+                  />
+                  <Chip
+                    icon={<LeaderboardRoundedIcon />}
+                    size="small"
+                    sx={{ mx: 1, alignItems: 'center' }}
+                    label={`Rating ${thread.author_rating}/5`}
+                  />
+                  <Chip
                     icon={<LanguageRoundedIcon />}
                     label={thread.link}
+                    size="small"
                     sx={{ my: 1 }}
                     onClick={() => {
                       alert(thread.link);
@@ -242,20 +284,16 @@ const ThreadCard = ({ thread, upVoteTrigger, downVoteTrigger }) => {
                       {thread.total_comments} Comments
                     </Typography>
                   </IconButton>
-                  <IconButton
-                    sx={{ borderRadius: 2 }}
-                    onClick={() => {
-                      navigate(
-                        `/dashboard/c/${thread.name}/${thread.id}/comments`
-                      );
-                    }}
-                  >
-                    <BookmarkIcon sx={{ fontSize: '1.2rem', color: 'green' }} />
+                  <IconButton sx={{ borderRadius: 2 }} onClick={handleSave}>
+                    <BookmarkIcon
+                      sx={{ fontSize: '1.2rem' }}
+                      htmlColor={savedColour}
+                    />
                     <Typography
                       variant="caption"
                       sx={{ mx: 1, color: '#333333' }}
                     >
-                      Save
+                      {savedText}
                     </Typography>
                   </IconButton>
                 </Box>

@@ -34,16 +34,30 @@ const getCommunityUserThreads = catchAsync(async (req, res) => {
     )
     .orderBy('t.id', 'desc');
 
-  const userCommunities = await db('user_communities').where(
+  const userThreadActions = await db('user_thread_actions').where(
     'user_id',
     loggedInUser
   );
 
   const transformThreads = threads.map((thread) => {
     const isAuthor = thread.user_id == loggedInUser ? 1 : 0;
+
+    const isSaved = userThreadActions.some(
+      (action) => action.thread_id === thread.id && action.is_saved
+    );
+    const isUpvoted = userThreadActions.some(
+      (action) => action.thread_id === thread.id && action.is_upvoted
+    );
+    const isDownvoted = userThreadActions.some(
+      (action) => action.thread_id === thread.id && action.is_downvoted
+    );
+
     return {
       ...thread,
       is_author: isAuthor,
+      is_saved: isSaved ? 1 : 0,
+      is_upvoted: isUpvoted ? 1 : 0,
+      is_downvoted: isDownvoted ? 1 : 0,
     };
   });
 
@@ -308,6 +322,48 @@ const downVoteThread = catchAsync(async (req, res) => {
   });
 });
 
+const saveThread = catchAsync(async (req, res) => {
+  const thread_id = req.params.id;
+  const loggedInUser = req.user.id;
+
+  const threadAction = await db('user_thread_actions')
+    .where({
+      thread_id: thread_id,
+      user_id: loggedInUser,
+    })
+    .first();
+
+  if (!threadAction) {
+    const newAction = await db('user_thread_actions').insert({
+      user_id: loggedInUser,
+      thread_id: thread_id,
+      is_saved: 1,
+    });
+
+    res.status(200).json({
+      success: true,
+      data: {
+        toggle: false,
+        message: 'Thread saved successfully',
+      },
+    });
+  }
+
+  const newIsSaved = threadAction.is_saved ? 0 : 1;
+
+  const update = await db('user_thread_actions')
+    .where({ thread_id: thread_id, user_id: loggedInUser })
+    .update({ is_saved: newIsSaved });
+
+  res.status(200).json({
+    success: true,
+    data: {
+      toggle: true,
+      message: 'Thread saved successfully',
+    },
+  });
+});
+
 module.exports = {
   getCommunityUserThreads,
   getThreadWithNestedComments,
@@ -315,4 +371,5 @@ module.exports = {
   createThread,
   upVoteThread,
   downVoteThread,
+  saveThread,
 };

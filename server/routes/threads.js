@@ -15,6 +15,8 @@ router
   .route('/:id/down-vote-thread')
   .get(protect, threadsController.downVoteThread);
 
+router.route('/:id/save').get(protect, threadsController.saveThread);
+
 router
   .route('/:id')
   .get(protect, threadsController.getThreadWithNestedComments);

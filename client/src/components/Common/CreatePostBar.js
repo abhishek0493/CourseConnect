@@ -33,6 +33,7 @@ const CreatePostBar = ({ community }) => {
         maxHeight: '60px',
         alignItems: 'center',
       }}
+      elevation={0}
     >
       <Grid container columnSpacing={2}>
         <Grid item xs={1}>
