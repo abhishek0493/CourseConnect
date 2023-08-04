@@ -12,11 +12,14 @@ const getTrendingThreads = catchAsync(async (req, res) => {
       'c.name',
       'c.description',
       'c.access_type',
+      'c.created_by',
+      'c.category_id',
       'c.name as community_name'
     )
     .select(db.raw('COUNT(comments.id) as total_comments'))
     .join('communities as c', 'c.id', '=', 't.community_id')
     .join('users as u', 'u.id', '=', 't.user_id')
+    .join('users as uc', 'uc.id', '=', 'c.created_by')
     .leftJoin('comments', 'comments.thread_id', '=', 't.id')
     .whereIn('c.access_type', [1, 2])
     .groupBy(
@@ -25,19 +28,17 @@ const getTrendingThreads = catchAsync(async (req, res) => {
       'c.category_id',
       'c.name',
       'c.description',
-      'c.access_type'
+      'c.access_type',
+      'c.category_id',
+      'c.created_by'
     )
-    .having('total_comments', '>', 2)
-    .orderBy('t.id', 'desc');
+    .having('total_comments', '>', 1)
+    .orderBy('total_comments', 'desc');
 
   const userCommunities = await db('user_communities').where(
     'user_id',
     loggedInUser
   );
-
-  // return res.status(200).json({
-  //   data: userCommunities,
-  // });
 
   const transformThreads = threads.map((thread) => {
     const isJoined = userCommunities.some(
@@ -54,10 +55,15 @@ const getTrendingThreads = catchAsync(async (req, res) => {
         uc.is_author != 1
     );
 
+    const isAuthor = thread.user_id == loggedInUser ? 1 : 0;
+    const isCreator = thread.created_by == loggedInUser ? 1 : 0;
+
     return {
       ...thread,
       is_joined: isJoined ? 1 : 0,
       is_request_pending: isRequestPending ? 1 : 0,
+      is_author: isAuthor,
+      is_creator: isCreator,
     };
   });
 

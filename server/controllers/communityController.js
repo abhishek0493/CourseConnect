@@ -32,7 +32,8 @@ const getUserCommunities = catchAsync(async (req, res) => {
     .where('uc.user_id', '=', loggedInUser)
     .andWhere(function () {
       this.where('uc.is_author', '=', 1).orWhere('uc.status', '=', 1);
-    });
+    })
+    .orderBy('c.id', 'desc');
 
   res.status(200).json({
     success: true,
@@ -109,7 +110,7 @@ const joinCommunity = catchAsync(async (req, res) => {
 
   /* Check is user is author */
   if (userCommunity && userCommunity.is_author == 1) {
-    return res.status(201).json({
+    return res.status(401).json({
       success: false,
       message: 'You are the creator of this community',
     });
@@ -118,14 +119,14 @@ const joinCommunity = catchAsync(async (req, res) => {
   /* Check if user has already joined or is pending request */
   if (userCommunity) {
     if (userCommunity.status == 1) {
-      return res.status(201).json({
+      return res.status(401).json({
         success: false,
         message: 'You already are a member of this community',
       });
     }
 
     if (userCommunity.status == 0) {
-      return res.status(201).json({
+      return res.status(401).json({
         success: false,
         message: 'Request to join this community is already created',
       });
@@ -138,7 +139,10 @@ const joinCommunity = catchAsync(async (req, res) => {
       await db('user_communities').where(whereObj).update('status', 1);
       return res.status(200).json({
         success: true,
-        data: 'Community Joined Successfully',
+        data: {
+          message: 'Community Joined Successfully',
+          name: community.name,
+        },
       });
     }
 
@@ -151,14 +155,20 @@ const joinCommunity = catchAsync(async (req, res) => {
 
     res.status(200).json({
       success: true,
-      data: newRow,
+      data: {
+        message: 'Community Joined Successfully',
+        name: community.name,
+      },
     });
   } else {
     if (userCommunity && userCommunity.status == -1) {
       await db('user_communities').where(whereObj).update('status', 0);
       return res.status(200).json({
         success: true,
-        data: 'Request sent to the creator for approval',
+        data: {
+          message: 'Request sent to the creator for approval',
+          name: community.name,
+        },
       });
     }
   }
@@ -170,7 +180,10 @@ const joinCommunity = catchAsync(async (req, res) => {
 
   return res.status(200).json({
     success: true,
-    data: 'Request sent to the creator for approval',
+    data: {
+      message: 'Request sent to the creator for approval',
+      name: community.name,
+    },
   });
 });
 

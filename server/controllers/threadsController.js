@@ -5,43 +5,52 @@ const { threadCreationSchema } = require('../utils/validation');
 
 const getCommunityUserThreads = catchAsync(async (req, res) => {
   const community = req.params.community;
+  const loggedInUser = req.user.id;
 
   const threads = await db('threads as t')
     .select(
       't.*',
-      'u.name as author',
+      'u.name as thread_author',
+      'uc.name as community_author',
       'c.category_id',
-      'uc.is_author',
-      'uc.status',
       'c.name',
       'c.description',
       'c.access_type'
     )
     .select(db.raw('COUNT(comments.id) as total_comments'))
     .join('communities as c', 'c.id', '=', 't.community_id')
-    .join('user_communities as uc', 'uc.community_id', '=', 'c.id')
     .join('users as u', 'u.id', '=', 't.user_id')
+    .join('users as uc', 'uc.id', '=', 'c.created_by')
     .leftJoin('comments', 'comments.thread_id', '=', 't.id')
-    .andWhere(function () {
-      this.where('uc.is_author', 1);
-    })
     .andWhere('c.name', community)
     .groupBy(
       't.id',
       'u.name',
+      'uc.name',
       'c.category_id',
-      'uc.is_author',
-      'uc.status',
       'c.name',
       'c.description',
       'c.access_type'
     )
     .orderBy('t.id', 'desc');
 
+  const userCommunities = await db('user_communities').where(
+    'user_id',
+    loggedInUser
+  );
+
+  const transformThreads = threads.map((thread) => {
+    const isAuthor = thread.user_id == loggedInUser ? 1 : 0;
+    return {
+      ...thread,
+      is_author: isAuthor,
+    };
+  });
+
   if (threads) {
     res.status(200).json({
       success: true,
-      data: threads,
+      data: transformThreads,
     });
   }
 });

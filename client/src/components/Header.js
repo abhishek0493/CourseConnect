@@ -20,7 +20,7 @@ import MoreIcon from '@mui/icons-material/MoreVert';
 import TripOriginRoundedIcon from '@mui/icons-material/TripOriginRounded';
 import { withStyles, makeStyles } from '@mui/styles';
 import { Link, useNavigate } from 'react-router-dom';
-import logo from './HeaderLogo.png';
+import logo from '../images/HeaderLogo.png';
 import axios from 'axios';
 
 const styles = (theme) => ({

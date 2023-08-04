@@ -5,25 +5,25 @@ import ColorLensTwoToneIcon from '@mui/icons-material/ColorLensTwoTone';
 import TranslateTwoToneIcon from '@mui/icons-material/TranslateTwoTone';
 import BusinessCenterTwoToneIcon from '@mui/icons-material/BusinessCenterTwoTone';
 
-export const AddCategoryIcon = (data) => {
+export const AddCategoryIcon = (data, size = '') => {
   const processData = (item) => {
     let icon = null;
 
     switch (item.category_id) {
       case 1:
-        icon = <PsychologyTwoToneIcon />;
+        icon = <PsychologyTwoToneIcon fontSize={size} />;
         break;
       case 2:
-        icon = <BusinessCenterTwoToneIcon />;
+        icon = <BusinessCenterTwoToneIcon fontSize={size} />;
         break;
       case 3:
-        icon = <ColorLensTwoToneIcon />;
+        icon = <ColorLensTwoToneIcon fontSize={size} />;
         break;
       case 4:
-        icon = <SettingsAccessibilityIcon />;
+        icon = <SettingsAccessibilityIcon fontSize={size} />;
         break;
       case 5:
-        icon = <TranslateTwoToneIcon />;
+        icon = <TranslateTwoToneIcon fontSize={size} />;
         break;
       default:
         break;

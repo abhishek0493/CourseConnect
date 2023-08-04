@@ -192,9 +192,9 @@ const Sidebar = ({ communities }) => {
                       <ListItemIcon>
                         <Avatar
                           sx={{
-                            width: 24,
-                            height: 24,
-                            bgcolor: '#2e2e78',
+                            width: 28,
+                            height: 28,
+                            bgcolor: '#090979',
                             // border: '2px solid #2e2e78',
                             color: 'paper',
                             p: 1.5,

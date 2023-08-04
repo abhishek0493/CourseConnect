@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import CreatePostBar from '../../components/Common/CreatePostBar';
-import { Box, Card, Alert, Stack } from '@mui/material';
+import { Box, Alert, Stack } from '@mui/material';
 import axios from 'axios';
 import { Refactor } from '../../components/Constants/Refactor';
-import ThreadCard from '../../components/Thread/ThreadCard';
 import FilterBar from '../../components/Dashboard/FilterBar';
 import DashboardThreads from '../../components/Dashboard/DashboardThreads';
+import { AddCategoryIcon } from '../../utils/AddCategoryIcon';
 
 const Dashboard = () => {
   const [threads, setThreads] = useState([]);
@@ -13,7 +13,8 @@ const Dashboard = () => {
     await axios.get('http://localhost:8000/api/v1/dashboard').then((res) => {
       if (res.data.success) {
         const response = Refactor(res.data);
-        setThreads(response);
+        const resWithIcons = AddCategoryIcon(response);
+        setThreads(resWithIcons);
       }
     });
   };

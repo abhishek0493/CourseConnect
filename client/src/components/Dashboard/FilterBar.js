@@ -1,40 +1,24 @@
-import {
-  Box,
-  IconButton,
-  Typography,
-  Card,
-  TextField,
-  MenuItem,
-} from '@mui/material';
-import WhatshotIcon from '@mui/icons-material/Whatshot';
-import CategoryIcon from '@mui/icons-material/Category';
 import React from 'react';
+
+import { Box, Typography, TextField, MenuItem } from '@mui/material';
+import CategoryIcon from '@mui/icons-material/Category';
 import { Categories } from '../Constants/Categories';
 
 const FilterBar = () => {
   return (
     <>
-      <Card sx={{ my: 2, p: 1 }}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+      <Box sx={{ my: 2, p: 1 }}>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
           <Box>
-            <IconButton sx={{ borderRadius: 2 }}>
-              <WhatshotIcon sx={{ fontSize: '1.2rem' }} />
-              <Typography sx={{ mx: 1, color: '#333333' }} variant="body2">
-                Trending
-              </Typography>
-            </IconButton>
-            <IconButton sx={{ borderRadius: 2 }}>
-              <WhatshotIcon sx={{ fontSize: '1.2rem' }} />
-              <Typography sx={{ mx: 1, color: '#333333' }} variant="body2">
-                Trending
-              </Typography>
-            </IconButton>
-            <IconButton sx={{ borderRadius: 2 }}>
-              <WhatshotIcon sx={{ fontSize: '1.2rem' }} />
-              <Typography sx={{ mx: 1, color: '#333333' }} variant="body2">
-                Trending
-              </Typography>
-            </IconButton>
+            <Typography variant="h5" fontWeight="bold">
+              # Trending Threads
+            </Typography>
           </Box>
           <TextField
             id="outlined-select-currency"
@@ -56,7 +40,7 @@ const FilterBar = () => {
             ))}
           </TextField>
         </Box>
-      </Card>
+      </Box>
     </>
   );
 };

@@ -9,6 +9,7 @@ import {
   Box,
   Grid,
   IconButton,
+  Tooltip,
   Chip,
 } from '@mui/material';
 
@@ -16,6 +17,9 @@ import ArrowCircleUpTwoToneIcon from '@mui/icons-material/ArrowCircleUpTwoTone';
 import ArrowCircleDownTwoToneIcon from '@mui/icons-material/ArrowCircleDownTwoTone';
 import BookmarkTwoToneIcon from '@mui/icons-material/BookmarkTwoTone';
 import MarkChatUnreadTwoToneIcon from '@mui/icons-material/MarkChatUnreadTwoTone';
+import StarsRoundedIcon from '@mui/icons-material/StarsRounded';
+import LanguageRoundedIcon from '@mui/icons-material/LanguageRounded';
+
 import ParentContext from '../../ParentContext';
 import axios from 'axios';
 import { FormatCount } from '../Constants/RefactorCount';
@@ -127,48 +131,62 @@ const ThreadCard = ({ thread, upVoteTrigger, downVoteTrigger }) => {
               sx={{
                 p: 1,
                 display: 'flex',
+                justifyContent: 'space-between',
                 alignItems: 'center',
                 borderBottom: '0.5px solid #e3e3e3',
               }}
             >
-              <Avatar
-                sx={{
-                  width: 24,
-                  height: 24,
-                  bgcolor: '#2e2e78',
-                  // border: '2px solid #2e2e78',
-                  color: 'paper',
-                  p: 1.5,
-                }}
-              >
-                {thread.author.charAt(0)}
-              </Avatar>
-              <Typography
-                variant="caption"
-                fontWeight="light"
-                color="gray"
-                sx={{ mx: 1 }}
-              >
-                Posted By
-                {thread.is_author === 1 ? (
-                  <Typography
-                    variant="caption"
-                    sx={{
-                      color: 'primary.dark',
-                      borderRadius: 4,
-                      p: 0.5,
-                      fontWeight: 'bold',
-                    }}
-                  >
-                    You
-                  </Typography>
-                ) : (
-                  <Typography variant="caption">u/{thread.author}</Typography>
+              <Box sx={{ display: 'flex' }}>
+                <Avatar
+                  sx={{
+                    width: 24,
+                    height: 24,
+                    bgcolor: '#2e2e78',
+                    // border: '2px solid #2e2e78',
+                    color: 'paper',
+                    p: 1.5,
+                  }}
+                >
+                  {thread.thread_author.charAt(0)}
+                </Avatar>
+                <Typography
+                  variant="caption"
+                  fontWeight="light"
+                  color="gray"
+                  sx={{ mx: 1 }}
+                >
+                  Posted By
+                  {thread.is_author == 1 ? (
+                    <Typography
+                      variant="caption"
+                      sx={{
+                        color: 'primary.dark',
+                        borderRadius: 4,
+                        p: 0.5,
+                        fontWeight: 'bold',
+                      }}
+                    >
+                      You
+                    </Typography>
+                  ) : (
+                    <Typography variant="caption" sx={{ ml: 0.5 }}>
+                      u/{thread.thread_author}
+                    </Typography>
+                  )}
+                </Typography>
+                <Typography variant="caption" color={'gray'}>
+                  {thread.created_at}
+                </Typography>
+              </Box>
+              <Box>
+                {thread.type == 1 && (
+                  <>
+                    <Tooltip title="Course thread">
+                      <StarsRoundedIcon sx={{ mr: 0.5 }} />
+                    </Tooltip>
+                  </>
                 )}
-              </Typography>
-              <Typography variant="caption" color={'gray'}>
-                {thread.created_at}
-              </Typography>
+              </Box>
             </Box>
             <Box sx={{ p: 1.5 }}>
               <Typography variant="body1" sx={{ ml: 1 }}>
@@ -182,6 +200,7 @@ const ThreadCard = ({ thread, upVoteTrigger, downVoteTrigger }) => {
               {thread.type == 1 && (
                 <>
                   <Chip
+                    icon={<LanguageRoundedIcon />}
                     label={thread.link}
                     sx={{ my: 1 }}
                     onClick={() => {

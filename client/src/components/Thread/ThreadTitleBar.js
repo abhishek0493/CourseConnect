@@ -6,44 +6,31 @@ import {
   Divider,
   Avatar,
   Button,
+  Modal,
   Box,
   Tooltip,
 } from '@mui/material';
 
-import AllInclusiveIcon from '@mui/icons-material/AllInclusive';
-import AddModeratorIcon from '@mui/icons-material/AddModerator';
-import LockPersonIcon from '@mui/icons-material/LockPerson';
+import { getAccessIcon } from '../Constants/GetAccessIcon';
 
-const getAccessIcon = (type) => {
-  let icon = null;
-  let message = '';
-  switch (type) {
-    case 1:
-      icon = <AllInclusiveIcon htmlColor="green" />;
-      message =
-        'This community is open. Anyone can join and post in this community';
-      break;
-    case 2:
-      icon = <AddModeratorIcon htmlColor="orange" />;
-      message =
-        'This community is restricted. Threads can be viewed but requires creator approval for posting in this community';
-      break;
-    case 3:
-      icon = <LockPersonIcon htmlColor="red" />;
-      message =
-        'This community is protected. Viewing and creating threads requires creator approval';
-      break;
-    default:
-      break;
-  }
-  return {
-    icon: icon,
-    message: message,
-  };
+const style = {
+  position: 'absolute',
+  top: '30%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 500,
+  bgcolor: 'background.paper',
+  borderRadius: 2,
+  boxShadow: 24,
+  p: 4,
 };
 
-const ThreadTitleBar = ({ community, name }) => {
+const ThreadTitleBar = ({ community }) => {
   const [isHovered, setIsHovered] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   const handleMouseEnter = () => {
     setIsHovered(true);
@@ -76,7 +63,7 @@ const ThreadTitleBar = ({ community, name }) => {
         <Grid item xs={1}>
           <Avatar
             sx={{
-              bgcolor: '#2e2e78',
+              bgcolor: '#090979',
               width: '4rem',
               height: '4rem',
               color: 'paper',
@@ -108,12 +95,26 @@ const ThreadTitleBar = ({ community, name }) => {
           <Typography variant="caption">
             Created by u/{community.author_name}
           </Typography>
-          <Typography
-            variant="caption"
-            sx={{ my: 1, display: 'block', fontStyle: 'italic' }}
-          >
-            {community.description}
-          </Typography>
+          <Box sx={{ mt: 0.5 }}>
+            <Button onClick={handleOpen} size="small">
+              Learn more
+            </Button>
+            <Modal
+              open={open}
+              onClose={handleClose}
+              aria-labelledby="modal-modal-title"
+              aria-describedby="modal-modal-description"
+            >
+              <Box sx={style}>
+                <Typography id="modal-modal-title" variant="h5" component="h2">
+                  About the community
+                </Typography>
+                <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                  {community.description}
+                </Typography>
+              </Box>
+            </Modal>
+          </Box>
         </Grid>
         <Grid item xs={1} alignItems={'center'}>
           <Button
