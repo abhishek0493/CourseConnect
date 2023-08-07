@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import {
@@ -9,7 +9,6 @@ import {
   Box,
   Grid,
   IconButton,
-  Rating,
   Tooltip,
   Chip,
 } from '@mui/material';

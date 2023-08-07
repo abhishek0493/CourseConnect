@@ -4,7 +4,9 @@ const catchAsync = require('../utils/catchAsync');
 
 const getTrendingThreads = catchAsync(async (req, res) => {
   const loggedInUser = req.user.id;
-  const threads = await db('threads as t')
+  const { is_saved, category } = req.query;
+
+  let threadsQuery = db('threads as t')
     .select(
       't.*',
       'u.name as author',
@@ -33,7 +35,21 @@ const getTrendingThreads = catchAsync(async (req, res) => {
       'c.created_by'
     )
     .having('total_comments', '>', 1)
-    .orderBy('total_comments', 'desc');
+    .orderBy('t.id', 'desc');
+
+  if (is_saved) {
+    threadsQuery = threadsQuery.join('user_thread_actions as uta', function () {
+      this.on('t.id', '=', 'uta.thread_id')
+        .andOn('uta.is_saved', 1)
+        .andOn('uta.user_id', loggedInUser);
+    });
+  }
+
+  if (category) {
+    threadsQuery = threadsQuery.andWhere('c.category_id', category);
+  }
+
+  const threads = await threadsQuery;
 
   const userCommunities = await db('user_communities').where(
     'user_id',

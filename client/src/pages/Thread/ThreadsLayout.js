@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box, Button, Grid } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import CreatePostBar from '../../components/Common/CreatePostBar';
 import { Outlet, useLocation, useParams } from 'react-router-dom';
@@ -6,6 +6,7 @@ import ThreadTitleBar from '../../components/Thread/ThreadTitleBar';
 import axios from 'axios';
 import { Refactor } from '../../components/Constants/Refactor';
 import { AddCategoryIcon } from '../../utils/AddCategoryIcon';
+import Filters from '../../components/Common/Filters';
 
 const ThreadsLayout = () => {
   const { name } = useParams();
@@ -52,6 +53,7 @@ const ThreadsLayout = () => {
     <Box>
       <ThreadTitleBar name={name} community={community} />
       <CreatePostBar community={community} />
+      <Filters />
       <Box sx={{ my: 2 }}>
         <Outlet context={[threads, setThreads]} />
       </Box>

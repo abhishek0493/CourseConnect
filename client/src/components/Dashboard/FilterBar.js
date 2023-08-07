@@ -1,10 +1,21 @@
 import React from 'react';
 
 import { Box, Typography, TextField, MenuItem } from '@mui/material';
+
 import CategoryIcon from '@mui/icons-material/Category';
 import { Categories } from '../Constants/Categories';
+import Filters from '../Common/Filters';
 
-const FilterBar = () => {
+import BookmarkAddedIcon from '@mui/icons-material/BookmarkAdded';
+import WhatshotIcon from '@mui/icons-material/Whatshot';
+
+const FilterBar = ({
+  title,
+  handleGetSave,
+  handleGetTrending,
+  handleFilterByCategory,
+  handleReset,
+}) => {
   return (
     <>
       <Box sx={{ my: 2, p: 1 }}>
@@ -17,7 +28,7 @@ const FilterBar = () => {
         >
           <Box>
             <Typography variant="h5" fontWeight="bold">
-              # Trending Threads
+              # {title}
             </Typography>
           </Box>
           <TextField
@@ -31,7 +42,8 @@ const FilterBar = () => {
                 Filter By Category
               </Typography>
             }
-            sx={{ maxWidth: '250px' }}
+            sx={{ maxWidth: '280px' }}
+            onChange={(event) => handleFilterByCategory(event.target.value)}
           >
             {Categories.map((option) => (
               <MenuItem key={option.id} value={option.id}>
@@ -39,7 +51,34 @@ const FilterBar = () => {
               </MenuItem>
             ))}
           </TextField>
+          {/* {title == 'Trending Threads' && (
+            <>
+              <Button
+                variant="contained"
+                size="small"
+                color="primary"
+                onClick={() => handleGetSave({ is_saved: 1 })}
+              >
+                <BookmarkAddedIcon sx={{ mx: 0.5 }} />
+                Saved
+              </Button>
+            </>
+          )}
+          {title == 'Saved Threads' && (
+            <>
+              <Button
+                variant="contained"
+                size="small"
+                color="primary"
+                onClick={handleGetTrending}
+              >
+                <WhatshotIcon sx={{ mx: 0.5 }} />
+                Trending
+              </Button>
+            </>
+          )} */}
         </Box>
+        <Filters handleReset={handleReset} />
       </Box>
     </>
   );

@@ -9,14 +9,41 @@ import { AddCategoryIcon } from '../../utils/AddCategoryIcon';
 
 const Dashboard = () => {
   const [threads, setThreads] = useState([]);
-  const fetchTrendingThreads = async () => {
-    await axios.get('http://localhost:8000/api/v1/dashboard').then((res) => {
+  const [url, setUrl] = useState('');
+  const [title, setTitle] = useState('Trending Threads');
+
+  const fetchTrendingThreads = async (filters) => {
+    let url = 'http://localhost:8000/api/v1/dashboard';
+    if (filters) {
+      const queryParams = new URLSearchParams(filters).toString();
+      url = `http://localhost:8000/api/v1/dashboard?${queryParams}`;
+    }
+
+    await axios.get(url, { withCredentials: true }).then((res) => {
       if (res.data.success) {
         const response = Refactor(res.data);
         const resWithIcons = AddCategoryIcon(response);
         setThreads(resWithIcons);
       }
     });
+  };
+
+  const handleShowSaveThreads = (filterObj) => {
+    fetchTrendingThreads(filterObj);
+    setTitle('Saved Threads');
+  };
+
+  const handleShowTrendingThreads = () => {
+    fetchTrendingThreads();
+    setTitle('Trending Threads');
+  };
+
+  const handleShowCategoryThreads = (value) => {
+    fetchTrendingThreads({ category: value });
+  };
+
+  const handleResetFilters = () => {
+    fetchTrendingThreads();
   };
 
   useEffect(() => {
@@ -26,7 +53,13 @@ const Dashboard = () => {
   return (
     <>
       <CreatePostBar />
-      <FilterBar />
+      <FilterBar
+        handleGetSave={handleShowSaveThreads}
+        handleGetTrending={handleShowTrendingThreads}
+        handleFilterByCategory={handleShowCategoryThreads}
+        handleReset={handleResetFilters}
+        title={title}
+      />
       <Box sx={{ my: 2 }}>
         {threads.length === 0 ? (
           <>
