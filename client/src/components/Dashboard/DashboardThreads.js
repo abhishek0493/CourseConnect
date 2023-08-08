@@ -160,19 +160,30 @@ const DashboardThreads = ({
             }}
           >
             <Box textAlign={'center'}>
-              <IconButton
-                size="small"
-                onClick={handleUpVote}
-                disabled={thread.is_joined == 0 && thread.is_author == 0}
-                sx={{
-                  m: 0,
-                  '&:hover': {
-                    color: 'primary.main',
-                  },
-                }}
+              <Tooltip
+                title={
+                  thread.is_joined || thread.is_author
+                    ? 'Upvote Thread'
+                    : 'Join community to up-vote'
+                }
               >
-                <ArrowCircleUpTwoToneIcon htmlColor={upVoteColor} />
-              </IconButton>
+                <span>
+                  <IconButton
+                    size="small"
+                    onClick={handleUpVote}
+                    disabled={thread.is_joined == 0 && thread.is_author == 0}
+                    sx={{
+                      m: 0,
+                      '&:hover': {
+                        color: 'primary.main',
+                      },
+                    }}
+                  >
+                    <ArrowCircleUpTwoToneIcon htmlColor={upVoteColor} />
+                  </IconButton>
+                </span>
+              </Tooltip>
+
               <Typography variant="caption" fontWeight={'bold'}>
                 {FormatCount(thread.total_upvotes)}
               </Typography>
@@ -181,18 +192,28 @@ const DashboardThreads = ({
               <Typography variant="caption" fontWeight={'bold'}>
                 {FormatCount(thread.total_downvotes)}
               </Typography>
-              <IconButton
-                size="small"
-                onClick={handleDownVote}
-                disabled={thread.is_joined == 0 && thread.is_author == 0}
-                sx={{
-                  '&:hover': {
-                    color: 'warning.main',
-                  },
-                }}
+              <Tooltip
+                title={
+                  thread.is_joined || thread.is_author
+                    ? 'Downvote Thread'
+                    : 'Join community to down-vote'
+                }
               >
-                <ArrowCircleDownTwoToneIcon htmlColor={downVoteColor} />
-              </IconButton>
+                <span>
+                  <IconButton
+                    size="small"
+                    onClick={handleDownVote}
+                    disabled={thread.is_joined == 0 && thread.is_author == 0}
+                    sx={{
+                      '&:hover': {
+                        color: 'warning.main',
+                      },
+                    }}
+                  >
+                    <ArrowCircleDownTwoToneIcon htmlColor={downVoteColor} />
+                  </IconButton>
+                </span>
+              </Tooltip>
             </Box>
           </Box>
         </Grid>
