@@ -394,34 +394,44 @@ const DashboardThreads = ({
                     {thread.total_comments} Comments
                   </Typography>
                 </IconButton>
-                <IconButton
-                  sx={{ borderRadius: 2 }}
-                  onClick={handleSave}
-                  disabled={thread.is_joined == 0 && thread.is_author == 0}
+                <Tooltip
+                  title={
+                    thread.is_joined || thread.is_author
+                      ? 'Save Thread'
+                      : 'Join community to save this thread'
+                  }
                 >
-                  {thread.is_joined == 0 && thread.is_author == 0 && (
-                    <BlockIcon sx={{ fontSize: '1.2rem' }} />
-                  )}
-                  {thread.is_joined == 1 ||
-                    (thread.is_author == 1 && (
-                      <BookmarkIcon
-                        sx={{ fontSize: '1.2rem' }}
-                        htmlColor={savedColour}
-                      />
-                    ))}
-                  {thread.is_joined == 1 && thread.is_author == 0 && (
-                    <BookmarkIcon
-                      sx={{ fontSize: '1.2rem' }}
-                      htmlColor={savedColour}
-                    />
-                  )}
-                  <Typography
-                    variant="caption"
-                    sx={{ mx: 1, color: '#333333' }}
-                  >
-                    {savedText}
-                  </Typography>
-                </IconButton>
+                  <span>
+                    <IconButton
+                      sx={{ borderRadius: 2 }}
+                      onClick={handleSave}
+                      disabled={thread.is_joined == 0 && thread.is_author == 0}
+                    >
+                      {thread.is_joined == 0 && thread.is_author == 0 && (
+                        <BlockIcon sx={{ fontSize: '1.2rem' }} />
+                      )}
+                      {thread.is_joined == 1 ||
+                        (thread.is_author == 1 && (
+                          <BookmarkIcon
+                            sx={{ fontSize: '1.2rem' }}
+                            htmlColor={savedColour}
+                          />
+                        ))}
+                      {thread.is_joined == 1 && thread.is_author == 0 && (
+                        <BookmarkIcon
+                          sx={{ fontSize: '1.2rem' }}
+                          htmlColor={savedColour}
+                        />
+                      )}
+                      <Typography
+                        variant="caption"
+                        sx={{ mx: 1, color: '#333333' }}
+                      >
+                        {savedText}
+                      </Typography>
+                    </IconButton>
+                  </span>
+                </Tooltip>
               </Box>
             </Box>
           </Box>
