@@ -11,12 +11,50 @@ import Filters from '../../components/Common/Filters';
 const ThreadsLayout = () => {
   const { name } = useParams();
   const location = useLocation();
+
   const [threads, setThreads] = useState([]);
   const [community, setCommunity] = useState([]);
+  const [filterState, setFilterState] = useState({
+    isSaved: 0,
+    isCourse: 0,
+    isAuthorPosted: 0,
+    isCategory: 0,
+  });
+
+  const handleShowSaveThreads = (value) => {
+    setFilterState((prevFilterState) => ({
+      ...prevFilterState,
+      isSaved: value,
+    }));
+  };
+
+  const handleShowCourseThreads = (value) => {
+    setFilterState((prevFilterState) => ({
+      ...prevFilterState,
+      isCourse: value,
+    }));
+  };
+
+  const handleShowPostedThreads = (value) => {
+    setFilterState((prevFilterState) => ({
+      ...prevFilterState,
+      isAuthorPosted: value,
+    }));
+  };
+
+  const handleResetFilters = () => {
+    setFilterState({
+      isSaved: 0,
+      isCourse: 0,
+      isAuthorPosted: 0,
+      isCategory: 0,
+    });
+  };
 
   const fetchCommunityDetails = async () => {
+    const url = `http://localhost:8000/api/v1/community/${name}`;
     await axios
-      .get(`http://localhost:8000/api/v1/community/${name}`)
+      .get(url, { withCredentials: true })
       .then((res) => {
         if (res.data.success) {
           const result = Refactor(res.data);
@@ -29,9 +67,14 @@ const ThreadsLayout = () => {
       });
   };
 
-  const fetchCommunityThreads = async () => {
+  const fetchCommunityThreads = async (filters) => {
+    let url = `http://localhost:8000/api/v1/threads/${name}/get-threads`;
+    if (filters) {
+      const queryParams = new URLSearchParams(filters).toString();
+      url = `http://localhost:8000/api/v1/threads/${name}/get-threads?${queryParams}`;
+    }
     await axios
-      .get(`http://localhost:8000/api/v1/threads/${name}/get-threads`)
+      .get(url, { withCredentials: true })
       .then((res) => {
         if (res.data.success) {
           const result = Refactor(res.data);
@@ -45,15 +88,21 @@ const ThreadsLayout = () => {
   };
 
   useEffect(() => {
-    fetchCommunityThreads();
+    fetchCommunityThreads(filterState);
     fetchCommunityDetails();
-  }, [location]);
+  }, [location, filterState]);
 
   return (
     <Box>
       <ThreadTitleBar name={name} community={community} />
       <CreatePostBar community={community} />
-      <Filters />
+      <Filters
+        filterState={filterState}
+        toggleSaved={handleShowSaveThreads}
+        toggleCourse={handleShowCourseThreads}
+        togglePosted={handleShowPostedThreads}
+        handleReset={handleResetFilters}
+      />
       <Box sx={{ my: 2 }}>
         <Outlet context={[threads, setThreads]} />
       </Box>

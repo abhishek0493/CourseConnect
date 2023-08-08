@@ -6,8 +6,9 @@ const { threadCreationSchema } = require('../utils/validation');
 const getCommunityUserThreads = catchAsync(async (req, res) => {
   const community = req.params.community;
   const loggedInUser = req.user.id;
+  const { isSaved, isPosted, isCourse } = req.query;
 
-  const threads = await db('threads as t')
+  let threadsQuery = db('threads as t')
     .select(
       't.*',
       'u.name as thread_author',
@@ -33,6 +34,24 @@ const getCommunityUserThreads = catchAsync(async (req, res) => {
       'c.access_type'
     )
     .orderBy('t.id', 'desc');
+
+  if (isSaved && isSaved == 1) {
+    threadsQuery = threadsQuery.join('user_thread_actions as uta', function () {
+      this.on('t.id', '=', 'uta.thread_id')
+        .andOn('uta.is_saved', 1)
+        .andOn('uta.user_id', loggedInUser);
+    });
+  }
+
+  if (isCourse && isCourse == 1) {
+    threadsQuery = threadsQuery.andWhere('t.type', 1);
+  }
+
+  if (isPosted && isPosted == 1) {
+    threadsQuery = threadsQuery.andWhere('t.user_id', loggedInUser);
+  }
+
+  const threads = await threadsQuery;
 
   const userThreadActions = await db('user_thread_actions').where(
     'user_id',
