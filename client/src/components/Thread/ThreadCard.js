@@ -99,7 +99,6 @@ const ThreadCard = ({
       <Card
         key={thread.id}
         sx={{
-          // borderLeft: thread.type == 1 ? `4px solid orangered` : ``,
           display: 'flex',
         }}
         variant="outlined"

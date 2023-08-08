@@ -22,8 +22,10 @@ import StarsRoundedIcon from '@mui/icons-material/StarsRounded';
 import ForumRoundedIcon from '@mui/icons-material/ForumRounded';
 import VerifiedRoundedIcon from '@mui/icons-material/VerifiedRounded';
 import LeaderboardRoundedIcon from '@mui/icons-material/LeaderboardRounded';
+import BlockIcon from '@mui/icons-material/Block';
 
 import MarkChatUnreadIcon from '@mui/icons-material/MarkChatUnread';
+import BookmarkIcon from '@mui/icons-material/Bookmark';
 
 import { FormatCount } from '../Constants/RefactorCount';
 import { useNavigate } from 'react-router-dom';
@@ -42,7 +44,12 @@ const style = {
   p: 4,
 };
 
-const DashboardThreads = ({ thread }) => {
+const DashboardThreads = ({
+  thread,
+  upVoteTrigger,
+  downVoteTrigger,
+  saveTrigger,
+}) => {
   const navigate = useNavigate();
 
   const [open, setOpen] = useState(false);
@@ -55,6 +62,12 @@ const DashboardThreads = ({ thread }) => {
 
   const accessIcon = getAccessIcon(thread.access_type);
   const communityIcon = thread.icon;
+
+  const savedColour = thread.is_saved ? 'green' : '';
+  const savedText = thread.is_saved ? 'Saved' : 'Save';
+
+  const upVoteColor = thread.is_upvoted == 1 ? 'green' : '';
+  const downVoteColor = thread.is_downvoted == 1 ? 'orangered' : '';
 
   const handleJoin = async (id) => {
     await axios
@@ -72,11 +85,63 @@ const DashboardThreads = ({ thread }) => {
       });
   };
 
+  const handleUpVote = async () => {
+    await axios
+      .get(`http://localhost:8000/api/v1/threads/${thread.id}/up-vote-thread`, {
+        withCredentials: true,
+      })
+      .then((res) => {
+        if (res.data.success) {
+          upVoteTrigger(thread.id, res.data.data.toggle);
+        }
+      })
+      .catch((err) => {
+        const res = err.response;
+        alert(res.data.message);
+        console.log(err);
+      });
+  };
+
+  const handleDownVote = async () => {
+    await axios
+      .get(
+        `http://localhost:8000/api/v1/threads/${thread.id}/down-vote-thread`,
+        {
+          withCredentials: true,
+        }
+      )
+      .then((res) => {
+        if (res.data.success) {
+          downVoteTrigger(thread.id, res.data.data.toggle);
+        }
+      })
+      .catch((err) => {
+        const res = err.response;
+        console.log(err);
+      });
+  };
+
+  const handleSave = async () => {
+    await axios
+      .get(`http://localhost:8000/api/v1/threads/${thread.id}/save`, {
+        withCredentials: true,
+      })
+      .then((res) => {
+        if (res.data.success) {
+          saveTrigger(thread.id, res.data.data.toggle);
+        }
+      })
+      .catch((err) => {
+        const res = err.response;
+        alert(res.data.message);
+        console.log(err);
+      });
+  };
+
   return (
     <Card
       key={thread.id}
       sx={{
-        // borderLeft: thread.type == 1 ? `4px solid orangered` : ``,
         display: 'flex',
       }}
       variant="outlined"
@@ -97,6 +162,8 @@ const DashboardThreads = ({ thread }) => {
             <Box textAlign={'center'}>
               <IconButton
                 size="small"
+                onClick={handleUpVote}
+                disabled={thread.is_joined == 0 && thread.is_author == 0}
                 sx={{
                   m: 0,
                   '&:hover': {
@@ -104,7 +171,7 @@ const DashboardThreads = ({ thread }) => {
                   },
                 }}
               >
-                <ArrowCircleUpTwoToneIcon />
+                <ArrowCircleUpTwoToneIcon htmlColor={upVoteColor} />
               </IconButton>
               <Typography variant="caption" fontWeight={'bold'}>
                 {FormatCount(thread.total_upvotes)}
@@ -116,13 +183,15 @@ const DashboardThreads = ({ thread }) => {
               </Typography>
               <IconButton
                 size="small"
+                onClick={handleDownVote}
+                disabled={thread.is_joined == 0 && thread.is_author == 0}
                 sx={{
                   '&:hover': {
                     color: 'warning.main',
                   },
                 }}
               >
-                <ArrowCircleDownTwoToneIcon />
+                <ArrowCircleDownTwoToneIcon htmlColor={downVoteColor} />
               </IconButton>
             </Box>
           </Box>
@@ -302,6 +371,34 @@ const DashboardThreads = ({ thread }) => {
                     sx={{ mx: 1, color: '#333333' }}
                   >
                     {thread.total_comments} Comments
+                  </Typography>
+                </IconButton>
+                <IconButton
+                  sx={{ borderRadius: 2 }}
+                  onClick={handleSave}
+                  disabled={thread.is_joined == 0 && thread.is_author == 0}
+                >
+                  {thread.is_joined == 0 && thread.is_author == 0 && (
+                    <BlockIcon sx={{ fontSize: '1.2rem' }} />
+                  )}
+                  {thread.is_joined == 1 ||
+                    (thread.is_author == 1 && (
+                      <BookmarkIcon
+                        sx={{ fontSize: '1.2rem' }}
+                        htmlColor={savedColour}
+                      />
+                    ))}
+                  {thread.is_joined == 1 && thread.is_author == 0 && (
+                    <BookmarkIcon
+                      sx={{ fontSize: '1.2rem' }}
+                      htmlColor={savedColour}
+                    />
+                  )}
+                  <Typography
+                    variant="caption"
+                    sx={{ mx: 1, color: '#333333' }}
+                  >
+                    {savedText}
                   </Typography>
                 </IconButton>
               </Box>

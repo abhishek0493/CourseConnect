@@ -64,6 +64,11 @@ const getTrendingThreads = catchAsync(async (req, res) => {
     loggedInUser
   );
 
+  const userThreadActions = await db('user_thread_actions').where(
+    'user_id',
+    loggedInUser
+  );
+
   const transformThreads = threads.map((thread) => {
     const isJoined = userCommunities.some(
       (uc) =>
@@ -82,12 +87,25 @@ const getTrendingThreads = catchAsync(async (req, res) => {
     const isAuthor = thread.user_id == loggedInUser ? 1 : 0;
     const isCreator = thread.created_by == loggedInUser ? 1 : 0;
 
+    const isSaved = userThreadActions.some(
+      (action) => action.thread_id === thread.id && action.is_saved
+    );
+    const isUpvoted = userThreadActions.some(
+      (action) => action.thread_id === thread.id && action.is_upvoted
+    );
+    const isDownvoted = userThreadActions.some(
+      (action) => action.thread_id === thread.id && action.is_downvoted
+    );
+
     return {
       ...thread,
       is_joined: isJoined ? 1 : 0,
       is_request_pending: isRequestPending ? 1 : 0,
       is_author: isAuthor,
       is_creator: isCreator,
+      is_saved: isSaved ? 1 : 0,
+      is_upvoted: isUpvoted ? 1 : 0,
+      is_downvoted: isDownvoted ? 1 : 0,
     };
   });
 
