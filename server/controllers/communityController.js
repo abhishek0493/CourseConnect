@@ -8,7 +8,12 @@ const getCommunityByName = catchAsync(async (req, res) => {
     .join('users as u', 'u.id', '=', 'c.created_by')
     .select('c.*', 'u.name as author_name')
     .where('c.name', req.params.name)
-    .first();
+    .first()
+    .select(
+      db.raw(
+        '(SELECT COUNT(*) FROM user_communities WHERE community_id = c.id AND status = 1) as total_joined_users'
+      )
+    );
 
   if (!community) {
     return res.status(400).json({

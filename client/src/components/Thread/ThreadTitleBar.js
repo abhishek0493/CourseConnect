@@ -9,9 +9,12 @@ import {
   Modal,
   Box,
   Tooltip,
+  IconButton,
+  Badge,
 } from '@mui/material';
 
 import { getAccessIcon } from '../Constants/GetAccessIcon';
+import FiberManualRecordRoundedIcon from '@mui/icons-material/FiberManualRecordRounded';
 
 const style = {
   position: 'absolute',
@@ -92,9 +95,19 @@ const ThreadTitleBar = ({ community }) => {
           >
             c/{community.name}
           </Typography>
-          <Typography variant="caption">
+          <Typography variant="caption" component={'h1'}>
             Created by u/{community.author_name}
           </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', my: 1 }}>
+            <FiberManualRecordRoundedIcon
+              color="success"
+              fontSize="8px"
+              sx={{ mr: 1 }}
+            />
+            <Typography variant="caption" color={'GrayText'}>
+              {community.total_joined_users} Members
+            </Typography>
+          </Box>
           <Box sx={{ mt: 0.5 }}>
             <Button onClick={handleOpen} size="small">
               Learn more

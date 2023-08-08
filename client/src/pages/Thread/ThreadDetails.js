@@ -22,6 +22,7 @@ import { Refactor } from '../../components/Constants/Refactor';
 
 import CreateCommentCard from '../../components/Comment/CreateCommentCard';
 import CommentItem from '../../components/Comment/CommentItem';
+import ThreadCard from '../../components/Thread/ThreadCard';
 
 const ThreadDetails = () => {
   const { name, thread_id } = useParams();
@@ -161,7 +162,6 @@ const ThreadDetails = () => {
           </Grid>
         </Grid>
       </Card>
-
       <Stack spacing={2} sx={{ marginTop: '2rem' }}>
         <Box>
           <CreateCommentCard
