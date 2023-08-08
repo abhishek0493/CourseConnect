@@ -6,14 +6,13 @@ import CategoryIcon from '@mui/icons-material/Category';
 import { Categories } from '../Constants/Categories';
 import Filters from '../Common/Filters';
 
-import BookmarkAddedIcon from '@mui/icons-material/BookmarkAdded';
-import WhatshotIcon from '@mui/icons-material/Whatshot';
-
 const FilterBar = ({
   title,
-  handleGetSave,
-  handleGetTrending,
+  filterState,
   handleFilterByCategory,
+  handleCourseToggle,
+  handlePostedToggle,
+  handleSavedToggle,
   handleReset,
 }) => {
   return (
@@ -36,6 +35,7 @@ const FilterBar = ({
             select
             fullWidth
             size="small"
+            value={filterState.isCategory}
             label={
               <Typography variant="body2">
                 <CategoryIcon sx={{ mx: 1 }} />
@@ -51,34 +51,14 @@ const FilterBar = ({
               </MenuItem>
             ))}
           </TextField>
-          {/* {title == 'Trending Threads' && (
-            <>
-              <Button
-                variant="contained"
-                size="small"
-                color="primary"
-                onClick={() => handleGetSave({ is_saved: 1 })}
-              >
-                <BookmarkAddedIcon sx={{ mx: 0.5 }} />
-                Saved
-              </Button>
-            </>
-          )}
-          {title == 'Saved Threads' && (
-            <>
-              <Button
-                variant="contained"
-                size="small"
-                color="primary"
-                onClick={handleGetTrending}
-              >
-                <WhatshotIcon sx={{ mx: 0.5 }} />
-                Trending
-              </Button>
-            </>
-          )} */}
         </Box>
-        <Filters handleReset={handleReset} />
+        <Filters
+          handleReset={handleReset}
+          filterState={filterState}
+          toggleCourse={(val) => handleCourseToggle(val)}
+          togglePosted={(val) => handlePostedToggle(val)}
+          toggleSaved={(val) => handleSavedToggle(val)}
+        />
       </Box>
     </>
   );

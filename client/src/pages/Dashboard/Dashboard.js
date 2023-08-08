@@ -9,17 +9,26 @@ import { AddCategoryIcon } from '../../utils/AddCategoryIcon';
 
 const Dashboard = () => {
   const [threads, setThreads] = useState([]);
+
   const [url, setUrl] = useState('');
+
+  const [filterState, setFilterState] = useState({
+    isSaved: 0,
+    isCourse: 0,
+    isAuthorPosted: 0,
+    isCategory: 0,
+  });
+
   const [title, setTitle] = useState('Trending Threads');
 
-  const fetchTrendingThreads = async (filters) => {
+  const fetchTrendingThreads = (filters) => {
     let url = 'http://localhost:8000/api/v1/dashboard';
     if (filters) {
-      const queryParams = new URLSearchParams(filters).toString();
+      const queryParams = new URLSearchParams(filterState).toString();
       url = `http://localhost:8000/api/v1/dashboard?${queryParams}`;
     }
 
-    await axios.get(url, { withCredentials: true }).then((res) => {
+    axios.get(url, { withCredentials: true }).then((res) => {
       if (res.data.success) {
         const response = Refactor(res.data);
         const resWithIcons = AddCategoryIcon(response);
@@ -28,36 +37,57 @@ const Dashboard = () => {
     });
   };
 
-  const handleShowSaveThreads = (filterObj) => {
-    fetchTrendingThreads(filterObj);
-    setTitle('Saved Threads');
+  const handleShowSaveThreads = (value) => {
+    setFilterState((prevFilterState) => ({
+      ...prevFilterState,
+      isSaved: value,
+    }));
   };
 
-  const handleShowTrendingThreads = () => {
-    fetchTrendingThreads();
-    setTitle('Trending Threads');
+  const handleShowCourseThreads = (value) => {
+    setFilterState((prevFilterState) => ({
+      ...prevFilterState,
+      isCourse: value,
+    }));
+  };
+
+  const handleShowPostedThreads = (value) => {
+    setFilterState((prevFilterState) => ({
+      ...prevFilterState,
+      isAuthorPosted: value,
+    }));
   };
 
   const handleShowCategoryThreads = (value) => {
-    fetchTrendingThreads({ category: value });
+    setFilterState((prevFilterState) => ({
+      ...prevFilterState,
+      isCategory: value,
+    }));
   };
 
   const handleResetFilters = () => {
-    fetchTrendingThreads();
+    setFilterState({
+      isSaved: 0,
+      isCourse: 0,
+      isAuthorPosted: 0,
+      isCategory: 0,
+    });
   };
 
   useEffect(() => {
-    fetchTrendingThreads();
-  }, []);
+    fetchTrendingThreads(filterState);
+  }, [filterState]);
 
   return (
     <>
       <CreatePostBar />
       <FilterBar
-        handleGetSave={handleShowSaveThreads}
-        handleGetTrending={handleShowTrendingThreads}
+        handleSavedToggle={handleShowSaveThreads}
         handleFilterByCategory={handleShowCategoryThreads}
+        handleCourseToggle={handleShowCourseThreads}
+        handlePostedToggle={handleShowPostedThreads}
         handleReset={handleResetFilters}
+        filterState={filterState}
         title={title}
       />
       <Box sx={{ my: 2 }}>
