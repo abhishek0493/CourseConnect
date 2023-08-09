@@ -11,8 +11,8 @@ import ThreadCard from '../../components/Thread/ThreadCard';
 
 const ThreadDetails = () => {
   const { name, thread_id } = useParams();
-  const [thread, setthread] = useState([]);
-  const [comments, setcomments] = useState([]);
+  const [thread, setThread] = useState([]);
+  const [comments, setComments] = useState([]);
   const [commentError, setCommentError] = useState({
     state: false,
     message: '',
@@ -23,14 +23,61 @@ const ThreadDetails = () => {
       .get(`http://localhost:8000/api/v1/threads/${thread_id}`)
       .then((res) => {
         const result = Refactor(res.data);
-        setthread(result.thread);
-        setcomments(result.comments);
+        setThread(result.thread);
+        setComments(result.comments);
       });
   };
 
   useEffect(() => {
     fetchthreadDetails();
   }, []);
+
+  const incrementUpvotes = (threadId, toggle) => {
+    const updatedThread = (thread) => {
+      if (thread.id === threadId) {
+        return {
+          ...thread,
+          total_upvotes: thread.total_upvotes + 1,
+          total_downvotes: thread.total_downvotes - (toggle ? 1 : 0),
+          is_upvoted: 1,
+          is_downvoted: 0,
+        };
+      }
+      return thread;
+    };
+    setThread(updatedThread);
+    fetchthreadDetails();
+  };
+
+  const incrementDownvotes = (threadId, toggle) => {
+    const updatedThread = (thread) => {
+      if (thread.id === threadId) {
+        return {
+          total_downvotes: thread.total_downvotes + 1,
+          total_upvotes: thread.total_upvotes - (toggle ? 1 : 0), // Decrement downvotes only if toggle is true
+          is_downvoted: 1,
+          is_upvoted: 0,
+        };
+      }
+      return thread;
+    };
+    setThread(updatedThread);
+    fetchthreadDetails();
+  };
+
+  const handleSave = (threadId, toggle) => {
+    const updatedThread = (thread) => {
+      if (thread.id === threadId) {
+        return {
+          ...thread,
+          is_saved: toggle ? (thread.is_saved ? 0 : 1) : 1,
+        };
+      }
+      return thread;
+    };
+    setThread(updatedThread);
+    fetchthreadDetails();
+  };
 
   const handleCreateComment = async (comment) => {
     await axios
@@ -81,7 +128,13 @@ const ThreadDetails = () => {
         c/{name}
       </Typography>
       {thread ? (
-        <ThreadCard thread={thread} isDetails={true} />
+        <ThreadCard
+          thread={thread}
+          isDetails={true}
+          upVoteTrigger={incrementUpvotes}
+          downVoteTrigger={incrementDownvotes}
+          saveTrigger={handleSave}
+        />
       ) : (
         <Typography>Loading thread details...</Typography>
       )}

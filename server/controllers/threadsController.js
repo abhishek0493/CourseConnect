@@ -144,7 +144,8 @@ const getThreadDetails = catchAsync(async (req, res) => {
 });
 
 const getThreadWithNestedComments = async (req, res) => {
-  // Execute the SQL query to retrieve the comments and their hierarchy
+  const loggedInUser = req.user.id;
+  // Retrieve the comments and their hierarchy
   let commentsData = await db.raw(`
     WITH RECURSIVE comment_hierarchy AS (
       SELECT
@@ -227,6 +228,22 @@ const getThreadWithNestedComments = async (req, res) => {
     .join('users as u', 'u.id', '=', 't.user_id')
     .where('t.id', req.params.id)
     .first();
+
+  const userThreadAction = await db('user_thread_actions')
+    .where({
+      user_id: loggedInUser,
+      thread_id: thread.id,
+    })
+    .first();
+
+  if (userThreadAction) {
+    thread = {
+      ...thread,
+      is_upvoted: userThreadAction.is_upvoted ? 1 : 0,
+      is_downvoted: userThreadAction.is_downvoted ? 1 : 0,
+      is_saved: userThreadAction.is_saved ? 1 : 0,
+    };
+  }
 
   const transformedRes = {
     thread: thread,

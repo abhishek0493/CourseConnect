@@ -66,8 +66,9 @@ const ThreadCard = ({
       })
       .catch((err) => {
         const res = err.response;
-        alert(res.data.message);
-        console.log(err);
+        if (res) {
+          alert(res.data.message);
+        }
       });
   };
 
@@ -86,7 +87,9 @@ const ThreadCard = ({
       })
       .catch((err) => {
         const res = err.response;
-        alert(res.data.message);
+        if (res) {
+          alert(res.data.message);
+        }
         console.log(err);
       });
   };
@@ -189,6 +192,7 @@ const ThreadCard = ({
                       width: 24,
                       height: 24,
                       bgcolor: '#2e2e78',
+                      fontSize: '1rem',
                       // border: '2px solid #2e2e78',
                       color: 'paper',
                       p: 1.5,
