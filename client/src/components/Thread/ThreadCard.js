@@ -27,11 +27,22 @@ import LeaderboardRoundedIcon from '@mui/icons-material/LeaderboardRounded';
 import axios from 'axios';
 import { FormatCount } from '../Constants/RefactorCount';
 
+import { formatDistanceToNow } from 'date-fns';
+
+const HumanReadableDate = ({ date }) => {
+  const formattedDate = formatDistanceToNow(new Date(date), {
+    addSuffix: true,
+  });
+
+  return <span>{formattedDate}</span>;
+};
+
 const ThreadCard = ({
   thread,
   upVoteTrigger,
   downVoteTrigger,
   saveTrigger,
+  isDetails,
 }) => {
   const navigate = useNavigate();
   const savedColour = thread.is_saved ? 'green' : '';
@@ -39,6 +50,9 @@ const ThreadCard = ({
 
   const upVoteColor = thread.is_upvoted == 1 ? 'green' : '';
   const downVoteColor = thread.is_downvoted == 1 ? 'orangered' : '';
+  const total_upvotes = thread.total_upvotes;
+  const total_downvotes = thread.total_downvotes;
+  const date = thread.created_at;
 
   const handleUpVote = async () => {
     await axios
@@ -130,12 +144,16 @@ const ThreadCard = ({
                   <ArrowCircleUpTwoToneIcon htmlColor={upVoteColor} />
                 </IconButton>
                 <Typography variant="caption" fontWeight={'bold'}>
-                  {FormatCount(thread.total_upvotes)}
+                  {total_upvotes &&
+                    total_upvotes != undefined &&
+                    FormatCount(total_upvotes)}
                 </Typography>
               </Box>
               <Box textAlign={'center'}>
                 <Typography variant="caption" fontWeight={'bold'}>
-                  {FormatCount(thread.total_downvotes)}
+                  {total_downvotes &&
+                    total_downvotes != undefined &&
+                    FormatCount(total_downvotes)}
                 </Typography>
                 <IconButton
                   size="small"
@@ -165,18 +183,20 @@ const ThreadCard = ({
               }}
             >
               <Box sx={{ display: 'flex' }}>
-                <Avatar
-                  sx={{
-                    width: 24,
-                    height: 24,
-                    bgcolor: '#2e2e78',
-                    // border: '2px solid #2e2e78',
-                    color: 'paper',
-                    p: 1.5,
-                  }}
-                >
-                  {thread.thread_author.charAt(0)}
-                </Avatar>
+                {thread && thread.thread_author && (
+                  <Avatar
+                    sx={{
+                      width: 24,
+                      height: 24,
+                      bgcolor: '#2e2e78',
+                      // border: '2px solid #2e2e78',
+                      color: 'paper',
+                      p: 1.5,
+                    }}
+                  >
+                    {thread.thread_author.charAt(0)}
+                  </Avatar>
+                )}
                 <Typography
                   variant="caption"
                   fontWeight="light"
@@ -203,7 +223,10 @@ const ThreadCard = ({
                   )}
                 </Typography>
                 <Typography variant="caption" color={'gray'}>
-                  {thread.created_at}
+                  {date && date != undefined && (
+                    <HumanReadableDate date={date} />
+                  )}
+                  {/* {thread.created_at} */}
                 </Typography>
               </Box>
               <Box>
@@ -266,22 +289,25 @@ const ThreadCard = ({
                 }}
               >
                 <Box>
-                  <IconButton
-                    sx={{ borderRadius: 2 }}
-                    onClick={() => {
-                      navigate(
-                        `/dashboard/c/${thread.name}/${thread.id}/comments`
-                      );
-                    }}
-                  >
-                    <MarkChatUnreadIcon sx={{ fontSize: '1.2rem' }} />
-                    <Typography
-                      variant="caption"
-                      sx={{ mx: 1, color: '#333333' }}
+                  {!isDetails && (
+                    <IconButton
+                      sx={{ borderRadius: 2 }}
+                      onClick={() => {
+                        navigate(
+                          `/dashboard/c/${thread.name}/${thread.id}/comments`
+                        );
+                      }}
                     >
-                      {thread.total_comments} Comments
-                    </Typography>
-                  </IconButton>
+                      <MarkChatUnreadIcon sx={{ fontSize: '1.2rem' }} />
+                      <Typography
+                        variant="caption"
+                        sx={{ mx: 1, color: '#333333' }}
+                      >
+                        {thread.total_comments} Comments
+                      </Typography>
+                    </IconButton>
+                  )}
+
                   <IconButton sx={{ borderRadius: 2 }} onClick={handleSave}>
                     <BookmarkIcon
                       sx={{ fontSize: '1.2rem' }}

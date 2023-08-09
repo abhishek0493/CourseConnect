@@ -1,20 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Card,
-  CardHeader,
-  CardContent,
-  Typography,
-  Avatar,
-  Box,
-  Stack,
-  Grid,
-  Alert,
-  Chip,
-} from '@mui/material';
-
-import ThumbUpAltOutlinedIcon from '@mui/icons-material/ThumbUpAltOutlined';
-import ThumbDownOffAltOutlinedIcon from '@mui/icons-material/ThumbDownOffAltOutlined';
-import QuestionAnswerRoundedIcon from '@mui/icons-material/QuestionAnswerRounded';
+import { Card, Typography, Box, Stack, Alert } from '@mui/material';
 
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
@@ -88,80 +73,19 @@ const ThreadDetails = () => {
 
   return (
     <Box>
-      <Card
-        key={thread.id}
-        sx={{
-          borderLeft: thread.type === 1 ? `4px solid orangered` : ``,
-          display: 'flex',
-        }}
-        variant="outlined"
+      <Typography
+        sx={{ mb: 1, fontWeight: 'bold' }}
+        variant="body1"
+        color="action"
       >
-        <Grid container>
-          <Grid item xs={0.6}>
-            <Box
-              sx={{
-                height: '100%',
-                bgcolor: 'secondary.light',
-                p: 1,
-                display: 'flex',
-                justifyContent: 'space-between',
-                flexDirection: 'column',
-              }}
-            >
-              <Box>
-                <ThumbUpAltOutlinedIcon sx={{ fontSize: '1.2rem' }} />
-                <Typography variant="caption">232</Typography>
-              </Box>
-              <Box>
-                <Typography variant="caption">232</Typography>
-                <ThumbDownOffAltOutlinedIcon sx={{ fontSize: '1.2rem' }} />
-              </Box>
-            </Box>
-          </Grid>
-          <Grid item xs={11.4}>
-            <CardHeader
-              avatar={
-                <Avatar sx={{ color: 'action.main' }}>
-                  {thread.creator && thread.creator.charAt(0)}
-                </Avatar>
-              }
-              title={thread.title}
-              subheader={`Posted by u/${thread.creator}`}
-            />
-            <CardContent>
-              <Typography variant="body2" color="text.secondary" sx={{ my: 1 }}>
-                {thread.body}
-              </Typography>
-              {thread.type === 1 && (
-                <Chip
-                  label={thread.link}
-                  onClick={() => {
-                    console.log('Hello');
-                  }}
-                />
-              )}
-            </CardContent>
-            <CardContent
-              sx={{
-                display: 'flex',
-                p: 1.2,
-                maxHeight: '3rem',
-                borderTop: '1px solid #e3e3e3',
-              }}
-            >
-              <Box>
-                <QuestionAnswerRoundedIcon
-                  sx={{ fontSize: '1.2rem' }}
-                  htmlColor="#333333"
-                />
-                <Typography variant="caption" sx={{ mx: 1, color: '#333333' }}>
-                  23 Comments
-                </Typography>
-              </Box>
-            </CardContent>
-          </Grid>
-        </Grid>
-      </Card>
+        c/{name}
+      </Typography>
+      {thread ? (
+        <ThreadCard thread={thread} isDetails={true} />
+      ) : (
+        <Typography>Loading thread details...</Typography>
+      )}
+
       <Stack spacing={2} sx={{ marginTop: '2rem' }}>
         <Box>
           <CreateCommentCard

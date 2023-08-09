@@ -32,6 +32,16 @@ import { useNavigate } from 'react-router-dom';
 import { getAccessIcon } from '../Constants/GetAccessIcon';
 import axios from 'axios';
 
+import { formatDistanceToNow } from 'date-fns';
+
+const HumanReadableDate = ({ date }) => {
+  const formattedDate = formatDistanceToNow(new Date(date), {
+    addSuffix: true,
+  });
+
+  return <span>{formattedDate}</span>;
+};
+
 const style = {
   position: 'absolute',
   top: '30%',
@@ -246,7 +256,15 @@ const DashboardThreads = ({
                 c/{thread.community_name}.
               </Typography>
               <Typography variant="caption" fontWeight="light" color="gray">
-                Posted by {thread.author}
+                Posted by {thread.author}.
+              </Typography>
+              <Typography
+                variant="caption"
+                fontWeight="light"
+                color={'GrayText'}
+                sx={{ ml: 1 }}
+              >
+                <HumanReadableDate date={thread.created_at} />
               </Typography>
             </Box>
             <Box sx={{ display: 'flex' }}>

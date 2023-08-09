@@ -223,7 +223,7 @@ const getThreadWithNestedComments = async (req, res) => {
   }
 
   let thread = await db('threads as t')
-    .select('t.*', 'u.name as creator')
+    .select('t.*', 'u.name as thread_author')
     .join('users as u', 'u.id', '=', 't.user_id')
     .where('t.id', req.params.id)
     .first();

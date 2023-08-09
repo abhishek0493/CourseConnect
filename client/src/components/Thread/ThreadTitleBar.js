@@ -15,6 +15,7 @@ import {
 
 import { getAccessIcon } from '../Constants/GetAccessIcon';
 import FiberManualRecordRoundedIcon from '@mui/icons-material/FiberManualRecordRounded';
+import Diversity3Icon from '@mui/icons-material/Diversity3';
 
 const style = {
   position: 'absolute',
@@ -99,17 +100,17 @@ const ThreadTitleBar = ({ community }) => {
             Created by u/{community.author_name}
           </Typography>
           <Box sx={{ display: 'flex', alignItems: 'center', my: 1 }}>
-            <FiberManualRecordRoundedIcon
-              color="success"
-              fontSize="8px"
-              sx={{ mr: 1 }}
-            />
+            <Diversity3Icon color="warning" sx={{ mr: 1 }} />
             <Typography variant="caption" color={'GrayText'}>
               {community.total_joined_users} Members
             </Typography>
           </Box>
           <Box sx={{ mt: 0.5 }}>
-            <Button onClick={handleOpen} size="small">
+            <Button
+              onClick={handleOpen}
+              size="small"
+              sx={{ fontSize: '0.7rem' }}
+            >
               Learn more
             </Button>
             <Modal
