@@ -24,6 +24,8 @@ import BookmarkIcon from '@mui/icons-material/Bookmark';
 import VerifiedRoundedIcon from '@mui/icons-material/VerifiedRounded';
 import LeaderboardRoundedIcon from '@mui/icons-material/LeaderboardRounded';
 
+import RequestQuoteIcon from '@mui/icons-material/RequestQuote';
+
 import axios from 'axios';
 import { FormatCount } from '../Constants/RefactorCount';
 
@@ -265,6 +267,14 @@ const ThreadCard = ({
                     size="small"
                     sx={{ mx: 1, alignItems: 'center' }}
                     label={`Rating ${thread.author_rating}/5`}
+                  />
+                  <Chip
+                    icon={<RequestQuoteIcon />}
+                    size="small"
+                    sx={{ mx: 1 }}
+                    label={
+                      thread.pricing == 1 ? 'Pricing: Free' : 'Pricing: Paid'
+                    }
                   />
                   <Chip
                     icon={<LanguageRoundedIcon />}
