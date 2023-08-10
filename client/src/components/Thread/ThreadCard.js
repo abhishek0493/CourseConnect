@@ -255,7 +255,7 @@ const ThreadCard = ({
                 {thread.body}
               </Typography>
               {thread.type == 1 && (
-                <>
+                <Box sx={{ mt: 2 }}>
                   <Chip
                     icon={<VerifiedRoundedIcon />}
                     size="small"
@@ -285,7 +285,7 @@ const ThreadCard = ({
                       alert(thread.link);
                     }}
                   />
-                </>
+                </Box>
               )}
             </CardContent>
             <Box
