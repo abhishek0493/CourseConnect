@@ -9,4 +9,12 @@ router
   .route('/community/view-all-requests')
   .get(protect, userController.getAllCommunityJoinRequests);
 
+router
+  .route('/community/request/:id/approve')
+  .get(protect, userController.approveRequest);
+
+router
+  .route('/community/request/:id/reject')
+  .get(protect, userController.approveRequest);
+
 module.exports = router;

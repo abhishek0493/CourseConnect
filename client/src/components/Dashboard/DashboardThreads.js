@@ -23,6 +23,8 @@ import ForumRoundedIcon from '@mui/icons-material/ForumRounded';
 import VerifiedRoundedIcon from '@mui/icons-material/VerifiedRounded';
 import LeaderboardRoundedIcon from '@mui/icons-material/LeaderboardRounded';
 import BlockIcon from '@mui/icons-material/Block';
+import GppMaybeRoundedIcon from '@mui/icons-material/GppMaybeRounded';
+import RequestQuoteIcon from '@mui/icons-material/RequestQuote';
 
 import MarkChatUnreadIcon from '@mui/icons-material/MarkChatUnread';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
@@ -90,8 +92,11 @@ const DashboardThreads = ({
         }
       })
       .catch((err) => {
-        const response = err.response.data;
-        alert(response.message);
+        const response = err.response;
+        if (response) {
+          alert(response.data.message);
+        }
+        console.log(err);
       });
   };
 
@@ -356,17 +361,34 @@ const DashboardThreads = ({
               </Typography>
               {thread.type == 1 && (
                 <Box sx={{ mt: 2 }}>
-                  <Chip
-                    icon={<VerifiedRoundedIcon />}
-                    size="small"
-                    sx={{ mx: 1 }}
-                    label="I have completed the course"
-                  />
+                  {thread.is_course_completed ? (
+                    <Chip
+                      icon={<VerifiedRoundedIcon />}
+                      size="small"
+                      sx={{ mx: 1 }}
+                      label="I have completed this course"
+                    />
+                  ) : (
+                    <Chip
+                      icon={<GppMaybeRoundedIcon />}
+                      size="small"
+                      sx={{ mx: 1 }}
+                      label="I have not completed this course"
+                    />
+                  )}
                   <Chip
                     icon={<LeaderboardRoundedIcon />}
                     size="small"
                     sx={{ mx: 1, alignItems: 'center' }}
                     label={`Rating ${thread.author_rating}/5`}
+                  />
+                  <Chip
+                    icon={<RequestQuoteIcon />}
+                    size="small"
+                    sx={{ mx: 1 }}
+                    label={
+                      thread.pricing == 1 ? 'Pricing: Free' : 'Pricing: Paid'
+                    }
                   />
                   <Chip
                     icon={<LanguageRoundedIcon />}

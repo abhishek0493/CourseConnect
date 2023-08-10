@@ -23,6 +23,25 @@ const getCommunityByName = catchAsync(async (req, res) => {
   }
 
   community.is_author = loggedInUser == community.created_by;
+  community.allow_access = true;
+
+  const userCommunity = await db('user_communities')
+    .where({
+      user_id: loggedInUser,
+      community_id: community.id,
+    })
+    .first();
+
+  if (community.access_type != 1 && !userCommunity) {
+    community.allow_access = false;
+  }
+
+  if (community.access_type != 1 && userCommunity) {
+    if (userCommunity.status != 1) {
+      community.allow_access = false;
+    }
+  }
+
   res.status(200).json({
     success: true,
     data: community,
@@ -178,9 +197,10 @@ const joinCommunity = catchAsync(async (req, res) => {
     }
   }
 
-  const request = await db('user_community_requests').insert({
+  const request = await db('user_communities').insert({
     user_id: loggedInUser,
     community_id: community.id,
+    is_author: 0,
   });
 
   return res.status(200).json({

@@ -25,7 +25,8 @@ const SecondarySidebar = () => {
       <Box sx={{ display: 'flex' }}>
         <InsertEmoticonRoundedIcon sx={{ mr: 1, color: 'green' }} />
         <Typography variant="body2" fontWeight={'bold'}>
-          u/{user.name}
+          {user && user.name != undefined && <span>u/{user.name}</span>}
+          {/* u/{user && user.name != undefined ? user.name : ''} */}
         </Typography>
       </Box>
       <Divider sx={{ mt: 1, borderWidth: '1px' }} />

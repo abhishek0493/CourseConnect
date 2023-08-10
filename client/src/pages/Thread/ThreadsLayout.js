@@ -21,6 +21,42 @@ const ThreadsLayout = () => {
     isCategory: 0,
   });
 
+  const fetchCommunityDetails = async () => {
+    const url = `http://localhost:8000/api/v1/community/${name}`;
+    await axios
+      .get(url, { withCredentials: true })
+      .then((res) => {
+        if (res.data.success) {
+          const result = Refactor(res.data);
+          // const resultWithIcon = AddCategoryIcon(result);
+          setCommunity(result);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const fetchCommunityThreads = async (filters) => {
+    let url = `http://localhost:8000/api/v1/threads/${name}/get-threads`;
+    if (filters) {
+      const queryParams = new URLSearchParams(filters).toString();
+      url = `http://localhost:8000/api/v1/threads/${name}/get-threads?${queryParams}`;
+    }
+    await axios
+      .get(url, { withCredentials: true })
+      .then((res) => {
+        if (res.data.success) {
+          const result = Refactor(res.data);
+          const resultWithIcons = AddCategoryIcon(result);
+          setThreads(resultWithIcons);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   const handleShowSaveThreads = (value) => {
     setFilterState((prevFilterState) => ({
       ...prevFilterState,
@@ -49,42 +85,6 @@ const ThreadsLayout = () => {
       isAuthorPosted: 0,
       isCategory: 0,
     });
-  };
-
-  const fetchCommunityDetails = async () => {
-    const url = `http://localhost:8000/api/v1/community/${name}`;
-    await axios
-      .get(url, { withCredentials: true })
-      .then((res) => {
-        if (res.data.success) {
-          const result = Refactor(res.data);
-          const resultWithIcon = AddCategoryIcon(result);
-          setCommunity(result);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  const fetchCommunityThreads = async (filters) => {
-    let url = `http://localhost:8000/api/v1/threads/${name}/get-threads`;
-    if (filters) {
-      const queryParams = new URLSearchParams(filters).toString();
-      url = `http://localhost:8000/api/v1/threads/${name}/get-threads?${queryParams}`;
-    }
-    await axios
-      .get(url, { withCredentials: true })
-      .then((res) => {
-        if (res.data.success) {
-          const result = Refactor(res.data);
-          const resultWithIcons = AddCategoryIcon(result);
-          setThreads(resultWithIcons);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
   };
 
   useEffect(() => {

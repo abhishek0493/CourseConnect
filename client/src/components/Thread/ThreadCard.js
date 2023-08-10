@@ -17,6 +17,7 @@ import ArrowCircleUpTwoToneIcon from '@mui/icons-material/ArrowCircleUpTwoTone';
 import ArrowCircleDownTwoToneIcon from '@mui/icons-material/ArrowCircleDownTwoTone';
 import StarsRoundedIcon from '@mui/icons-material/StarsRounded';
 import LanguageRoundedIcon from '@mui/icons-material/LanguageRounded';
+import GppMaybeRoundedIcon from '@mui/icons-material/GppMaybeRounded';
 
 import MarkChatUnreadIcon from '@mui/icons-material/MarkChatUnread';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
@@ -256,12 +257,21 @@ const ThreadCard = ({
               </Typography>
               {thread.type == 1 && (
                 <Box sx={{ mt: 2 }}>
-                  <Chip
-                    icon={<VerifiedRoundedIcon />}
-                    size="small"
-                    sx={{ mx: 1 }}
-                    label="I have completed the course"
-                  />
+                  {thread.is_course_completed ? (
+                    <Chip
+                      icon={<VerifiedRoundedIcon />}
+                      size="small"
+                      sx={{ mx: 1 }}
+                      label="I have completed this course"
+                    />
+                  ) : (
+                    <Chip
+                      icon={<GppMaybeRoundedIcon />}
+                      size="small"
+                      sx={{ mx: 1 }}
+                      label="I have not completed this course"
+                    />
+                  )}
                   <Chip
                     icon={<LeaderboardRoundedIcon />}
                     size="small"
