@@ -11,7 +11,7 @@ exports.up = function (knex) {
     table
       .tinyint('status')
       .defaultTo(0)
-      .comment('0:Un-approved|1:Approved|-1:Left');
+      .comment('0:Un-approved|1:Approved|-1:Left|2:Rejected');
 
     table.timestamps(true, true);
 

@@ -14,8 +14,8 @@ import {
 } from '@mui/material';
 
 import { getAccessIcon } from '../Constants/GetAccessIcon';
-import FiberManualRecordRoundedIcon from '@mui/icons-material/FiberManualRecordRounded';
 import Diversity3Icon from '@mui/icons-material/Diversity3';
+import { useNavigate } from 'react-router-dom';
 
 const style = {
   position: 'absolute',
@@ -32,6 +32,8 @@ const style = {
 const ThreadTitleBar = ({ community }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [open, setOpen] = useState(false);
+
+  const navigate = useNavigate();
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -113,6 +115,20 @@ const ThreadTitleBar = ({ community }) => {
             >
               Learn more
             </Button>
+            {community &&
+              community.is_author == 1 &&
+              (community.access_type == 2 || community.access_type == 3) && (
+                <Button
+                  onClick={() =>
+                    navigate(`/dashboard/${community.name}/view-requests`)
+                  }
+                  size="small"
+                  sx={{ fontSize: '0.7rem', ml: 1 }}
+                >
+                  View Join Requests
+                </Button>
+              )}
+
             <Modal
               open={open}
               onClose={handleClose}

@@ -3,6 +3,7 @@ import Sidebar from './Sidebar/Sidebar';
 import { Outlet } from 'react-router-dom';
 import { Box, Grid, Card, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
+import SecondarySidebar from './Dashboard/SecondarySidebar';
 
 const useStyles = makeStyles((theme) => ({
   sidebar: {
@@ -41,27 +42,7 @@ const LayoutSecondary = ({ communities }) => {
             </Grid>
             <Grid item xs={4} sx={{ p: 6 }}>
               <Card variant="outlined" sx={{ position: 'sticky', top: 80 }}>
-                <Box sx={{ height: '80vh', p: 4 }}>
-                  <Typography variant="h6">Secondary Sidebar</Typography>
-                  {[1, 2, 3].map((el) => {
-                    return (
-                      <>
-                        <Card
-                          key={el}
-                          sx={{
-                            minHeight: '100px',
-                            bgcolor: 'secondary.dark',
-                            my: 2,
-                            color: 'primary.dark',
-                            p: 5,
-                          }}
-                        >
-                          Coming Soon #1
-                        </Card>
-                      </>
-                    );
-                  })}
-                </Box>
+                <SecondarySidebar />
               </Card>
             </Grid>
           </Grid>

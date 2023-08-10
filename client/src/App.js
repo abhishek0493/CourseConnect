@@ -19,6 +19,8 @@ import { AddCategoryIcon } from './utils/AddCategoryIcon';
 import ThreadDetails from './pages/Thread/ThreadDetails';
 import Dashboard from './pages/Dashboard/Dashboard';
 import ParentContext from './ParentContext';
+import Requests from './pages/Dashboard/Requests';
+import CommunityRequests from './pages/Dashboard/CommunityRequests';
 
 function App() {
   const [userTypes, setUserTypes] = useState([]);
@@ -166,6 +168,11 @@ function App() {
               <Route
                 path="c/:name/:thread_id/comments"
                 element={<ThreadDetails />}
+              ></Route>
+              <Route path="view-all-requests" element={<Requests />}></Route>
+              <Route
+                path=":name/view-requests"
+                element={<CommunityRequests />}
               ></Route>
             </Route>
           </Route>
