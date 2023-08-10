@@ -118,6 +118,12 @@ const ThreadDetails = () => {
       });
   };
 
+  const commentActionTrigger = (val) => {
+    if (val) {
+      fetchthreadDetails();
+    }
+  };
+
   return (
     <Box>
       <Typography
@@ -160,6 +166,7 @@ const ThreadDetails = () => {
                 key={comment.id}
                 comment={comment}
                 handleSubmitReply={handleSubmitReply}
+                updateComments={commentActionTrigger}
               />
             ))
           ) : (

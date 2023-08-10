@@ -10,7 +10,7 @@ const Indentation = styled(Box)(({ theme }) => ({
   paddingLeft: '1rem',
 }));
 
-const CommentItem = ({ comment, handleSubmitReply }) => {
+const CommentItem = ({ comment, handleSubmitReply, updateComments }) => {
   const [showNestedComments, setShowNestedComments] = useState(false);
   const [showReplyBoxId, setShowReplyBoxId] = useState(null);
 
@@ -20,6 +20,10 @@ const CommentItem = ({ comment, handleSubmitReply }) => {
 
   const handleToggleNestedComments = () => {
     setShowNestedComments((prevShowNested) => !prevShowNested);
+  };
+
+  const handleCommentUpdate = (commentId) => {
+    updateComments(true);
   };
 
   const renderNestedComments = (comments, depth) => {
@@ -60,7 +64,10 @@ const CommentItem = ({ comment, handleSubmitReply }) => {
             </Typography>
             <ActionBox
               commentId={el.id}
+              comment={el}
               handleReplyButtonClick={handleReplyButtonClick}
+              upVoteTrigger={handleCommentUpdate}
+              downVoteTrigger={handleCommentUpdate}
             />
             {el.id === showReplyBoxId && (
               <ReplyBox commentId={el.id} onSubmit={handleSubmitReply} />
@@ -70,7 +77,11 @@ const CommentItem = ({ comment, handleSubmitReply }) => {
               <>
                 {renderNestedComments(el.comments, depth + 1)}
                 {depth === 2 && (
-                  <Button size="small" onClick={handleToggleNestedComments}>
+                  <Button
+                    size="small"
+                    onClick={handleToggleNestedComments}
+                    sx={{ fontSize: '12px', textTransform: 'Capitalize' }}
+                  >
                     {showNestedComments ? 'Hide Replies' : 'Show More Replies'}
                   </Button>
                 )}
@@ -109,7 +120,10 @@ const CommentItem = ({ comment, handleSubmitReply }) => {
       </Typography>
       <ActionBox
         commentId={comment.id}
+        comment={comment}
         handleReplyButtonClick={handleReplyButtonClick}
+        upVoteTrigger={handleCommentUpdate}
+        downVoteTrigger={handleCommentUpdate}
       />
       {renderNestedComments(comment.comments, 1)}
       {comment.id === showReplyBoxId && (

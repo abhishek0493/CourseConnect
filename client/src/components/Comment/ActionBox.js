@@ -1,31 +1,88 @@
 import React from 'react';
 
 import { Typography, Box, IconButton } from '@mui/material';
-import ThumbUpAltTwoToneIcon from '@mui/icons-material/ThumbUpAltTwoTone';
-import ThumbDownOffAltTwoToneIcon from '@mui/icons-material/ThumbDownOffAltTwoTone';
 import ReplyAllRoundedIcon from '@mui/icons-material/ReplyAllRounded';
 
-const ActionBox = ({ commentId, handleReplyButtonClick }) => {
+import ArrowCircleUpTwoToneIcon from '@mui/icons-material/ArrowCircleUpTwoTone';
+import ArrowCircleDownTwoToneIcon from '@mui/icons-material/ArrowCircleDownTwoTone';
+import axios from 'axios';
+
+const ActionBox = ({
+  commentId,
+  handleReplyButtonClick,
+  comment,
+  upVoteTrigger,
+  downVoteTrigger,
+}) => {
+  const handleUpVote = async () => {
+    await axios
+      .get(`http://localhost:8000/api/v1/comments/${commentId}/up-vote`, {
+        withCredentials: true,
+      })
+      .then((res) => {
+        if (res.data.success) {
+          upVoteTrigger(commentId);
+        }
+      })
+      .catch((err) => {
+        const res = err.response;
+        if (res) {
+          console.log(res.data);
+        }
+        console.log(err);
+      });
+  };
+
+  const handleDownVote = async () => {
+    await axios
+      .get(`http://localhost:8000/api/v1/comments/${commentId}/down-vote`, {
+        withCredentials: true,
+      })
+      .then((res) => {
+        if (res.data.success) {
+          downVoteTrigger(commentId);
+        }
+      })
+      .catch((err) => {
+        const res = err.response;
+        if (res) {
+          console.log(res.data);
+        }
+        console.log(err);
+      });
+  };
+
   return (
     <>
       <Box sx={{ mb: 2, color: 'primary.dark' }}>
         <Typography variant="caption" sx={{ mr: 0.5, fontSize: '0.7rem' }}>
-          14
+          {comment && comment.total_upvotes && (
+            <span>{comment.total_upvotes}</span>
+          )}
         </Typography>
-        <IconButton size="small" aria-label="Reply">
-          <ThumbUpAltTwoToneIcon
-            color="primary"
-            sx={{ fontSize: '1rem', mr: 1 }}
-          />
+        <IconButton
+          size="small"
+          aria-label="up-vote"
+          sx={{ mr: 1, p: 0 }}
+          onClick={handleUpVote}
+        >
+          <ArrowCircleUpTwoToneIcon color="gray" sx={{ fontSize: '1.4rem' }} />
         </IconButton>
-        <IconButton size="small" aria-label="Reply">
-          <ThumbDownOffAltTwoToneIcon
-            color="primary"
-            sx={{ fontSize: '1rem', mr: 0.5 }}
+        <IconButton
+          size="small"
+          aria-label="down-vote"
+          sx={{ p: 0 }}
+          onClick={handleDownVote}
+        >
+          <ArrowCircleDownTwoToneIcon
+            color="gray"
+            sx={{ mr: 0.5, fontSize: '1.4rem' }}
           />
         </IconButton>
         <Typography variant="caption" sx={{ mr: 1, fontSize: '0.7rem' }}>
-          14
+          {comment && comment.total_downvotes && (
+            <span>{comment.total_downvotes}</span>
+          )}
         </Typography>
         <IconButton
           size="small"

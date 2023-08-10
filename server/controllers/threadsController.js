@@ -155,6 +155,8 @@ const getThreadWithNestedComments = async (req, res) => {
         c.created_at,
         c.comment,
         c.parent_comment_id,
+        c.total_upvotes,
+        c.total_downvotes,
         0 AS depth,
         u.name AS user_name
       FROM
@@ -170,6 +172,8 @@ const getThreadWithNestedComments = async (req, res) => {
         c.created_at,
         c.comment,
         c.parent_comment_id,
+        c.total_upvotes,
+        c.total_downvotes,
         ch.depth + 1,
         u.name AS user_name
       FROM
@@ -184,6 +188,8 @@ const getThreadWithNestedComments = async (req, res) => {
       parent_comment_id,
       created_at,
       comment,
+      total_upvotes,
+      total_downvotes,
       depth,
       user_name
     FROM
@@ -204,6 +210,8 @@ const getThreadWithNestedComments = async (req, res) => {
       author: comment.user_name,
       depth: comment.depth,
       created_at: comment.created_at,
+      total_upvotes: comment.total_upvotes,
+      total_downvotes: comment.total_downvotes,
       comment: comment.comment,
       comments: [], // Initialize an empty array for nested comments
     });
