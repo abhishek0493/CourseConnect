@@ -5,6 +5,8 @@ const userController = require('../controllers/userController');
 
 router.route('/').get(protect, userController.getAllUsers);
 router.route('/categories').get(userController.getUserTypes);
+router.route('/get-stats').get(protect, userController.getUserStats);
+
 router
   .route('/community/view-all-requests')
   .get(protect, userController.getAllCommunityJoinRequests);

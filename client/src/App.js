@@ -28,7 +28,7 @@ function App() {
   const [categories, setCategories] = useState([]);
   const [communities, setCommunities] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState([]);
 
   const fetchLoggedInStatus = async () => {
     await axios
@@ -123,12 +123,7 @@ function App() {
 
   return (
     <BrowserRouter>
-      <ParentContext.Provider
-        value={{
-          isLoggedIn,
-          user,
-        }}
-      >
+      <ParentContext.Provider value={{ user, setUser }}>
         <Routes>
           <Route element={<LayoutMain />}>
             <Route path="/" element={<Home />} />

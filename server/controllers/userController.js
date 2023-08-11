@@ -104,10 +104,41 @@ const rejectRequest = catchAsync(async (req, res) => {
   });
 });
 
+const getUserStats = catchAsync(async (req, res) => {
+  const loggedInUser = req.user.id;
+
+  const stats = await db('users as u')
+    .select(
+      'u.name',
+      db.raw(
+        `(SELECT COUNT(*) FROM user_communities as uc WHERE uc.status = 1 AND uc.is_author != 1 AND uc.user_id = ${loggedInUser}) as total_communities_joined`
+      ),
+      db.raw(
+        `(SELECT COUNT(*) FROM communities as c WHERE c.created_by = ${loggedInUser}) as total_communities_created`
+      ),
+      db.raw(
+        `(SELECT COUNT(*) FROM threads as c WHERE c.user_id = ${loggedInUser}) as total_threads_created`
+      ),
+      db.raw(
+        `(SELECT COUNT(*) FROM comments as cmt WHERE cmt.user_id = ${loggedInUser} AND parent_comment_id = 0) as total_comments`
+      ),
+      db.raw(
+        `(SELECT COUNT(*) FROM comments as cmt WHERE cmt.user_id = ${loggedInUser} AND parent_comment_id != 0) as total_replies`
+      )
+    )
+    .where({ id: loggedInUser });
+
+  res.status(200).json({
+    success: true,
+    data: stats,
+  });
+});
+
 module.exports = {
   getAllUsers,
   getUserTypes,
   getAllCommunityJoinRequests,
   approveRequest,
   rejectRequest,
+  getUserStats,
 };

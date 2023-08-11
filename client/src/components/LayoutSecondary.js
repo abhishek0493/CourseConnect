@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Sidebar from './Sidebar/Sidebar';
 import { Outlet } from 'react-router-dom';
 import { Box, Grid, Card, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import SecondarySidebar from './Dashboard/SecondarySidebar';
+import ParentContext from '../ParentContext';
 
 const useStyles = makeStyles((theme) => ({
   sidebar: {
@@ -28,6 +29,9 @@ const useStyles = makeStyles((theme) => ({
 
 const LayoutSecondary = ({ communities }) => {
   const classes = useStyles();
+  const { user, setUser } = useContext(ParentContext);
+
+  console.log(user);
 
   return (
     <>
@@ -42,7 +46,7 @@ const LayoutSecondary = ({ communities }) => {
             </Grid>
             <Grid item xs={4} sx={{ p: 6 }}>
               <Card variant="outlined" sx={{ position: 'sticky', top: 80 }}>
-                <SecondarySidebar />
+                <SecondarySidebar user={user} />
               </Card>
             </Grid>
           </Grid>

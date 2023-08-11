@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 import {
   Box,
@@ -8,25 +8,53 @@ import {
   Chip,
   Button,
   Avatar,
+  LinearProgress,
 } from '@mui/material';
 
 import InsertEmoticonRoundedIcon from '@mui/icons-material/InsertEmoticonRounded';
 import RateReviewRoundedIcon from '@mui/icons-material/RateReviewRounded';
 import GroupsRoundedIcon from '@mui/icons-material/GroupsRounded';
-import ParentContext from '../../ParentContext';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { Refactor } from '../Constants/Refactor';
 
 const SecondarySidebar = () => {
-  const { isLoggedIn, user } = useContext(ParentContext);
   const navigate = useNavigate();
+  const [user, setUser] = useState([]);
+
+  const fetchUserStats = async () => {
+    await axios
+      .get('http://localhost:8000/api/v1/users/get-stats', {
+        withCredentials: true,
+      })
+      .then((res) => {
+        if (res.data.success) {
+          const result = Refactor(res.data);
+          setUser(result[0]);
+        }
+      });
+  };
+
+  useEffect(() => {
+    fetchUserStats();
+  }, []);
 
   return (
     <Box sx={{ height: '80vh', p: 3 }}>
       <Box sx={{ display: 'flex' }}>
-        <InsertEmoticonRoundedIcon sx={{ mr: 1, color: 'green' }} />
         <Typography variant="body2" fontWeight={'bold'}>
-          {user && user.name != undefined && <span>u/{user.name}</span>}
-          {/* u/{user && user.name != undefined ? user.name : ''} */}
+          {user && Object.keys(user).length > 0 ? (
+            <Box sx={{ display: 'flex' }}>
+              <InsertEmoticonRoundedIcon sx={{ mr: 1, color: 'green' }} />
+              <Typography variant="body2" fontWeight={'bold'}>
+                u/{user.name}
+              </Typography>
+            </Box>
+          ) : (
+            <Box sx={{ width: '100%' }}>
+              <LinearProgress />
+            </Box>
+          )}
         </Typography>
       </Box>
       <Divider sx={{ mt: 1, borderWidth: '1px' }} />
@@ -46,10 +74,10 @@ const SecondarySidebar = () => {
           </Grid>
           <Grid item xs={8}>
             <Typography variant="caption" component={'p'}>
-              Total Created
+              Total Created: {user.total_communities_created}
             </Typography>
             <Typography variant="caption" component={'p'}>
-              Total Joined
+              Total Joined: {user.total_communities_joined}
             </Typography>
             <Button
               size="small"
@@ -86,10 +114,13 @@ const SecondarySidebar = () => {
           </Grid>
           <Grid item xs={8}>
             <Typography variant="caption" component={'p'}>
-              Total Created
+              Total Threads Created: {user.total_threads_created}
             </Typography>
             <Typography variant="caption" component={'p'}>
-              Total Interacted
+              Total Comments: {user.total_comments}
+            </Typography>
+            <Typography variant="caption" component={'p'}>
+              Total Replies: {user.total_replies}
             </Typography>
             <Button
               size="small"
@@ -104,25 +135,6 @@ const SecondarySidebar = () => {
       <Divider sx={{ mt: 2 }}>
         <Chip size="small" label="THREADS" />
       </Divider>
-
-      {/* {[1, 2, 3].map((el) => {
-        return (
-          <>
-            <Card
-              key={el}
-              sx={{
-                minHeight: '100px',
-                bgcolor: 'secondary.dark',
-                my: 2,
-                color: 'primary.dark',
-                p: 5,
-              }}
-            >
-              Coming Soon #1
-            </Card>
-          </>
-        );
-      })} */}
     </Box>
   );
 };
