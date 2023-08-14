@@ -3,16 +3,21 @@ import axios from 'axios';
 
 import { Refactor } from '../../components/Constants/Refactor';
 import RequestsTable from '../../components/Dashboard/RequestsTable';
+import { useParams } from 'react-router-dom';
 
 const CommunityRequests = () => {
   const [requests, setRequests] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const { name } = useParams();
 
   const fetchJoinRequests = async () => {
     axios
-      .get(`http://localhost:8000/api/v1/users/community/view-all-requests`, {
-        withCredentials: true,
-      })
+      .get(
+        `http://localhost:8000/api/v1/users/community/view-all-requests?name=${name}`,
+        {
+          withCredentials: true,
+        }
+      )
       .then((res) => {
         const result = Refactor(res.data);
         setRequests(result);
