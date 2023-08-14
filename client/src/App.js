@@ -138,7 +138,10 @@ function App() {
               path="dashboard"
               element={<LayoutSecondary communities={communities} />}
             >
-              <Route index element={<Dashboard />} />
+              <Route
+                index
+                element={<Dashboard updateTrigger={handleCreateCommunity} />}
+              />
               <Route
                 path="create-thread"
                 element={<CreateThread communities={communities} />}

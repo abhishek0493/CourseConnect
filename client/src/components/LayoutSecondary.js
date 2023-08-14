@@ -27,11 +27,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const LayoutSecondary = ({ communities }) => {
+const LayoutSecondary = ({ communities, isUpdateTrigger }) => {
   const classes = useStyles();
   const { user, setUser } = useContext(ParentContext);
-
-  console.log(user);
 
   return (
     <>

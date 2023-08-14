@@ -7,7 +7,7 @@ import FilterBar from '../../components/Dashboard/FilterBar';
 import DashboardThreads from '../../components/Dashboard/DashboardThreads';
 import { AddCategoryIcon } from '../../utils/AddCategoryIcon';
 
-const Dashboard = () => {
+const Dashboard = ({ updateTrigger }) => {
   const [threads, setThreads] = useState([]);
 
   const [url, setUrl] = useState('');
@@ -150,6 +150,7 @@ const Dashboard = () => {
                 upVoteTrigger={incrementUpvotes}
                 downVoteTrigget={incrementDownvotes}
                 saveTrigger={handleSave}
+                isCommunityJoined={updateTrigger}
               />
             ))}
           </Stack>

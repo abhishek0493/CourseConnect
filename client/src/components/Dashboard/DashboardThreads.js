@@ -61,6 +61,7 @@ const DashboardThreads = ({
   upVoteTrigger,
   downVoteTrigger,
   saveTrigger,
+  isCommunityJoined,
 }) => {
   const navigate = useNavigate();
 
@@ -88,6 +89,7 @@ const DashboardThreads = ({
         if (res.data.success) {
           console.log(res.data);
           alert(res.data.data.message);
+          isCommunityJoined(true);
           navigate(`/dashboard/c/${res.data.data.name}`);
         }
       })
