@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Box, Typography, Grid, Button } from '@mui/material';
 import image5 from './Connected world-cuate.svg';
 
@@ -46,6 +46,9 @@ const Home = () => {
             >
               Sign up
             </Button>
+            <Typography variant="subtitle2" sx={{ mt: 2 }}>
+              Already registered ? <Link to="/login">Click here</Link> to Login
+            </Typography>
           </Box>
         </Grid>
       </Grid>

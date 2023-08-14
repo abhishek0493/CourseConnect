@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 
 import { useState, useEffect } from 'react';
 import axios from 'axios';
@@ -128,10 +128,19 @@ function App() {
         <Routes>
           <Route element={<LayoutMain isLoggedIn={isLoggedIn} />}>
             <Route path="/" element={<Home />} />
-            <Route path="consent" element={<Consent />} />
+            <Route
+              path="consent"
+              element={isLoggedIn ? <NoAccess /> : <Consent />}
+            />
             <Route
               path="login"
-              element={<Login isLoggedIn={updateLoginStatus} />}
+              element={
+                isLoggedIn ? (
+                  <Navigate to="/dashboard"></Navigate>
+                ) : (
+                  <Login isLoggedIn={updateLoginStatus} />
+                )
+              }
             />
             <Route path="sign-up" element={<Signup userTypes={userTypes} />} />
             {/* Post Login Routes */}

@@ -81,11 +81,15 @@ const SignupNew = ({ userTypes }) => {
           </Grid>
           <Grid item xs={12} sm={6}>
             <Typography
-              variant="h2"
-              component="h2"
+              variant="h5"
+              component="h4"
               color="primary"
               align="center"
-              sx={{ marginBottom: '2rem' }}
+              sx={{
+                mb: '2rem',
+                textTransform: 'uppercase',
+                fontWeight: 'bold',
+              }}
             >
               Create an account
             </Typography>

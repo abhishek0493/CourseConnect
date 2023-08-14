@@ -84,7 +84,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 const Header = (props) => {
-  const { classes, isLoggedIn } = props;
+  const { classes, isLoggedIn, onLogout } = props;
 
   const styleClasses = useStyles();
   const navigate = useNavigate();
@@ -102,6 +102,7 @@ const Header = (props) => {
       })
       .then((res) => {
         if (res.data.success) {
+          onLogout(true);
           navigate('/', { replace: true });
         }
       });
