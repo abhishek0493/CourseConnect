@@ -1,5 +1,14 @@
 import React from 'react';
-import { Box, Grid, TextField, Button, Typography } from '@mui/material';
+import {
+  Box,
+  Grid,
+  TextField,
+  Button,
+  Typography,
+  Container,
+} from '@mui/material';
+
+import loginImage from '../../images/Login.png';
 
 import { useState } from 'react';
 import { useLocation, Link, useNavigate } from 'react-router-dom';
@@ -49,7 +58,7 @@ const Login = ({ isLoggedIn }) => {
   };
 
   return (
-    <Box sx={{ p: 8 }}>
+    <Container sx={{ p: 8 }}>
       <Grid container spacing={3}>
         <Grid item xs={12} sm={6}>
           <Typography
@@ -68,6 +77,7 @@ const Login = ({ isLoggedIn }) => {
                 <TextField
                   label="Email"
                   fullWidth
+                  size="small"
                   name="email"
                   type="email"
                   value={formData.email}
@@ -79,6 +89,7 @@ const Login = ({ isLoggedIn }) => {
                 <TextField
                   label="Password"
                   fullWidth
+                  size="small"
                   name="password"
                   type="password"
                   value={formData.password}
@@ -98,6 +109,7 @@ const Login = ({ isLoggedIn }) => {
                 <Button
                   variant="contained"
                   color="primary"
+                  size="small"
                   fullWidth
                   type="submit"
                 >
@@ -109,7 +121,7 @@ const Login = ({ isLoggedIn }) => {
         </Grid>
         <Grid item xs={12} sm={6}>
           <img
-            src=""
+            src={loginImage}
             style={{ width: '80%', display: 'block', margin: '0 auto' }}
             alt="Your Image"
           />
@@ -123,7 +135,7 @@ const Login = ({ isLoggedIn }) => {
           </Typography>
         </Grid>
       </Grid>
-    </Box>
+    </Container>
   );
 };
 

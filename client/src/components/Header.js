@@ -84,7 +84,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 const Header = (props) => {
-  const { classes } = props;
+  const { classes, isLoggedIn } = props;
 
   const styleClasses = useStyles();
   const navigate = useNavigate();
@@ -105,6 +105,10 @@ const Header = (props) => {
           navigate('/', { replace: true });
         }
       });
+  };
+
+  const handleLogin = () => {
+    navigate('/login', { replace: true });
   };
 
   const handleProfileMenuOpen = (event) => {
@@ -141,8 +145,11 @@ const Header = (props) => {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleLogout}>Logout</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      {isLoggedIn ? (
+        <MenuItem onClick={handleLogout}>Logout</MenuItem>
+      ) : (
+        <MenuItem onClick={handleLogin}>Login</MenuItem>
+      )}
     </Menu>
   );
 
@@ -208,7 +215,7 @@ const Header = (props) => {
               sx={{ fontSize: '2.5rem', mx: 1, color: 'orangered' }}
             />
             <Link
-              to="/dashboard"
+              to={isLoggedIn ? '/dashboard' : '/'}
               style={{ textDecoration: 'none', color: 'inherit' }}
             >
               <img alt="logo" src={logo} style={{ width: '100px' }} />

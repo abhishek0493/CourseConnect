@@ -2,11 +2,11 @@ import React from 'react';
 import { Outlet } from 'react-router-dom';
 import Header from './Header';
 
-const LayoutMain = () => {
+const LayoutMain = ({ isLoggedIn }) => {
   return (
     <>
       <main>
-        <Header />
+        <Header isLoggedIn={isLoggedIn} />
         <Outlet />
       </main>
     </>

@@ -21,6 +21,7 @@ import Dashboard from './pages/Dashboard/Dashboard';
 import ParentContext from './ParentContext';
 import Requests from './pages/Dashboard/Requests';
 import CommunityRequests from './pages/Dashboard/CommunityRequests';
+import NoAccess from './pages/NoAccess/NoAccess';
 
 function App() {
   const [userTypes, setUserTypes] = useState([]);
@@ -30,8 +31,8 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState([]);
 
-  const fetchLoggedInStatus = async () => {
-    await axios
+  const fetchLoggedInStatus = () => {
+    axios
       .get('http://localhost:8000/api/v1/auth/check-login', {
         withCredentials: true,
       })
@@ -125,7 +126,7 @@ function App() {
     <BrowserRouter>
       <ParentContext.Provider value={{ user, setUser }}>
         <Routes>
-          <Route element={<LayoutMain />}>
+          <Route element={<LayoutMain isLoggedIn={isLoggedIn} />}>
             <Route path="/" element={<Home />} />
             <Route path="consent" element={<Consent />} />
             <Route
@@ -136,7 +137,13 @@ function App() {
             {/* Post Login Routes */}
             <Route
               path="dashboard"
-              element={<LayoutSecondary communities={communities} />}
+              element={
+                isLoggedIn ? (
+                  <LayoutSecondary communities={communities} />
+                ) : (
+                  <NoAccess />
+                )
+              }
             >
               <Route
                 index
