@@ -41,12 +41,10 @@ function App() {
           setIsLoggedIn(true);
           setUser(res.data.data);
         }
+      })
+      .catch((err) => {
+        setIsLoggedIn(false);
       });
-  };
-
-  const updateLoginStatus = (bool) => {
-    setIsLoggedIn(bool);
-    if (bool) fetchUserCommunities();
   };
 
   const fetchUserTypes = async () => {
@@ -108,9 +106,10 @@ function App() {
       });
   };
 
-  const handleCreateCommunity = (bool) => {
+  const handleUpdateTrigger = (bool) => {
     if (bool) {
       fetchUserCommunities();
+      fetchLoggedInStatus();
     }
   };
 
@@ -126,7 +125,14 @@ function App() {
     <BrowserRouter>
       <ParentContext.Provider value={{ user, setUser }}>
         <Routes>
-          <Route element={<LayoutMain isLoggedIn={isLoggedIn} />}>
+          <Route
+            element={
+              <LayoutMain
+                isLoggedIn={isLoggedIn}
+                triggerAuthUpdate={handleUpdateTrigger}
+              />
+            }
+          >
             <Route path="/" element={<Home />} />
             <Route
               path="consent"
@@ -138,11 +144,19 @@ function App() {
                 isLoggedIn ? (
                   <Navigate to="/dashboard"></Navigate>
                 ) : (
-                  <Login isLoggedIn={updateLoginStatus} />
+                  <Login isLoggedIn={handleUpdateTrigger} />
                 )
               }
             />
-            <Route path="sign-up" element={<Signup userTypes={userTypes} />} />
+            <Route
+              path="sign-up"
+              element={
+                <Signup
+                  userTypes={userTypes}
+                  onSignUpSuccess={handleUpdateTrigger}
+                />
+              }
+            />
             {/* Post Login Routes */}
             <Route
               path="dashboard"
@@ -156,7 +170,7 @@ function App() {
             >
               <Route
                 index
-                element={<Dashboard updateTrigger={handleCreateCommunity} />}
+                element={<Dashboard updateTrigger={handleUpdateTrigger} />}
               />
               <Route
                 path="create-thread"
@@ -168,7 +182,7 @@ function App() {
                   <CreateCommunity
                     accessTypes={accessTypes}
                     cmCategories={categories}
-                    onCreateCommunity={handleCreateCommunity}
+                    onCreateCommunity={handleUpdateTrigger}
                   />
                 }
               />

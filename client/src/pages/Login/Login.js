@@ -60,13 +60,18 @@ const Login = ({ isLoggedIn }) => {
   return (
     <Container sx={{ p: 8 }}>
       <Grid container spacing={3}>
-        <Grid item xs={12} sm={6}>
+        <Grid
+          item
+          xs={12}
+          sm={6}
+          sx={{ alignContent: 'center', margin: 'auto 0' }}
+        >
           <Typography
-            variant="h2"
+            variant="h5"
             component="h2"
             color="primary"
             align="center"
-            sx={{ marginBottom: '2rem' }}
+            sx={{ mb: '2rem', textTransform: 'uppercase', fontWeight: 'bold' }}
           >
             LOGIN
           </Typography>

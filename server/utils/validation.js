@@ -13,7 +13,10 @@ const userCreationSchema = Joi.object({
       'any.only': 'Confirm password does not match the password',
     }),
   type: Joi.number().min(1).required(),
-  type_value: Joi.string(),
+  type_value: Joi.string().optional().allow(''),
+  consent: Joi.number().valid(1).required().messages({
+    'any.only': 'Consent is required',
+  }),
 });
 
 const communityCreationSchema = Joi.object({

@@ -20,7 +20,10 @@ import image from './Connected world-amico.png';
 import axios from 'axios';
 import errorImg from '../../images/Warning-bro.png';
 
-const SignupNew = ({ userTypes }) => {
+const SignupNew = ({ userTypes, onSignUpSuccess }) => {
+  const location = useLocation();
+  const state = location.state;
+
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: '',
@@ -29,10 +32,8 @@ const SignupNew = ({ userTypes }) => {
     confirmPassword: '',
     type: 0,
     type_value: '',
+    consent: state ? 1 : 0,
   });
-
-  const location = useLocation();
-  const state = location.state;
 
   const [validationError, setValidationError] = useState(false);
   const [validationMessage, setValidationMessage] = useState('');
@@ -49,6 +50,7 @@ const SignupNew = ({ userTypes }) => {
     await axios
       .post('http://localhost:8000/api/v1/auth/signUp', formData)
       .then((res) => {
+        onSignUpSuccess(true);
         navigate('/dashboard', { replace: true });
       })
       .catch((err) => {

@@ -53,7 +53,14 @@ exports.signup = catchAsync(async (req, res) => {
     });
   }
 
-  const userObj = _.pick(req.body, ['name', 'email', 'type', 'type_value']);
+  const userObj = _.pick(req.body, [
+    'name',
+    'email',
+    'type',
+    'type_value',
+    'consent',
+  ]);
+
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(req.body.password, salt);
 
@@ -63,6 +70,7 @@ exports.signup = catchAsync(async (req, res) => {
     password: hashedPassword,
     type: userObj.type,
     type_value: userObj.type_value,
+    consent: userObj.consent,
   });
 
   await db('users')
