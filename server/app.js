@@ -34,7 +34,7 @@ app.use(cors(corsOptions));
 // app.options('/api/v1/threads/:id', cors());
 
 // Serving static files
-app.use(express.static(path.join(__dirname, 'client/build')));
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Set security HTTP headers
 app.use(helmet());
@@ -83,7 +83,7 @@ app.use('/api/v1/dashboard', dashboardRouter);
 // });
 
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // app.use(globalErrorHandler);
