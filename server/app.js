@@ -34,7 +34,7 @@ app.use(cors(corsOptions));
 // app.options('/api/v1/threads/:id', cors());
 
 // Serving static files
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'client/build')));
 
 // Set security HTTP headers
 app.use(helmet());
@@ -81,6 +81,10 @@ app.use('/api/v1/dashboard', dashboardRouter);
 // app.all('*', (req, res, next) => {
 //   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
 // });
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+});
 
 // app.use(globalErrorHandler);
 
