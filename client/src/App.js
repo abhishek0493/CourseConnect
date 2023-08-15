@@ -22,6 +22,7 @@ import ParentContext from './ParentContext';
 import Requests from './pages/Dashboard/Requests';
 import CommunityRequests from './pages/Dashboard/CommunityRequests';
 import NoAccess from './pages/NoAccess/NoAccess';
+import LoginNew from './pages/Login/LoginNew';
 
 function App() {
   const [userTypes, setUserTypes] = useState([]);
