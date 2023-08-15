@@ -50,7 +50,7 @@ const CommunityRequests = () => {
         if (response) {
           alert(response.data.message);
         }
-        console.log(err);
+        // console.log(err);
       });
   };
 
@@ -71,7 +71,7 @@ const CommunityRequests = () => {
         if (response) {
           alert(response.data.message);
         }
-        console.log(err);
+        // console.log(err);
       });
   };
 

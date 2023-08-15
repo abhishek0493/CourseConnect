@@ -45,7 +45,7 @@ const Requests = () => {
         if (response) {
           alert(response.data.message);
         }
-        console.log(err);
+        // console.log(err);
       });
   };
 
@@ -66,7 +66,7 @@ const Requests = () => {
         if (response) {
           alert(response.data.message);
         }
-        console.log(err);
+        // console.log(err);
       });
   };
 

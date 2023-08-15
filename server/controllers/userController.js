@@ -26,8 +26,6 @@ const getAllCommunityJoinRequests = catchAsync(async (req, res) => {
   const loggedInUser = req.user.id;
   const communityName = req.query.name;
 
-  console.log(communityName);
-
   let requestsQuery = db('user_communities as uc')
     .select('uc.*', 'u.name as request_user', 'c.name', 'c.access_type')
     .join('communities as c', 'c.id', '=', 'uc.community_id')

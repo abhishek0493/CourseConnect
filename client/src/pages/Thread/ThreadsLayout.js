@@ -33,7 +33,7 @@ const ThreadsLayout = () => {
         }
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
       });
   };
 
@@ -53,7 +53,7 @@ const ThreadsLayout = () => {
         }
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
       });
   };
 

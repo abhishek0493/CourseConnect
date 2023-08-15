@@ -93,7 +93,7 @@ const ThreadCard = ({
         if (res) {
           alert(res.data.message);
         }
-        console.log(err);
+        // console.log(err);
       });
   };
 
@@ -110,7 +110,7 @@ const ThreadCard = ({
       .catch((err) => {
         const res = err.response;
         alert(res.data.message);
-        console.log(err);
+        // console.log(err);
       });
   };
 

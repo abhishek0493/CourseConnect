@@ -96,7 +96,7 @@ const ThreadDetails = () => {
         if (!response.data.success) {
           setCommentError({ state: true, message: response.data.message });
         }
-        console.log(err);
+        // console.log(err);
       });
   };
 

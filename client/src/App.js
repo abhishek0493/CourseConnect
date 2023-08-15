@@ -70,7 +70,7 @@ function App() {
         setAccessTypes(response.data);
       })
       .catch((error) => {
-        console.log(error);
+        // console.log(error);
       });
   };
 
@@ -103,7 +103,7 @@ function App() {
         }
       })
       .catch((error) => {
-        console.log(error);
+        // console.log(error);
       });
   };
 

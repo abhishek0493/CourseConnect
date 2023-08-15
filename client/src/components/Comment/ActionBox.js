@@ -27,9 +27,9 @@ const ActionBox = ({
       .catch((err) => {
         const res = err.response;
         if (res) {
-          console.log(res.data);
+          // console.log(res.data);
         }
-        console.log(err);
+        // console.log(err);
       });
   };
 
@@ -46,9 +46,9 @@ const ActionBox = ({
       .catch((err) => {
         const res = err.response;
         if (res) {
-          console.log(res.data);
+          // console.log(res.data);
         }
-        console.log(err);
+        // console.log(err);
       });
   };
 

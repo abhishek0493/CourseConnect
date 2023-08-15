@@ -87,7 +87,7 @@ const DashboardThreads = ({
       .get(`http://localhost:8000/api/v1/community/${id}/join`)
       .then((res) => {
         if (res.data.success) {
-          console.log(res.data);
+          // console.log(res.data);
           alert(res.data.data.message);
           isCommunityJoined(true);
           navigate(`/dashboard/c/${res.data.data.name}`);
@@ -98,7 +98,7 @@ const DashboardThreads = ({
         if (response) {
           alert(response.data.message);
         }
-        console.log(err);
+        // console.log(err);
       });
   };
 
@@ -115,7 +115,7 @@ const DashboardThreads = ({
       .catch((err) => {
         const res = err.response;
         alert(res.data.message);
-        console.log(err);
+        // console.log(err);
       });
   };
 
@@ -134,7 +134,7 @@ const DashboardThreads = ({
       })
       .catch((err) => {
         const res = err.response;
-        console.log(err);
+        // console.log(err);
       });
   };
 
@@ -151,7 +151,7 @@ const DashboardThreads = ({
       .catch((err) => {
         const res = err.response;
         alert(res.data.message);
-        console.log(err);
+        // console.log(err);
       });
   };
 
