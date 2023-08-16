@@ -5,10 +5,7 @@
 exports.up = function (knex) {
   return knex.schema.createTable('users', function (table) {
     table.increments('id').unsigned().primary();
-    table
-      .uuid('uuid', { useBinaryUuid: true, primaryKey: true })
-      .notNullable()
-      .defaultTo(knex.raw('(gen_random_uuid())')); // Use binary(16) UUID and set it as primary key
+    table.string('uuid').notNullable().defaultTo(knex.raw('(UUID())')); // Use binary(16) UUID and set it as primary key
 
     table.string('name').notNullable();
     table.string('email').notNullable();
