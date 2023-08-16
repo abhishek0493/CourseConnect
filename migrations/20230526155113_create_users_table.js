@@ -5,12 +5,12 @@
 exports.up = function (knex) {
   return knex.schema.createTable('users', function (table) {
     table.increments('id').unsigned().primary();
-    table.string('uuid', 255).notNullable().defaultTo(knex.raw('UUID()')); // Use knex.raw to set the default value
-    table.string('name', 255).notNullable();
-    table.string('email', 255).notNullable();
-    table.string('password', 255).notNullable();
+    table.uuid('uuid').notNullable().defaultTo(knex.fn.uuid()); // Use knex.raw to set the default value
+    table.string('name').notNullable();
+    table.string('email').notNullable();
+    table.string('password').notNullable();
     table.tinyint('type').notNullable();
-    table.string('type_value', 255).nullable();
+    table.string('type_value').nullable();
     table.integer('reputation_points').defaultTo(0);
     table.integer('total_posts').defaultTo(0);
     table
