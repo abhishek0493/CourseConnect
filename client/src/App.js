@@ -24,6 +24,10 @@ import CommunityRequests from './pages/Dashboard/CommunityRequests';
 import NoAccess from './pages/NoAccess/NoAccess';
 import LoginNew from './pages/Login/LoginNew';
 
+const url = process.env.REACT_APP_BACKEND_URL;
+
+console.log(url);
+
 function App() {
   const [userTypes, setUserTypes] = useState([]);
   const [accessTypes, setAccessTypes] = useState([]);
@@ -31,8 +35,6 @@ function App() {
   const [communities, setCommunities] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState([]);
-
-  const url = process.env.REACT_APP_BACKEND_URL;
 
   const fetchLoggedInStatus = () => {
     axios
