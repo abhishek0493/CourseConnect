@@ -22,6 +22,7 @@ import { withStyles, makeStyles } from '@mui/styles';
 import { Link, useNavigate } from 'react-router-dom';
 import logo from '../images/HeaderLogo.png';
 import axios from 'axios';
+import ParentContext from '../ParentContext';
 
 const styles = (theme) => ({
   // Load app bar information from the theme
@@ -84,6 +85,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 const Header = (props) => {
+  const { baseUrl, setBaseUrl } = React.useContext(ParentContext);
   const { classes, isLoggedIn, onLogout } = props;
 
   const styleClasses = useStyles();
@@ -97,7 +99,7 @@ const Header = (props) => {
 
   const handleLogout = async () => {
     await axios
-      .get(`/api/v1/auth/logout`, {
+      .get(`${baseUrl}/api/v1/auth/logout`, {
         withCredentials: true,
       })
       .then((res) => {

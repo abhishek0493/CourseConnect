@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import {
   Box,
   Grid,
@@ -19,8 +19,11 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import image from './Connected world-amico.png';
 import axios from 'axios';
 import errorImg from '../../images/Warning-bro.png';
+import ParentContext from '../../ParentContext';
 
 const SignupNew = ({ userTypes, onSignUpSuccess }) => {
+  const { baseUrl, setBaseUrl } = useContext(ParentContext);
+
   const location = useLocation();
   const state = location.state;
 
@@ -48,7 +51,7 @@ const SignupNew = ({ userTypes, onSignUpSuccess }) => {
   const handleSignUp = async (e) => {
     e.preventDefault();
     await axios
-      .post(`/api/v1/auth/signUp`, formData)
+      .post(`${baseUrl}/api/v1/auth/signUp`, formData)
       .then((res) => {
         onSignUpSuccess(true);
         navigate('/dashboard', { replace: true });

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import {
   Box,
   Typography,
@@ -21,8 +21,10 @@ import {
 import InfoIcon from '@mui/icons-material/Info';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import ParentContext from '../../ParentContext';
 
 const CreateCommunity = ({ cmCategories, onCreateCommunity }) => {
+  const { baseUrl } = useContext(ParentContext);
   const navigate = useNavigate();
   const [nameAvailability, setNameAvailability] = useState(null);
   const [formData, setFormData] = useState({
@@ -48,7 +50,7 @@ const CreateCommunity = ({ cmCategories, onCreateCommunity }) => {
   const handleCommunityNameBlur = async () => {
     try {
       const response = await axios.post(
-        `/api/v1/community/check-availability`,
+        `${baseUrl}/api/v1/community/check-availability`,
         {
           name: formData.name,
         },
@@ -64,7 +66,7 @@ const CreateCommunity = ({ cmCategories, onCreateCommunity }) => {
   const handleCreate = async (e) => {
     e.preventDefault();
     await axios
-      .post(`/api/v1/community`, formData)
+      .post(`${baseUrl}/api/v1/community`, formData)
       .then((res) => {
         if (res.data.success) {
           const result = res.data.data;

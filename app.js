@@ -25,8 +25,8 @@ const app = express();
 // Implement CORS
 const corsOptions = {
   origin:
-    process.env.REACT_APP_ENV == 'production'
-      ? 'https://course-connect-bu-5d7fd598c842.herokuapp.com/'
+    process.env.NODE_ENV == 'production'
+      ? 'https://course-connect-bu-5d7fd598c842.herokuapp.com'
       : 'http://localhost:3000',
   credentials: true, //access-control-allow-credentials:true
   optionSuccessStatus: 200,

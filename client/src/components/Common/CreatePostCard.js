@@ -16,11 +16,12 @@ import {
   Checkbox,
 } from '@mui/material';
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import ParentContext from '../../ParentContext';
 
 const CreatePostCard = ({ communities, selectedId }) => {
-  // const [selectedOption, setSelectedOption] = useState(1);
+  const { baseUrl, setBaseUrl } = useContext(ParentContext);
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -58,7 +59,7 @@ const CreatePostCard = ({ communities, selectedId }) => {
         : formData;
 
     await axios
-      .post(`/api/v1/threads`, reqData, {
+      .post(`${baseUrl}/api/v1/threads`, reqData, {
         withCredentials: true,
       })
       .then((res) => {

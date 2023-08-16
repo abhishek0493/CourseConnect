@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import CreatePostBar from '../../components/Common/CreatePostBar';
 import { Box, Alert, Stack } from '@mui/material';
 import axios from 'axios';
@@ -6,8 +6,10 @@ import { Refactor } from '../../components/Constants/Refactor';
 import FilterBar from '../../components/Dashboard/FilterBar';
 import DashboardThreads from '../../components/Dashboard/DashboardThreads';
 import { AddCategoryIcon } from '../../utils/AddCategoryIcon';
+import ParentContext from '../../ParentContext';
 
 const Dashboard = ({ updateTrigger }) => {
+  const { baseUrl } = useContext(ParentContext);
   const [threads, setThreads] = useState([]);
 
   const [filterState, setFilterState] = useState({
@@ -20,10 +22,10 @@ const Dashboard = ({ updateTrigger }) => {
   const [title, setTitle] = useState('Trending Threads');
 
   const fetchTrendingThreads = (filters) => {
-    let url = `/api/v1/dashboard`;
+    let url = `${baseUrl}/api/v1/dashboard`;
     if (filters) {
       const queryParams = new URLSearchParams(filterState).toString();
-      url = `/api/v1/dashboard?${queryParams}`;
+      url = `${baseUrl}/api/v1/dashboard?${queryParams}`;
     }
 
     axios.get(url, { withCredentials: true }).then((res) => {

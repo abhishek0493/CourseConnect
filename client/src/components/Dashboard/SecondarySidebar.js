@@ -17,14 +17,16 @@ import GroupsRoundedIcon from '@mui/icons-material/GroupsRounded';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Refactor } from '../Constants/Refactor';
+import ParentContext from '../../ParentContext';
 
 const SecondarySidebar = () => {
+  const { baseUrl } = useContext(ParentContext);
   const navigate = useNavigate();
   const [user, setUser] = useState([]);
 
   const fetchUserStats = async () => {
     await axios
-      .get(`/api/v1/users/get-stats`, {
+      .get(`${baseUrl}/api/v1/users/get-stats`, {
         withCredentials: true,
       })
       .then((res) => {

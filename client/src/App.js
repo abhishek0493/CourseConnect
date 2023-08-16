@@ -31,10 +31,15 @@ function App() {
   const [communities, setCommunities] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState([]);
+  const [baseUrl, setBaseUrl] = useState(
+    process.env.REACT_APP_ENV == 'production'
+      ? process.env.REACT_APP_BASE_URL
+      : process.env.REACT_APP_SERVER_URL
+  );
 
   const fetchLoggedInStatus = () => {
     axios
-      .get(`/api/v1/auth/check-login`, {
+      .get(`${baseUrl}/api/v1/auth/check-login`, {
         withCredentials: true,
       })
       .then((res) => {
@@ -50,7 +55,7 @@ function App() {
 
   const fetchUserTypes = async () => {
     await axios
-      .get(`/api/v1/users/categories`)
+      .get(`${baseUrl}/api/v1/users/categories`)
       .then((response) => {
         if (response.data.success) {
           const res = Refactor(response.data);
@@ -65,7 +70,7 @@ function App() {
 
   const fetchAccessTypes = async () => {
     await axios
-      .get(`/api/v1/categories/access-types`)
+      .get(`${baseUrl}/api/v1/categories/access-types`)
       .then((response) => {
         setAccessTypes(response.data);
       })
@@ -76,7 +81,7 @@ function App() {
 
   const fetchUserCommunities = async () => {
     await axios
-      .get(`/api/v1/community`, {
+      .get(`${baseUrl}/api/v1/community`, {
         withCredentials: true,
       })
       .then((response) => {
@@ -93,7 +98,7 @@ function App() {
 
   const fetchCategories = async () => {
     await axios
-      .get(`/api/v1/community/categories`, {
+      .get(`${baseUrl}/api/v1/community/categories`, {
         withCredentials: true,
       })
       .then((response) => {
@@ -124,7 +129,7 @@ function App() {
 
   return (
     <BrowserRouter>
-      <ParentContext.Provider value={{ user, setUser }}>
+      <ParentContext.Provider value={{ user, setUser, baseUrl, setBaseUrl }}>
         <Routes>
           <Route
             element={

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Card, Typography, Box, Stack, Alert } from '@mui/material';
 
 import axios from 'axios';
@@ -8,8 +8,10 @@ import { Refactor } from '../../components/Constants/Refactor';
 import CreateCommentCard from '../../components/Comment/CreateCommentCard';
 import CommentItem from '../../components/Comment/CommentItem';
 import ThreadCard from '../../components/Thread/ThreadCard';
+import ParentContext from '../../ParentContext';
 
 const ThreadDetails = () => {
+  const { baseUrl } = useContext(ParentContext);
   const { name, thread_id } = useParams();
   const [thread, setThread] = useState([]);
   const [comments, setComments] = useState([]);
@@ -19,7 +21,7 @@ const ThreadDetails = () => {
   });
 
   const fetchthreadDetails = async () => {
-    await axios.get(`/api/v1/threads/${thread_id}`).then((res) => {
+    await axios.get(`${baseUrl}/api/v1/threads/${thread_id}`).then((res) => {
       const result = Refactor(res.data);
       setThread(result.thread);
       setComments(result.comments);
@@ -80,7 +82,7 @@ const ThreadDetails = () => {
   const handleCreateComment = async (comment) => {
     await axios
       .post(
-        `/api/v1/comments/${thread_id}`,
+        `${baseUrl}/api/v1/comments/${thread_id}`,
         { comment: comment },
         { withCredentials: true }
       )
@@ -101,7 +103,7 @@ const ThreadDetails = () => {
   const handleSubmitReply = (reply, commentId) => {
     axios
       .post(
-        `/api/v1/comments/${thread_id}/${commentId}`,
+        `${baseUrl}/api/v1/comments/${thread_id}/${commentId}`,
         { comment: reply },
         { withCredentials: true }
       )

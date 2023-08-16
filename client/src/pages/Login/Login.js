@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import {
   Box,
   Grid,
@@ -13,10 +13,12 @@ import loginImage from '../../images/Login.png';
 import { useState } from 'react';
 import { useLocation, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import ParentContext from '../../ParentContext';
 
 axios.defaults.withCredentials = true;
 
 const Login = ({ isLoggedIn }) => {
+  const { baseUrl } = useContext(ParentContext);
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
@@ -39,7 +41,7 @@ const Login = ({ isLoggedIn }) => {
   const handleLogin = async (e) => {
     e.preventDefault();
     await axios
-      .post(`/api/v1/auth/login`, formData)
+      .post(`${baseUrl}/api/v1/auth/login`, formData)
       .then((res) => {
         // console.log(res.data);
         if (res.data.success) {

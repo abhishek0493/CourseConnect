@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import {
   Card,
   CardContent,
@@ -35,6 +35,7 @@ import { getAccessIcon } from '../Constants/GetAccessIcon';
 import axios from 'axios';
 
 import { formatDistanceToNow } from 'date-fns';
+import ParentContext from '../../ParentContext';
 
 const HumanReadableDate = ({ date }) => {
   const formattedDate = formatDistanceToNow(new Date(date), {
@@ -63,6 +64,7 @@ const DashboardThreads = ({
   saveTrigger,
   isCommunityJoined,
 }) => {
+  const { baseUrl, setBaseUrl } = useContext(ParentContext);
   const navigate = useNavigate();
 
   const [open, setOpen] = useState(false);
@@ -84,7 +86,7 @@ const DashboardThreads = ({
 
   const handleJoin = async (id) => {
     await axios
-      .get(`/api/v1/community/${id}/join`)
+      .get(`${baseUrl}/api/v1/community/${id}/join`)
       .then((res) => {
         if (res.data.success) {
           // console.log(res.data);
@@ -104,7 +106,7 @@ const DashboardThreads = ({
 
   const handleUpVote = async () => {
     await axios
-      .get(`/api/v1/threads/${thread.id}/up-vote-thread`, {
+      .get(`${baseUrl}/api/v1/threads/${thread.id}/up-vote-thread`, {
         withCredentials: true,
       })
       .then((res) => {
@@ -121,7 +123,7 @@ const DashboardThreads = ({
 
   const handleDownVote = async () => {
     await axios
-      .get(`/api/v1/threads/${thread.id}/down-vote-thread`, {
+      .get(`${baseUrl}/api/v1/threads/${thread.id}/down-vote-thread`, {
         withCredentials: true,
       })
       .then((res) => {
@@ -137,7 +139,7 @@ const DashboardThreads = ({
 
   const handleSave = async () => {
     await axios
-      .get(`/api/v1/threads/${thread.id}/save`, {
+      .get(`${baseUrl}/api/v1/threads/${thread.id}/save`, {
         withCredentials: true,
       })
       .then((res) => {

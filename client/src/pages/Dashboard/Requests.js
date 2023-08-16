@@ -1,16 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 
 import { Refactor } from '../../components/Constants/Refactor';
 import RequestsTable from '../../components/Dashboard/RequestsTable';
+import ParentContext from '../../ParentContext';
 
 const Requests = () => {
+  const { baseUrl } = useContext(ParentContext);
   const [requests, setRequests] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchJoinRequests = async () => {
     axios
-      .get(`/api/v1/users/community/view-all-requests`, {
+      .get(`${baseUrl}/api/v1/users/community/view-all-requests`, {
         withCredentials: true,
       })
       .then((res) => {
@@ -30,7 +32,7 @@ const Requests = () => {
 
   const handleApprove = async (requestId) => {
     await axios
-      .get(`/api/v1/users/community/request/${requestId}/approve`, {
+      .get(`${baseUrl}/api/v1/users/community/request/${requestId}/approve`, {
         withCredentials: true,
       })
       .then((res) => {
@@ -50,7 +52,7 @@ const Requests = () => {
 
   const handleReject = async (requestId) => {
     await axios
-      .get(`/api/v1/users/community/request/${requestId}/reject`, {
+      .get(`${baseUrl}/api/v1/users/community/request/${requestId}/reject`, {
         withCredentials: true,
       })
       .then((res) => {

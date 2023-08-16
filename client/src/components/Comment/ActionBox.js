@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
 import { Typography, Box, IconButton } from '@mui/material';
 import ReplyAllRoundedIcon from '@mui/icons-material/ReplyAllRounded';
@@ -6,6 +6,7 @@ import ReplyAllRoundedIcon from '@mui/icons-material/ReplyAllRounded';
 import ArrowCircleUpTwoToneIcon from '@mui/icons-material/ArrowCircleUpTwoTone';
 import ArrowCircleDownTwoToneIcon from '@mui/icons-material/ArrowCircleDownTwoTone';
 import axios from 'axios';
+import ParentContext from '../../ParentContext';
 
 const ActionBox = ({
   commentId,
@@ -14,9 +15,10 @@ const ActionBox = ({
   upVoteTrigger,
   downVoteTrigger,
 }) => {
+  const { baseUrl, setBaseUrl } = useContext(ParentContext);
   const handleUpVote = async () => {
     await axios
-      .get(`/api/v1/comments/${commentId}/up-vote`, {
+      .get(`${baseUrl}/api/v1/comments/${commentId}/up-vote`, {
         withCredentials: true,
       })
       .then((res) => {
@@ -35,7 +37,7 @@ const ActionBox = ({
 
   const handleDownVote = async () => {
     await axios
-      .get(`/api/v1/comments/${commentId}/down-vote`, {
+      .get(`${baseUrl}/api/v1/comments/${commentId}/down-vote`, {
         withCredentials: true,
       })
       .then((res) => {

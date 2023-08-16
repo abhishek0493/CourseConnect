@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import {
@@ -31,6 +31,7 @@ import axios from 'axios';
 import { FormatCount } from '../Constants/RefactorCount';
 
 import { formatDistanceToNow } from 'date-fns';
+import ParentContext from '../../ParentContext';
 
 const HumanReadableDate = ({ date }) => {
   const formattedDate = formatDistanceToNow(new Date(date), {
@@ -47,6 +48,7 @@ const ThreadCard = ({
   saveTrigger,
   isDetails,
 }) => {
+  const { baseUrl } = useContext(ParentContext);
   const navigate = useNavigate();
   const savedColour = thread.is_saved ? 'green' : '';
   const savedText = thread.is_saved ? 'Saved' : 'Save';
@@ -59,7 +61,7 @@ const ThreadCard = ({
 
   const handleUpVote = async () => {
     await axios
-      .get(`/api/v1/threads/${thread.id}/up-vote-thread`, {
+      .get(`${baseUrl}/api/v1/threads/${thread.id}/up-vote-thread`, {
         withCredentials: true,
       })
       .then((res) => {
@@ -77,7 +79,7 @@ const ThreadCard = ({
 
   const handleDownVote = async () => {
     await axios
-      .get(`/api/v1/threads/${thread.id}/down-vote-thread`, {
+      .get(`${baseUrl}/api/v1/threads/${thread.id}/down-vote-thread`, {
         withCredentials: true,
       })
       .then((res) => {
@@ -96,7 +98,7 @@ const ThreadCard = ({
 
   const handleSave = async () => {
     await axios
-      .get(`/api/v1/threads/${thread.id}/save`, {
+      .get(`${baseUrl}/api/v1/threads/${thread.id}/save`, {
         withCredentials: true,
       })
       .then((res) => {

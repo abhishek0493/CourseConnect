@@ -1,5 +1,5 @@
 import { Box, Button, Grid } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import CreatePostBar from '../../components/Common/CreatePostBar';
 import { Outlet, useLocation, useParams } from 'react-router-dom';
 import ThreadTitleBar from '../../components/Thread/ThreadTitleBar';
@@ -7,8 +7,10 @@ import axios from 'axios';
 import { Refactor } from '../../components/Constants/Refactor';
 import { AddCategoryIcon } from '../../utils/AddCategoryIcon';
 import Filters from '../../components/Common/Filters';
+import ParentContext from '../../ParentContext';
 
 const ThreadsLayout = () => {
+  const { baseUrl } = useContext(ParentContext);
   const { name } = useParams();
   const location = useLocation();
 
@@ -22,7 +24,7 @@ const ThreadsLayout = () => {
   });
 
   const fetchCommunityDetails = async () => {
-    const url = `/api/v1/community/${name}`;
+    const url = `${baseUrl}/api/v1/community/${name}`;
     await axios
       .get(url, { withCredentials: true })
       .then((res) => {
@@ -38,10 +40,10 @@ const ThreadsLayout = () => {
   };
 
   const fetchCommunityThreads = async (filters) => {
-    let url = `/api/v1/threads/${name}/get-threads`;
+    let url = `${baseUrl}/api/v1/threads/${name}/get-threads`;
     if (filters) {
       const queryParams = new URLSearchParams(filters).toString();
-      url = `/api/v1/threads/${name}/get-threads?${queryParams}`;
+      url = `${baseUrl}/api/v1/threads/${name}/get-threads?${queryParams}`;
     }
     await axios
       .get(url, { withCredentials: true })

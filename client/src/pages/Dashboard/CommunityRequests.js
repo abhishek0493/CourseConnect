@@ -1,18 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 
 import { Refactor } from '../../components/Constants/Refactor';
 import RequestsTable from '../../components/Dashboard/RequestsTable';
 import { useParams } from 'react-router-dom';
+import ParentContext from '../../ParentContext';
 
 const CommunityRequests = () => {
+  const { baseUrl } = useContext(ParentContext);
   const [requests, setRequests] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const { name } = useParams();
 
   const fetchJoinRequests = async () => {
     axios
-      .get(`/api/v1/users/community/view-all-requests?name=${name}`, {
+      .get(`${baseUrl}/api/v1/users/community/view-all-requests?name=${name}`, {
         withCredentials: true,
       })
       .then((res) => {
@@ -32,7 +34,7 @@ const CommunityRequests = () => {
 
   const handleApprove = async (requestId) => {
     await axios
-      .get(`/api/v1/users/community/request/${requestId}/approve`, {
+      .get(`${baseUrl}/api/v1/users/community/request/${requestId}/approve`, {
         withCredentials: true,
       })
       .then((res) => {
@@ -52,7 +54,7 @@ const CommunityRequests = () => {
 
   const handleReject = async (requestId) => {
     await axios
-      .get(`/api/v1/users/community/request/${requestId}/reject`, {
+      .get(`${baseUrl}/api/v1/users/community/request/${requestId}/reject`, {
         withCredentials: true,
       })
       .then((res) => {
