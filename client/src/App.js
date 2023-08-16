@@ -38,7 +38,7 @@ function App() {
 
   const fetchLoggedInStatus = () => {
     axios
-      .get(`${url}/api/v1/auth/check-login`, {
+      .get(`/api/v1/auth/check-login`, {
         withCredentials: true,
       })
       .then((res) => {
@@ -54,7 +54,7 @@ function App() {
 
   const fetchUserTypes = async () => {
     await axios
-      .get(`${url}/api/v1/users/categories`)
+      .get(`/api/v1/users/categories`)
       .then((response) => {
         if (response.data.success) {
           const res = Refactor(response.data);
@@ -69,7 +69,7 @@ function App() {
 
   const fetchAccessTypes = async () => {
     await axios
-      .get(`${url}/api/v1/categories/access-types`)
+      .get(`/api/v1/categories/access-types`)
       .then((response) => {
         setAccessTypes(response.data);
       })
@@ -80,7 +80,7 @@ function App() {
 
   const fetchUserCommunities = async () => {
     await axios
-      .get(`${url}/api/v1/community`, {
+      .get(`/api/v1/community`, {
         withCredentials: true,
       })
       .then((response) => {
@@ -97,7 +97,7 @@ function App() {
 
   const fetchCategories = async () => {
     await axios
-      .get(`${url}/api/v1/community/categories`, {
+      .get(`/api/v1/community/categories`, {
         withCredentials: true,
       })
       .then((response) => {
