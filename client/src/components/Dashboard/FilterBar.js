@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Box, Typography, TextField, MenuItem } from '@mui/material';
+import { Box, Typography, TextField, MenuItem, Divider } from '@mui/material';
 
 import CategoryIcon from '@mui/icons-material/Category';
 import { Categories } from '../Constants/Categories';
@@ -25,10 +25,12 @@ const FilterBar = ({
             alignItems: 'center',
           }}
         >
-          <Box>
-            <Typography variant="h5" fontWeight="bold">
-              # {title}
-            </Typography>
+          <Box sx={{ width: '100%' }}>
+            <Divider textAlign="left">
+              <Typography variant="h5" fontWeight="bold">
+                # {title}
+              </Typography>
+            </Divider>
           </Box>
           <TextField
             id="outlined-select-currency"

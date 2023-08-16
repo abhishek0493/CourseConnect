@@ -6,7 +6,7 @@ import image5 from './Connected world-cuate.svg';
 const Home = () => {
   const navigate = useNavigate();
   return (
-    <Box sx={{ bgcolor: ' #e3e3e3e3', p: 5 }}>
+    <Box>
       <Grid container>
         <Grid item xs={6}>
           <Box sx={{ display: 'flex' }}>

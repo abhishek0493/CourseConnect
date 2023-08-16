@@ -30,8 +30,8 @@ const ThreadsLayout = () => {
       .then((res) => {
         if (res.data.success) {
           const result = Refactor(res.data);
-          // const resultWithIcon = AddCategoryIcon(result);
-          setCommunity(result);
+          const resultWithIcon = AddCategoryIcon(result);
+          setCommunity(resultWithIcon);
         }
       })
       .catch((err) => {

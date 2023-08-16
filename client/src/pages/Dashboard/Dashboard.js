@@ -7,6 +7,7 @@ import FilterBar from '../../components/Dashboard/FilterBar';
 import DashboardThreads from '../../components/Dashboard/DashboardThreads';
 import { AddCategoryIcon } from '../../utils/AddCategoryIcon';
 import ParentContext from '../../ParentContext';
+import Communities from '../../components/Dashboard/Communities';
 
 const Dashboard = ({ updateTrigger }) => {
   const { baseUrl } = useContext(ParentContext);
@@ -126,6 +127,7 @@ const Dashboard = ({ updateTrigger }) => {
   return (
     <>
       <CreatePostBar />
+      <Communities />
       <FilterBar
         handleSavedToggle={handleShowSaveThreads}
         handleFilterByCategory={handleShowCategoryThreads}
@@ -139,7 +141,8 @@ const Dashboard = ({ updateTrigger }) => {
         {threads.length === 0 ? (
           <>
             <Alert severity="warning">
-              No threads created in this community yet!
+              No popular threads found. Start a discussion or explore other
+              communities!
             </Alert>
           </>
         ) : (

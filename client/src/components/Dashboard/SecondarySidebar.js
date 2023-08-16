@@ -124,18 +124,11 @@ const SecondarySidebar = () => {
             <Typography variant="caption" component={'p'}>
               Total Replies: {user.total_replies}
             </Typography>
-            <Button
-              size="small"
-              variant="outlined"
-              sx={{ fontSize: '10px', mt: 1 }}
-            >
-              View Join Requests
-            </Button>
           </Grid>
         </Grid>
       </Box>
       <Divider sx={{ mt: 2 }}>
-        <Chip size="small" label="THREADS" />
+        <Chip size="small" label="INTERACTIONS" />
       </Divider>
     </Box>
   );
