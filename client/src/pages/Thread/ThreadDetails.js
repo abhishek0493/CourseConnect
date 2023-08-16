@@ -9,8 +9,6 @@ import CreateCommentCard from '../../components/Comment/CreateCommentCard';
 import CommentItem from '../../components/Comment/CommentItem';
 import ThreadCard from '../../components/Thread/ThreadCard';
 
-const url = process.env.REACT_APP_BACKEND_URL;
-
 const ThreadDetails = () => {
   const { name, thread_id } = useParams();
   const [thread, setThread] = useState([]);
@@ -21,7 +19,7 @@ const ThreadDetails = () => {
   });
 
   const fetchthreadDetails = async () => {
-    await axios.get(`${url}/api/v1/threads/${thread_id}`).then((res) => {
+    await axios.get(`/api/v1/threads/${thread_id}`).then((res) => {
       const result = Refactor(res.data);
       setThread(result.thread);
       setComments(result.comments);
@@ -82,7 +80,7 @@ const ThreadDetails = () => {
   const handleCreateComment = async (comment) => {
     await axios
       .post(
-        `${url}/api/v1/comments/${thread_id}`,
+        `/api/v1/comments/${thread_id}`,
         { comment: comment },
         { withCredentials: true }
       )
@@ -103,7 +101,7 @@ const ThreadDetails = () => {
   const handleSubmitReply = (reply, commentId) => {
     axios
       .post(
-        `${url}/api/v1/comments/${thread_id}/${commentId}`,
+        `/api/v1/comments/${thread_id}/${commentId}`,
         { comment: reply },
         { withCredentials: true }
       )

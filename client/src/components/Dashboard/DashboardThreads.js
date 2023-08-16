@@ -36,8 +36,6 @@ import axios from 'axios';
 
 import { formatDistanceToNow } from 'date-fns';
 
-const url = process.env.REACT_APP_BACKEND_URL;
-
 const HumanReadableDate = ({ date }) => {
   const formattedDate = formatDistanceToNow(new Date(date), {
     addSuffix: true,
@@ -86,7 +84,7 @@ const DashboardThreads = ({
 
   const handleJoin = async (id) => {
     await axios
-      .get(`${url}/api/v1/community/${id}/join`)
+      .get(`/api/v1/community/${id}/join`)
       .then((res) => {
         if (res.data.success) {
           // console.log(res.data);
@@ -106,7 +104,7 @@ const DashboardThreads = ({
 
   const handleUpVote = async () => {
     await axios
-      .get(`${url}/api/v1/threads/${thread.id}/up-vote-thread`, {
+      .get(`/api/v1/threads/${thread.id}/up-vote-thread`, {
         withCredentials: true,
       })
       .then((res) => {
@@ -123,7 +121,7 @@ const DashboardThreads = ({
 
   const handleDownVote = async () => {
     await axios
-      .get(`${url}/api/v1/threads/${thread.id}/down-vote-thread`, {
+      .get(`/api/v1/threads/${thread.id}/down-vote-thread`, {
         withCredentials: true,
       })
       .then((res) => {
@@ -139,7 +137,7 @@ const DashboardThreads = ({
 
   const handleSave = async () => {
     await axios
-      .get(`${url}/api/v1/threads/${thread.id}/save`, {
+      .get(`/api/v1/threads/${thread.id}/save`, {
         withCredentials: true,
       })
       .then((res) => {

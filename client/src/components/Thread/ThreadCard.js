@@ -57,11 +57,9 @@ const ThreadCard = ({
   const total_downvotes = thread.total_downvotes;
   const date = thread.created_at;
 
-  const url = process.env.REACT_APP_BACKEND_URL;
-
   const handleUpVote = async () => {
     await axios
-      .get(`${url}/api/v1/threads/${thread.id}/up-vote-thread`, {
+      .get(`/api/v1/threads/${thread.id}/up-vote-thread`, {
         withCredentials: true,
       })
       .then((res) => {
@@ -79,7 +77,7 @@ const ThreadCard = ({
 
   const handleDownVote = async () => {
     await axios
-      .get(`${url}/api/v1/threads/${thread.id}/down-vote-thread`, {
+      .get(`/api/v1/threads/${thread.id}/down-vote-thread`, {
         withCredentials: true,
       })
       .then((res) => {
@@ -98,7 +96,7 @@ const ThreadCard = ({
 
   const handleSave = async () => {
     await axios
-      .get(`${url}/api/v1/threads/${thread.id}/save`, {
+      .get(`/api/v1/threads/${thread.id}/save`, {
         withCredentials: true,
       })
       .then((res) => {

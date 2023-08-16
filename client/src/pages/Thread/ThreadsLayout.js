@@ -8,8 +8,6 @@ import { Refactor } from '../../components/Constants/Refactor';
 import { AddCategoryIcon } from '../../utils/AddCategoryIcon';
 import Filters from '../../components/Common/Filters';
 
-const server_url = process.env.REACT_APP_BACKEND_URL;
-
 const ThreadsLayout = () => {
   const { name } = useParams();
   const location = useLocation();
@@ -24,7 +22,7 @@ const ThreadsLayout = () => {
   });
 
   const fetchCommunityDetails = async () => {
-    const url = `${server_url}/api/v1/community/${name}`;
+    const url = `/api/v1/community/${name}`;
     await axios
       .get(url, { withCredentials: true })
       .then((res) => {
@@ -40,10 +38,10 @@ const ThreadsLayout = () => {
   };
 
   const fetchCommunityThreads = async (filters) => {
-    let url = `${server_url}/api/v1/threads/${name}/get-threads`;
+    let url = `/api/v1/threads/${name}/get-threads`;
     if (filters) {
       const queryParams = new URLSearchParams(filters).toString();
-      url = `${server_url}/api/v1/threads/${name}/get-threads?${queryParams}`;
+      url = `/api/v1/threads/${name}/get-threads?${queryParams}`;
     }
     await axios
       .get(url, { withCredentials: true })

@@ -7,8 +7,6 @@ import FilterBar from '../../components/Dashboard/FilterBar';
 import DashboardThreads from '../../components/Dashboard/DashboardThreads';
 import { AddCategoryIcon } from '../../utils/AddCategoryIcon';
 
-const server_url = process.env.REACT_APP_BACKEND_URL;
-
 const Dashboard = ({ updateTrigger }) => {
   const [threads, setThreads] = useState([]);
 
@@ -22,10 +20,10 @@ const Dashboard = ({ updateTrigger }) => {
   const [title, setTitle] = useState('Trending Threads');
 
   const fetchTrendingThreads = (filters) => {
-    let url = `${server_url}/api/v1/dashboard`;
+    let url = `/api/v1/dashboard`;
     if (filters) {
       const queryParams = new URLSearchParams(filterState).toString();
-      url = `${server_url}/api/v1/dashboard?${queryParams}`;
+      url = `/api/v1/dashboard?${queryParams}`;
     }
 
     axios.get(url, { withCredentials: true }).then((res) => {

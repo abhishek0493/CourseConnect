@@ -5,8 +5,6 @@ import { Refactor } from '../../components/Constants/Refactor';
 import RequestsTable from '../../components/Dashboard/RequestsTable';
 import { useParams } from 'react-router-dom';
 
-const url = process.env.REACT_APP_BACKEND_URL;
-
 const CommunityRequests = () => {
   const [requests, setRequests] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -14,7 +12,7 @@ const CommunityRequests = () => {
 
   const fetchJoinRequests = async () => {
     axios
-      .get(`${url}/api/v1/users/community/view-all-requests?name=${name}`, {
+      .get(`/api/v1/users/community/view-all-requests?name=${name}`, {
         withCredentials: true,
       })
       .then((res) => {
@@ -34,7 +32,7 @@ const CommunityRequests = () => {
 
   const handleApprove = async (requestId) => {
     await axios
-      .get(`${url}/api/v1/users/community/request/${requestId}/approve`, {
+      .get(`/api/v1/users/community/request/${requestId}/approve`, {
         withCredentials: true,
       })
       .then((res) => {
@@ -54,7 +52,7 @@ const CommunityRequests = () => {
 
   const handleReject = async (requestId) => {
     await axios
-      .get(`${url}/api/v1/users/community/request/${requestId}/reject`, {
+      .get(`/api/v1/users/community/request/${requestId}/reject`, {
         withCredentials: true,
       })
       .then((res) => {

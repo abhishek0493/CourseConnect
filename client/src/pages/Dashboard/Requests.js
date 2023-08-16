@@ -4,15 +4,13 @@ import axios from 'axios';
 import { Refactor } from '../../components/Constants/Refactor';
 import RequestsTable from '../../components/Dashboard/RequestsTable';
 
-const url = process.env.REACT_APP_BACKEND_URL;
-
 const Requests = () => {
   const [requests, setRequests] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchJoinRequests = async () => {
     axios
-      .get(`${url}/api/v1/users/community/view-all-requests`, {
+      .get(`/api/v1/users/community/view-all-requests`, {
         withCredentials: true,
       })
       .then((res) => {
@@ -32,7 +30,7 @@ const Requests = () => {
 
   const handleApprove = async (requestId) => {
     await axios
-      .get(`${url}/api/v1/users/community/request/${requestId}/approve`, {
+      .get(`/api/v1/users/community/request/${requestId}/approve`, {
         withCredentials: true,
       })
       .then((res) => {
@@ -52,7 +50,7 @@ const Requests = () => {
 
   const handleReject = async (requestId) => {
     await axios
-      .get(`${url}/api/v1/users/community/request/${requestId}/reject`, {
+      .get(`/api/v1/users/community/request/${requestId}/reject`, {
         withCredentials: true,
       })
       .then((res) => {
