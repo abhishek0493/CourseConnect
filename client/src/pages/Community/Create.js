@@ -22,6 +22,8 @@ import InfoIcon from '@mui/icons-material/Info';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
+const url = process.env.REACT_APP_BACKEND_URL;
+
 const CreateCommunity = ({ cmCategories, onCreateCommunity }) => {
   const navigate = useNavigate();
   const [nameAvailability, setNameAvailability] = useState(null);
@@ -48,7 +50,7 @@ const CreateCommunity = ({ cmCategories, onCreateCommunity }) => {
   const handleCommunityNameBlur = async () => {
     try {
       const response = await axios.post(
-        'http://localhost:8000/api/v1/community/check-availability',
+        `${url}/api/v1/community/check-availability`,
         {
           name: formData.name,
         },
@@ -64,7 +66,7 @@ const CreateCommunity = ({ cmCategories, onCreateCommunity }) => {
   const handleCreate = async (e) => {
     e.preventDefault();
     await axios
-      .post('http://localhost:8000/api/v1/community', formData)
+      .post(`${url}/api/v1/community`, formData)
       .then((res) => {
         if (res.data.success) {
           const result = res.data.data;

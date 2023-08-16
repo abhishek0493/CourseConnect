@@ -13,6 +13,8 @@ import loginImage from '../../images/Login.png';
 import { useState } from 'react';
 import { useLocation, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+
+const url = process.env.REACT_APP_BACKEND_URL;
 axios.defaults.withCredentials = true;
 
 const Login = ({ isLoggedIn }) => {
@@ -38,7 +40,7 @@ const Login = ({ isLoggedIn }) => {
   const handleLogin = async (e) => {
     e.preventDefault();
     await axios
-      .post('http://localhost:8000/api/v1/auth/login', formData)
+      .post(`${url}/api/v1/auth/login`, formData)
       .then((res) => {
         // console.log(res.data);
         if (res.data.success) {

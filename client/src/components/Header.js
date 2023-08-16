@@ -23,6 +23,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import logo from '../images/HeaderLogo.png';
 import axios from 'axios';
 
+const url = process.env.REACT_APP_BACKEND_URL;
+
 const styles = (theme) => ({
   // Load app bar information from the theme
   toolbar: theme.mixins.toolbar,
@@ -97,7 +99,7 @@ const Header = (props) => {
 
   const handleLogout = async () => {
     await axios
-      .get('http://localhost:8000/api/v1/auth/logout', {
+      .get(`${url}/api/v1/auth/logout`, {
         withCredentials: true,
       })
       .then((res) => {

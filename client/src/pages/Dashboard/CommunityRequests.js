@@ -5,6 +5,8 @@ import { Refactor } from '../../components/Constants/Refactor';
 import RequestsTable from '../../components/Dashboard/RequestsTable';
 import { useParams } from 'react-router-dom';
 
+const url = process.env.REACT_APP_BACKEND_URL;
+
 const CommunityRequests = () => {
   const [requests, setRequests] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -12,12 +14,9 @@ const CommunityRequests = () => {
 
   const fetchJoinRequests = async () => {
     axios
-      .get(
-        `http://localhost:8000/api/v1/users/community/view-all-requests?name=${name}`,
-        {
-          withCredentials: true,
-        }
-      )
+      .get(`${url}/api/v1/users/community/view-all-requests?name=${name}`, {
+        withCredentials: true,
+      })
       .then((res) => {
         const result = Refactor(res.data);
         setRequests(result);
@@ -35,10 +34,9 @@ const CommunityRequests = () => {
 
   const handleApprove = async (requestId) => {
     await axios
-      .get(
-        `http://localhost:8000/api/v1/users/community/request/${requestId}/approve`,
-        { withCredentials: true }
-      )
+      .get(`${url}/api/v1/users/community/request/${requestId}/approve`, {
+        withCredentials: true,
+      })
       .then((res) => {
         if (res.data.success) {
           alert(res.data.data.message);
@@ -56,10 +54,9 @@ const CommunityRequests = () => {
 
   const handleReject = async (requestId) => {
     await axios
-      .get(
-        `http://localhost:8000/api/v1/users/community/request/${requestId}/reject`,
-        { withCredentials: true }
-      )
+      .get(`${url}/api/v1/users/community/request/${requestId}/reject`, {
+        withCredentials: true,
+      })
       .then((res) => {
         if (res.data.success) {
           alert(res.data.data.message);

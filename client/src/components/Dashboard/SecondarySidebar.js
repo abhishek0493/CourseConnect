@@ -18,13 +18,15 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Refactor } from '../Constants/Refactor';
 
+const url = process.env.REACT_APP_BACKEND_URL;
+
 const SecondarySidebar = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState([]);
 
   const fetchUserStats = async () => {
     await axios
-      .get('http://localhost:8000/api/v1/users/get-stats', {
+      .get(`${url}/api/v1/users/get-stats`, {
         withCredentials: true,
       })
       .then((res) => {

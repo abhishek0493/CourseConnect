@@ -32,9 +32,11 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState([]);
 
+  const url = process.env.REACT_APP_BACKEND_URL;
+
   const fetchLoggedInStatus = () => {
     axios
-      .get('http://localhost:8000/api/v1/auth/check-login', {
+      .get(`${url}/api/v1/auth/check-login`, {
         withCredentials: true,
       })
       .then((res) => {
@@ -50,7 +52,7 @@ function App() {
 
   const fetchUserTypes = async () => {
     await axios
-      .get('http://localhost:8000/api/v1/users/categories')
+      .get(`${url}/api/v1/users/categories`)
       .then((response) => {
         if (response.data.success) {
           const res = Refactor(response.data);
@@ -65,7 +67,7 @@ function App() {
 
   const fetchAccessTypes = async () => {
     await axios
-      .get('http://localhost:8000/api/v1/categories/access-types')
+      .get(`${url}/api/v1/categories/access-types`)
       .then((response) => {
         setAccessTypes(response.data);
       })
@@ -76,7 +78,7 @@ function App() {
 
   const fetchUserCommunities = async () => {
     await axios
-      .get('http://localhost:8000/api/v1/community', {
+      .get(`${url}/api/v1/community`, {
         withCredentials: true,
       })
       .then((response) => {
@@ -93,7 +95,7 @@ function App() {
 
   const fetchCategories = async () => {
     await axios
-      .get('http://localhost:8000/api/v1/community/categories', {
+      .get(`${url}/api/v1/community/categories`, {
         withCredentials: true,
       })
       .then((response) => {

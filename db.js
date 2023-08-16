@@ -1,6 +1,9 @@
 const knex = require('knex');
 const knexConfig = require('./knexfile');
-const db = knex(knexConfig.development);
+const db =
+  process.env.NODE_ENV === 'development'
+    ? knex(knexConfig.development)
+    : knex(knexConfig.production);
 
 db.raw('SELECT 1')
   .then(() => {

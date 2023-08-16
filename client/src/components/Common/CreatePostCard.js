@@ -18,6 +18,7 @@ import {
 import axios from 'axios';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+const url = process.env.REACT_APP_BACKEND_URL;
 
 const CreatePostCard = ({ communities, selectedId }) => {
   // const [selectedOption, setSelectedOption] = useState(1);
@@ -58,7 +59,7 @@ const CreatePostCard = ({ communities, selectedId }) => {
         : formData;
 
     await axios
-      .post('http://localhost:8000/api/v1/threads', reqData, {
+      .post(`${url}/api/v1/threads`, reqData, {
         withCredentials: true,
       })
       .then((res) => {

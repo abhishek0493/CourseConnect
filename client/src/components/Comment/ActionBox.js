@@ -7,6 +7,8 @@ import ArrowCircleUpTwoToneIcon from '@mui/icons-material/ArrowCircleUpTwoTone';
 import ArrowCircleDownTwoToneIcon from '@mui/icons-material/ArrowCircleDownTwoTone';
 import axios from 'axios';
 
+const url = process.env.REACT_APP_BACKEND_URL;
+
 const ActionBox = ({
   commentId,
   handleReplyButtonClick,
@@ -16,7 +18,7 @@ const ActionBox = ({
 }) => {
   const handleUpVote = async () => {
     await axios
-      .get(`http://localhost:8000/api/v1/comments/${commentId}/up-vote`, {
+      .get(`${url}/api/v1/comments/${commentId}/up-vote`, {
         withCredentials: true,
       })
       .then((res) => {
@@ -35,7 +37,7 @@ const ActionBox = ({
 
   const handleDownVote = async () => {
     await axios
-      .get(`http://localhost:8000/api/v1/comments/${commentId}/down-vote`, {
+      .get(`${url}/api/v1/comments/${commentId}/down-vote`, {
         withCredentials: true,
       })
       .then((res) => {

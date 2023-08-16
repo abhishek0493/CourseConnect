@@ -24,7 +24,10 @@ const app = express();
 // 1) GLOBAL MIDDLEWARES
 // Implement CORS
 const corsOptions = {
-  origin: 'http://localhost:3000',
+  origin:
+    process.env.REACT_APP_ENV == 'production'
+      ? 'https://course-connect-bu-5d7fd598c842.herokuapp.com/'
+      : 'http://localhost:3000',
   credentials: true, //access-control-allow-credentials:true
   optionSuccessStatus: 200,
 };
