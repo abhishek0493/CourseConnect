@@ -5,7 +5,7 @@
 exports.up = function (knex) {
   return knex.schema.createTable('users', function (table) {
     table.increments('id').unsigned().primary();
-    table.uuid('uuid').notNullable().defaultTo(knex.fn.uuid()); // Use knex.raw to set the default value
+    table.uuid('uuid').notNullable().defaultTo(knex.fn.binToUuid()); // Use knex.raw to set the default value
     table.string('name').notNullable();
     table.string('email').notNullable();
     table.string('password').notNullable();
