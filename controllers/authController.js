@@ -9,6 +9,7 @@ const {
 } = require('../utils/validation');
 const catchAsync = require('../utils/catchAsync');
 const db = require('../db');
+const uuid = require('uuid');
 
 const createSendToken = (user, statusCode, req, res) => {
   const token = jwt.sign(
@@ -53,6 +54,8 @@ exports.signup = catchAsync(async (req, res) => {
     });
   }
 
+  const user_uuid = uuid.v4();
+
   const userObj = _.pick(req.body, [
     'name',
     'email',
@@ -65,6 +68,7 @@ exports.signup = catchAsync(async (req, res) => {
   const hashedPassword = await bcrypt.hash(req.body.password, salt);
 
   const [id] = await db('users').insert({
+    uuid: user_uuid,
     name: userObj.name,
     email: userObj.email,
     password: hashedPassword,
