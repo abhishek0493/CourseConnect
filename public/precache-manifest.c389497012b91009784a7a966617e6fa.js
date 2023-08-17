@@ -1,23 +1,23 @@
 self.__precacheManifest = [
   {
-    "revision": "4fae291f1c9dfd14df7e",
+    "revision": "3c24a861aad87cb3c47c",
     "url": "/static/css/main.4f6280ff.chunk.css"
   },
   {
-    "revision": "4fae291f1c9dfd14df7e",
-    "url": "/static/js/main.4fae291f.chunk.js"
+    "revision": "3c24a861aad87cb3c47c",
+    "url": "/static/js/main.3c24a861.chunk.js"
   },
   {
     "revision": "b9699fdd249ffdecb04e",
     "url": "/static/js/1.b9699fdd.chunk.js"
   },
   {
-    "revision": "610385c55e8af2950a99",
+    "revision": "84afe467c767101204e2",
     "url": "/static/css/2.ffee892a.chunk.css"
   },
   {
-    "revision": "610385c55e8af2950a99",
-    "url": "/static/js/2.610385c5.chunk.js"
+    "revision": "84afe467c767101204e2",
+    "url": "/static/js/2.84afe467.chunk.js"
   },
   {
     "revision": "d045ba4c1770e68b8d83",
@@ -52,7 +52,7 @@ self.__precacheManifest = [
     "url": "/static/media/Connected world-cuate.c5b79e8e.svg"
   },
   {
-    "revision": "c438b9a0862a71968e98a179ff50e8b3",
+    "revision": "a65f98c9e2d1abe394dde20b0388d0d3",
     "url": "/index.html"
   }
 ];
