@@ -10,6 +10,7 @@ import {
   Modal,
   IconButton,
   Button,
+  Link,
   Chip,
 } from '@mui/material';
 
@@ -63,6 +64,7 @@ const DashboardThreads = ({
   downVoteTrigger,
   saveTrigger,
   isCommunityJoined,
+  isNavigated,
 }) => {
   const { baseUrl, setBaseUrl } = useContext(ParentContext);
   const navigate = useNavigate();
@@ -187,7 +189,10 @@ const DashboardThreads = ({
                   <IconButton
                     size="small"
                     onClick={handleUpVote}
-                    disabled={thread.is_joined == 0 && thread.is_author == 0}
+                    disabled={
+                      (thread.is_joined == 0 && thread.is_author == 0) ||
+                      isNavigated
+                    }
                     sx={{
                       m: 0,
                       '&:hover': {
@@ -219,7 +224,10 @@ const DashboardThreads = ({
                   <IconButton
                     size="small"
                     onClick={handleDownVote}
-                    disabled={thread.is_joined == 0 && thread.is_author == 0}
+                    disabled={
+                      (thread.is_joined == 0 && thread.is_author == 0) ||
+                      isNavigated
+                    }
                     sx={{
                       '&:hover': {
                         color: 'warning.main',
@@ -258,9 +266,24 @@ const DashboardThreads = ({
               >
                 {communityIcon}
               </Avatar>
-              <Typography variant="caption" sx={{ mx: 1, fontWeight: 'bold' }}>
-                c/{thread.community_name}.
-              </Typography>
+              <Link
+                component="button"
+                sx={{
+                  fontSize: '0.5rem',
+                  textDecoration: 'underline',
+                }}
+                onClick={() => {
+                  navigate(`/dashboard/c/${thread.community_name}`);
+                }}
+              >
+                <Typography
+                  variant="caption"
+                  sx={{ mx: 1, fontWeight: 'bold' }}
+                >
+                  c/{thread.community_name}.
+                </Typography>
+              </Link>
+
               <Typography variant="caption" fontWeight="light" color="gray">
                 Posted by {thread.author}.
               </Typography>
@@ -446,7 +469,10 @@ const DashboardThreads = ({
                     <IconButton
                       sx={{ borderRadius: 2 }}
                       onClick={handleSave}
-                      disabled={thread.is_joined == 0 && thread.is_author == 0}
+                      disabled={
+                        (thread.is_joined == 0 && thread.is_author == 0) ||
+                        isNavigated
+                      }
                     >
                       {thread.is_joined == 0 && thread.is_author == 0 && (
                         <BlockIcon sx={{ fontSize: '1.2rem' }} />

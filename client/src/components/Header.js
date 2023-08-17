@@ -25,7 +25,6 @@ import axios from 'axios';
 import ParentContext from '../ParentContext';
 
 const styles = (theme) => ({
-  // Load app bar information from the theme
   toolbar: theme.mixins.toolbar,
 });
 
@@ -87,6 +86,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 const Header = (props) => {
   const { baseUrl, setBaseUrl } = React.useContext(ParentContext);
   const { classes, isLoggedIn, onLogout } = props;
+  const [searchQuery, setSearchQuery] = React.useState('');
 
   const styleClasses = useStyles();
   const navigate = useNavigate();
@@ -96,6 +96,17 @@ const Header = (props) => {
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+
+  const handleSearchInputChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
+  const handleSearchSubmit = () => {
+    setSearchQuery('');
+    navigate(`/dashboard/custom-search?query=${searchQuery}`, {
+      replace: true,
+    });
+  };
 
   const handleLogout = async () => {
     await axios
@@ -230,8 +241,16 @@ const Header = (props) => {
             </SearchIconWrapper>
             <StyledInputBase
               fullWidth
-              placeholder="Search…"
+              placeholder="Search any topic or community..."
+              value={searchQuery}
+              onChange={handleSearchInputChange}
               inputProps={{ 'aria-label': 'search' }}
+              onKeyDownCapture={(event) => {
+                if (event.key === 'Enter') {
+                  handleSearchSubmit(event);
+                  // alert(searchQuery);
+                }
+              }}
             />
           </Search>
           <Box sx={{ flexGrow: 1 }} />

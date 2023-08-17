@@ -11,6 +11,10 @@ router
   .route('/get-saved-threads')
   .get(protect, dashboardController.getAllSavedThreads);
 
+router
+  .route('/search-threads')
+  .get(protect, dashboardController.getSearchQueryThreads);
+
 router.route('/').get(protect, dashboardController.getTrendingThreads);
 
 module.exports = router;
