@@ -170,7 +170,7 @@ const Dashboard = ({ updateTrigger }) => {
               <DashboardThreads
                 thread={item}
                 upVoteTrigger={incrementUpvotes}
-                downVoteTrigget={incrementDownvotes}
+                downVoteTrigger={incrementDownvotes}
                 saveTrigger={handleSave}
                 isCommunityJoined={updateTrigger}
               />

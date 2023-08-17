@@ -64,9 +64,8 @@ const DashboardThreads = ({
   downVoteTrigger,
   saveTrigger,
   isCommunityJoined,
-  isNavigated,
 }) => {
-  const { baseUrl, setBaseUrl } = useContext(ParentContext);
+  const { baseUrl } = useContext(ParentContext);
   const navigate = useNavigate();
 
   const [open, setOpen] = useState(false);
@@ -91,7 +90,6 @@ const DashboardThreads = ({
       .get(`${baseUrl}/api/v1/community/${id}/join`)
       .then((res) => {
         if (res.data.success) {
-          // console.log(res.data);
           alert(res.data.data.message);
           isCommunityJoined(true);
           navigate(`/dashboard/c/${res.data.data.name}`);
@@ -135,7 +133,10 @@ const DashboardThreads = ({
       })
       .catch((err) => {
         const res = err.response;
-        // console.log(err);
+        console.log(err);
+        if (res) {
+          alert(res.data.message);
+        }
       });
   };
 
@@ -189,10 +190,7 @@ const DashboardThreads = ({
                   <IconButton
                     size="small"
                     onClick={handleUpVote}
-                    disabled={
-                      (thread.is_joined == 0 && thread.is_author == 0) ||
-                      isNavigated
-                    }
+                    disabled={thread.is_joined == 0 && thread.is_author == 0}
                     sx={{
                       m: 0,
                       '&:hover': {
@@ -224,10 +222,7 @@ const DashboardThreads = ({
                   <IconButton
                     size="small"
                     onClick={handleDownVote}
-                    disabled={
-                      (thread.is_joined == 0 && thread.is_author == 0) ||
-                      isNavigated
-                    }
+                    disabled={thread.is_joined == 0 && thread.is_author == 0}
                     sx={{
                       '&:hover': {
                         color: 'warning.main',
@@ -469,10 +464,7 @@ const DashboardThreads = ({
                     <IconButton
                       sx={{ borderRadius: 2 }}
                       onClick={handleSave}
-                      disabled={
-                        (thread.is_joined == 0 && thread.is_author == 0) ||
-                        isNavigated
-                      }
+                      disabled={thread.is_joined == 0 && thread.is_author == 0}
                     >
                       {thread.is_joined == 0 && thread.is_author == 0 && (
                         <BlockIcon sx={{ fontSize: '1.2rem' }} />

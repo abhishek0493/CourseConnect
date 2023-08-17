@@ -11,7 +11,7 @@ import axios from 'axios';
 import DashboardThreads from '../../components/Dashboard/DashboardThreads';
 import { AddCategoryIcon } from '../../utils/AddCategoryIcon';
 
-const SearchResults = () => {
+const SearchResults = ({ updateTrigger }) => {
   const { baseUrl } = useContext(ParentContext);
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -29,6 +29,51 @@ const SearchResults = () => {
           setThreads(resWithIcons);
         }
       });
+  };
+
+  const incrementUpvotes = (threadId, toggle) => {
+    const updatedThreads = threads.map((thread) => {
+      if (thread.id === threadId) {
+        return {
+          ...thread,
+          total_upvotes: thread.total_upvotes + 1,
+          total_downvotes: thread.total_downvotes - (toggle ? 1 : 0),
+          is_upvoted: 1,
+          is_downvoted: 0,
+        };
+      }
+      return thread;
+    });
+    setThreads(updatedThreads);
+  };
+
+  const incrementDownvotes = (threadId, toggle) => {
+    const updatedThreads = threads.map((thread) => {
+      if (thread.id === threadId) {
+        return {
+          ...thread,
+          total_downvotes: thread.total_downvotes + 1,
+          total_upvotes: thread.total_upvotes - (toggle ? 1 : 0), // Decrement downvotes only if toggle is true
+          is_downvoted: 1,
+          is_upvoted: 0,
+        };
+      }
+      return thread;
+    });
+    setThreads(updatedThreads);
+  };
+
+  const handleSave = (threadId, toggle) => {
+    const updatedThreads = threads.map((thread) => {
+      if (thread.id === threadId) {
+        return {
+          ...thread,
+          is_saved: toggle ? (thread.is_saved ? 0 : 1) : 1,
+        };
+      }
+      return thread;
+    });
+    setThreads(updatedThreads);
   };
 
   useEffect(() => {
@@ -52,7 +97,13 @@ const SearchResults = () => {
         ) : (
           <Stack spacing={2}>
             {threads.map((item) => (
-              <DashboardThreads thread={item} isNavigated={true} />
+              <DashboardThreads
+                thread={item}
+                upVoteTrigger={incrementUpvotes}
+                downVoteTrigger={incrementDownvotes}
+                saveTrigger={handleSave}
+                isCommunityJoined={updateTrigger}
+              />
             ))}
           </Stack>
         )}

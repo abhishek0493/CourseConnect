@@ -206,8 +206,14 @@ function App() {
                 element={<ThreadDetails />}
               ></Route>
               <Route path="view-all-requests" element={<Requests />}></Route>
-              <Route path="view-all-saved" element={<SavedThreads />}></Route>
-              <Route path="custom-search" element={<SearchResults />}></Route>
+              <Route
+                path="view-all-saved"
+                element={<SavedThreads updateTrigger={handleUpdateTrigger} />}
+              ></Route>
+              <Route
+                path="custom-search"
+                element={<SearchResults updateTrigger={handleUpdateTrigger} />}
+              ></Route>
               <Route
                 path=":name/view-requests"
                 element={<CommunityRequests />}
