@@ -47,6 +47,7 @@ const ThreadCard = ({
   downVoteTrigger,
   saveTrigger,
   isDetails,
+  isAllSaved,
 }) => {
   const { baseUrl } = useContext(ParentContext);
   const navigate = useNavigate();
@@ -139,6 +140,7 @@ const ThreadCard = ({
                 <IconButton
                   size="small"
                   onClick={handleUpVote}
+                  disabled={isAllSaved}
                   sx={{
                     m: 0,
                     '&:hover': {
@@ -162,6 +164,7 @@ const ThreadCard = ({
                 </Typography>
                 <IconButton
                   size="small"
+                  disabled={isAllSaved}
                   onClick={handleDownVote}
                   sx={{
                     '&:hover': {
@@ -331,7 +334,11 @@ const ThreadCard = ({
                     </IconButton>
                   )}
 
-                  <IconButton sx={{ borderRadius: 2 }} onClick={handleSave}>
+                  <IconButton
+                    sx={{ borderRadius: 2 }}
+                    onClick={handleSave}
+                    disabled={isAllSaved}
+                  >
                     <BookmarkIcon
                       sx={{ fontSize: '1.2rem' }}
                       htmlColor={savedColour}

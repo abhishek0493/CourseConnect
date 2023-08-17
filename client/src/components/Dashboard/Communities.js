@@ -59,7 +59,7 @@ const Communities = ({ communities }) => {
   return (
     <>
       <Divider sx={{ my: 3 }} textAlign="left">
-        <Typography variant="body1" fontWeight={'bold'}>
+        <Typography variant="h5" fontWeight={'bold'}>
           # Popular Communities
         </Typography>
       </Divider>

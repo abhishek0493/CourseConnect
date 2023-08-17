@@ -132,6 +132,18 @@ const getUserStats = catchAsync(async (req, res) => {
       ),
       db.raw(
         `(SELECT COUNT(*) FROM comments as cmt WHERE cmt.user_id = ${loggedInUser} AND parent_comment_id != 0) as total_replies`
+      ),
+      db.raw(
+        `(SELECT COUNT(*) FROM user_communities as ucr WHERE ucr.community_id IN (SELECT c.id FROM communities as c WHERE c.created_by = ${loggedInUser} AND c.access_type != 1) AND ucr.is_author != 1 AND ucr.status = 0) as total_requests`
+      ),
+      db.raw(
+        `(SELECT COUNT(*) FROM user_thread_actions as uta WHERE uta.thread_id IN (SELECT t.id FROM threads as t WHERE t.user_id = ${loggedInUser}) AND uta.is_upvoted = 1 AND uta.user_id != ${loggedInUser}) as total_upvotes`
+      ),
+      db.raw(
+        `(SELECT COUNT(*) FROM user_thread_actions as uta WHERE uta.thread_id IN (SELECT t.id FROM threads as t WHERE t.user_id = ${loggedInUser}) AND uta.is_downvoted = 1 AND uta.user_id != ${loggedInUser}) as total_downvotes`
+      ),
+      db.raw(
+        `(SELECT COUNT(*) FROM user_thread_actions as uta WHERE uta.user_id = ${loggedInUser} AND uta.is_saved = 1) as total_saved`
       )
     )
     .where({ id: loggedInUser });

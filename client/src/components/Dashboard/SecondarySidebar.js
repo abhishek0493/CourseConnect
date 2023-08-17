@@ -8,12 +8,17 @@ import {
   Chip,
   Button,
   Avatar,
+  Badge,
   LinearProgress,
 } from '@mui/material';
 
 import InsertEmoticonRoundedIcon from '@mui/icons-material/InsertEmoticonRounded';
 import RateReviewRoundedIcon from '@mui/icons-material/RateReviewRounded';
 import GroupsRoundedIcon from '@mui/icons-material/GroupsRounded';
+import NotificationImportantRoundedIcon from '@mui/icons-material/NotificationImportantRounded';
+import BallotRoundedIcon from '@mui/icons-material/BallotRounded';
+import BookmarkIcon from '@mui/icons-material/Bookmark';
+
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Refactor } from '../Constants/Refactor';
@@ -42,7 +47,7 @@ const SecondarySidebar = () => {
   }, []);
 
   return (
-    <Box sx={{ height: '70vh', p: 3 }}>
+    <Box sx={{ height: '80vh', p: 3 }}>
       <Box sx={{ display: 'flex' }}>
         <Typography variant="body2" fontWeight={'bold'}>
           {user && Object.keys(user).length > 0 ? (
@@ -81,20 +86,30 @@ const SecondarySidebar = () => {
             <Typography variant="caption" component={'p'}>
               Total Joined: {user.total_communities_joined}
             </Typography>
-            <Button
-              size="small"
-              variant="outlined"
-              sx={{ fontSize: '10px', mt: 1 }}
-              onClick={() =>
-                navigate('/dashboard/view-all-requests', { replace: true })
-              }
-            >
-              View Join Requests
-            </Button>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Button
+                size="small"
+                variant="outlined"
+                sx={{ fontSize: '10px', mt: 1, mr: 1 }}
+                onClick={() =>
+                  navigate('/dashboard/view-all-requests', { replace: true })
+                }
+              >
+                Join Requests
+              </Button>
+              <Badge
+                badgeContent={user.total_requests}
+                color="warning"
+                sx={{ mt: 0.5 }}
+                showZero
+              >
+                <NotificationImportantRoundedIcon color="primary" />
+              </Badge>
+            </Box>
           </Grid>
         </Grid>
       </Box>
-      <Divider sx={{ mt: 2 }}>
+      <Divider sx={{ mt: 3 }} textAlign="left">
         <Chip size="small" label="COMMUNITIES" />
       </Divider>
 
@@ -124,11 +139,59 @@ const SecondarySidebar = () => {
             <Typography variant="caption" component={'p'}>
               Total Replies: {user.total_replies}
             </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Button
+                size="small"
+                variant="outlined"
+                sx={{ fontSize: '10px', mt: 1, mr: 1 }}
+                onClick={() =>
+                  navigate('/dashboard/view-all-saved', { replace: true })
+                }
+              >
+                My Saved Threads
+              </Button>
+              <Badge
+                color="success"
+                badgeContent={user.total_saved}
+                sx={{ mt: 0.5 }}
+                showZero
+              >
+                <BookmarkIcon color="primary" />
+              </Badge>
+            </Box>
           </Grid>
         </Grid>
       </Box>
-      <Divider sx={{ mt: 2 }}>
+      <Divider sx={{ mt: 3 }} textAlign="left">
         <Chip size="small" label="INTERACTIONS" />
+      </Divider>
+
+      <Box sx={{ mt: 5 }}>
+        <Grid container alignItems={'center'}>
+          <Grid item xs={4}>
+            <Avatar
+              sx={{
+                bgcolor: '#090979',
+                width: '4rem',
+                height: '4rem',
+                color: 'paper',
+              }}
+            >
+              <BallotRoundedIcon sx={{ fontSize: '2rem', color: 'paper' }} />
+            </Avatar>
+          </Grid>
+          <Grid item xs={8}>
+            <Typography variant="caption" component={'p'}>
+              Upvotes Received: {user.total_upvotes}
+            </Typography>
+            <Typography variant="caption" component={'p'}>
+              Downvotes Received: {user.total_downvotes}
+            </Typography>
+          </Grid>
+        </Grid>
+      </Box>
+      <Divider sx={{ mt: 3 }} textAlign="left">
+        <Chip size="small" label="PROFILE STATS" />
       </Divider>
     </Box>
   );

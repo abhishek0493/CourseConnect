@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Card, Typography, Box, Stack, Alert } from '@mui/material';
+import { Card, Typography, Box, Stack, Alert, Divider } from '@mui/material';
 
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
@@ -126,13 +126,12 @@ const ThreadDetails = () => {
 
   return (
     <Box>
-      <Typography
-        sx={{ mb: 1, fontWeight: 'bold' }}
-        variant="body1"
-        color="action"
-      >
-        c/{name}
-      </Typography>
+      <Divider textAlign="left" sx={{ mb: 2 }}>
+        <Typography sx={{ fontWeight: 'bold' }} variant="subtitle1">
+          c/{name}
+        </Typography>
+      </Divider>
+
       {thread ? (
         <ThreadCard
           thread={thread}

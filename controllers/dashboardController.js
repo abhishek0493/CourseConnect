@@ -140,7 +140,73 @@ const getTrendingThreads = catchAsync(async (req, res) => {
   });
 });
 
+const getAllSavedThreads = catchAsync(async (req, res) => {
+  const loggedInUser = req.user.id;
+
+  let threadsQuery = db('threads as t')
+    .select(
+      't.*',
+      'u.name as author',
+      'c.category_id',
+      'c.name',
+      'c.description',
+      'c.access_type',
+      'c.created_by',
+      'c.category_id',
+      'c.name as community_name',
+      'uta.is_saved',
+      'uta.is_upvoted',
+      'uta.is_downvoted'
+    )
+    .select(db.raw('COUNT(comments.id) as total_comments'))
+    .join('communities as c', 'c.id', '=', 't.community_id')
+    .join('users as u', 'u.id', '=', 't.user_id')
+    .join('users as uc', 'uc.id', '=', 'c.created_by')
+    .leftJoin('comments', 'comments.thread_id', '=', 't.id')
+    .leftJoin('user_thread_actions as uta', function () {
+      this.on('uta.thread_id', '=', 't.id').andOn(
+        'uta.user_id',
+        '=',
+        loggedInUser
+      );
+    })
+    .where('uta.is_saved', 1)
+    .groupBy(
+      't.id',
+      'u.name',
+      'c.category_id',
+      'c.name',
+      'c.description',
+      'c.access_type',
+      'c.category_id',
+      'c.created_by',
+      'uta.is_saved',
+      'uta.is_upvoted',
+      'uta.is_downvoted'
+    )
+    .orderBy('t.id', 'desc');
+
+  const threads = await threadsQuery;
+
+  const transformThreads = threads.map((thread) => {
+    const isAuthor = thread.user_id == loggedInUser ? 1 : 0;
+    const isCreator = thread.created_by == loggedInUser ? 1 : 0;
+
+    return {
+      ...thread,
+      is_author: isAuthor,
+      is_creator: isCreator,
+    };
+  });
+
+  res.status(200).json({
+    success: true,
+    data: transformThreads,
+  });
+});
+
 module.exports = {
   getTrendingThreads,
   getRecentCommunites,
+  getAllSavedThreads,
 };

@@ -7,6 +7,10 @@ router
   .route('/get-recent-communities')
   .get(protect, dashboardController.getRecentCommunites);
 
+router
+  .route('/get-saved-threads')
+  .get(protect, dashboardController.getAllSavedThreads);
+
 router.route('/').get(protect, dashboardController.getTrendingThreads);
 
 module.exports = router;

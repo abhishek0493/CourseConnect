@@ -113,7 +113,7 @@ const CreateCommunity = ({ cmCategories, onCreateCommunity }) => {
                   InputProps={{
                     endAdornment: (
                       <InputAdornment position="end">
-                        <Tooltip title="Community name must be at least 3 characters long and can contain letters, numbers, and hyphens.">
+                        <Tooltip title="Community name must be at least 3 and max 20 characters long and can contain letters, numbers, and hyphens. No Spaces are allowed">
                           <IconButton size="small">
                             <InfoIcon sx={{ color: 'primary.main' }} />
                           </IconButton>
@@ -156,7 +156,7 @@ const CreateCommunity = ({ cmCategories, onCreateCommunity }) => {
                   InputProps={{
                     endAdornment: (
                       <InputAdornment position="end">
-                        <Tooltip title="Community name must be at least 3 characters long and can contain letters, numbers, and hyphens.">
+                        <Tooltip title="Write a title for the community">
                           <IconButton size="small">
                             <InfoIcon sx={{ color: 'primary.main' }} />
                           </IconButton>

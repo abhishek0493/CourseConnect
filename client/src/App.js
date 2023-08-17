@@ -23,6 +23,7 @@ import Requests from './pages/Dashboard/Requests';
 import CommunityRequests from './pages/Dashboard/CommunityRequests';
 import NoAccess from './pages/NoAccess/NoAccess';
 import LoginNew from './pages/Login/LoginNew';
+import SavedThreads from './pages/Dashboard/SavedThreads';
 
 function App() {
   const [userTypes, setUserTypes] = useState([]);
@@ -204,6 +205,7 @@ function App() {
                 element={<ThreadDetails />}
               ></Route>
               <Route path="view-all-requests" element={<Requests />}></Route>
+              <Route path="view-all-saved" element={<SavedThreads />}></Route>
               <Route
                 path=":name/view-requests"
                 element={<CommunityRequests />}
