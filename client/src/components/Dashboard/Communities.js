@@ -1,19 +1,21 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { makeStyles } from '@mui/styles';
 
 import {
   Paper,
   Typography,
-  Avatar,
-  Badge,
   Tooltip,
   Chip,
   Link,
+  Box,
   Divider,
+  Alert,
 } from '@mui/material';
 
 import AcUnitIcon from '@mui/icons-material/AcUnit';
-import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
+import Groups3Icon from '@mui/icons-material/Groups3';
+import DrawRoundedIcon from '@mui/icons-material/DrawRounded';
+import { useNavigate } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -41,6 +43,7 @@ const useStyles = makeStyles((theme) => ({
   icons: {
     display: 'flex',
     alignItems: 'center',
+    width: '100%',
     marginTop: theme.spacing(1),
   },
   icon: {
@@ -48,90 +51,88 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const randomDate = (start, end) => {
-  return new Date(
-    start.getTime() + Math.random() * (end.getTime() - start.getTime())
-  );
-};
-
-const generateRandomCommunities = (numCommunities) => {
-  const communities = [];
-
-  for (let i = 1; i <= numCommunities; i++) {
-    const createdAt = randomDate(new Date(2023, 0, 1), new Date());
-    const numThreads = Math.floor(Math.random() * 20) + 1;
-
-    communities.push({
-      id: i,
-      name: `Community ${i}`,
-      createdBy: `User ${i}`,
-      createdAt: createdAt.toDateString(),
-      numThreads,
-    });
-  }
-
-  return communities;
-};
-
 const Communities = ({ communities }) => {
   const classes = useStyles();
-
-  const communitiesData = generateRandomCommunities(3); // Generate 10 random communities
+  const navigate = useNavigate();
 
   return (
     <>
       <Divider sx={{ my: 3 }} textAlign="left">
         <Typography variant="body1" fontWeight={'bold'}>
-          # Recently Created Communities
+          # Popular Communities
         </Typography>
       </Divider>
 
+      {communities && communities.length === 0 && (
+        <>
+          <Alert severity="warning">
+            No popular communities found. Be the first to create one and start a
+            discussion!
+          </Alert>
+        </>
+      )}
       <div style={{ display: 'flex', flexWrap: 'wrap', marginTop: '1rem' }}>
-        {communitiesData.map((community) => (
-          <Paper key={community.id} elevation={0} className={classes.root}>
-            <div className={classes.communityInfo}>
-              <Link
-                component="button"
-                variant="subtitle2"
-                fontWeight={'bold'}
-                className={classes.communityName}
-                onClick={() => {
-                  console.info("I'm a button.");
-                }}
-              >
-                c/node.js-backend
-              </Link>
-            </div>
-            <Chip size="small" label="Science & Tech"></Chip>
-            <Divider />
-            <div className={classes.icons}>
-              <Tooltip title="Total Members">
-                <Avatar
-                  className={classes.icon}
-                  sx={{
-                    width: '20px',
-                    height: '20px',
-                    bgcolor: 'primary.main',
+        {communities &&
+          communities.length > 0 &&
+          communities.map((community) => (
+            <Paper key={community.id} elevation={0} className={classes.root}>
+              <div className={classes.communityInfo}>
+                <Link
+                  component="button"
+                  variant="subtitle2"
+                  fontWeight={'bold'}
+                  className={classes.communityName}
+                  onClick={() => {
+                    navigate(`/dashboard/c/${community.community_name}`, {
+                      replace: true,
+                    });
                   }}
                 >
-                  <AccountCircleRoundedIcon sx={{ fontSize: '1rem' }} />
-                </Avatar>
-              </Tooltip>
-              <Tooltip title="Total Threads Created">
-                <Avatar
-                  className={classes.icon}
-                  sx={{
-                    width: '20px',
-                    height: '20px',
-                    bgcolor: 'primary.main',
-                  }}
-                >
-                  <AcUnitIcon sx={{ fontSize: '1rem' }} />
-                </Avatar>
-              </Tooltip>
-            </div>
-          </Paper>
-        ))}
+                  {community.community_name}
+                </Link>
+              </div>
+              <Box sx={{ display: 'flex' }}>
+                <Chip
+                  size="small"
+                  icon={community.icon}
+                  label={
+                    <Typography variant="caption">
+                      {community.category_name}
+                    </Typography>
+                  }
+                ></Chip>
+              </Box>
+              <Divider />
+              <div className={classes.icons}>
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                  <Tooltip title="Members">
+                    <Chip
+                      size="small"
+                      icon={<Groups3Icon />}
+                      label={
+                        <Typography variant="caption" component={'p'}>
+                          {community.total_users}
+                        </Typography>
+                      }
+                    ></Chip>
+                  </Tooltip>
+                </Box>
+                <Box sx={{ display: 'flex', alignItems: 'center', mx: 1 }}>
+                  <Tooltip title="Threads Created">
+                    <Chip
+                      size="small"
+                      icon={<DrawRoundedIcon />}
+                      label={
+                        <Typography variant="caption" component={'p'}>
+                          {community.total_threads}
+                        </Typography>
+                      }
+                    ></Chip>
+                  </Tooltip>
+                </Box>
+              </div>
+            </Paper>
+          ))}
       </div>
     </>
   );

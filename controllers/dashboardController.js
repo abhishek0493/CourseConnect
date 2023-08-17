@@ -2,6 +2,30 @@ const db = require('../db');
 const _ = require('lodash');
 const catchAsync = require('../utils/catchAsync');
 
+const getRecentCommunites = catchAsync(async (req, res) => {
+  const communities = await db('communities as c')
+    .select(
+      'c.name as community_name',
+      'ct.name as category_name',
+      'c.category_id',
+      db.raw(
+        `(SELECT COUNT(*) FROM user_communities as uc WHERE uc.status = 1 AND uc.is_author != 1 AND uc.community_id = c.id) as total_users`
+      ),
+      db.raw(
+        `(SELECT COUNT(*) FROM threads as t WHERE t.community_id = c.id) as total_threads`
+      )
+    )
+    .join('categories as ct', 'ct.id', '=', 'c.category_id')
+    .orderBy('total_users', 'desc')
+    .orderBy('total_threads', 'desc')
+    .limit(9);
+
+  res.status(200).json({
+    success: true,
+    data: communities,
+  });
+});
+
 const getTrendingThreads = catchAsync(async (req, res) => {
   const loggedInUser = req.user.id;
   const { isSaved, isCategory, isCourse, isAuthorPosted } = req.query;
@@ -117,4 +141,5 @@ const getTrendingThreads = catchAsync(async (req, res) => {
 
 module.exports = {
   getTrendingThreads,
+  getRecentCommunites,
 };

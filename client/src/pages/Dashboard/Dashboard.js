@@ -12,6 +12,7 @@ import Communities from '../../components/Dashboard/Communities';
 const Dashboard = ({ updateTrigger }) => {
   const { baseUrl } = useContext(ParentContext);
   const [threads, setThreads] = useState([]);
+  const [communities, setCommunities] = useState([]);
 
   const [filterState, setFilterState] = useState({
     isSaved: 0,
@@ -36,6 +37,20 @@ const Dashboard = ({ updateTrigger }) => {
         setThreads(resWithIcons);
       }
     });
+  };
+
+  const fetchRecentCommunities = () => {
+    axios
+      .get(`${baseUrl}/api/v1/dashboard/get-recent-communities`, {
+        withCredentials: true,
+      })
+      .then((res) => {
+        if (res.data.success) {
+          const response = Refactor(res.data);
+          const resWithIcons = AddCategoryIcon(response);
+          setCommunities(resWithIcons);
+        }
+      });
   };
 
   const incrementUpvotes = (threadId, toggle) => {
@@ -124,10 +139,14 @@ const Dashboard = ({ updateTrigger }) => {
     fetchTrendingThreads(filterState);
   }, [filterState]);
 
+  useEffect(() => {
+    fetchRecentCommunities();
+  }, []);
+
   return (
     <>
       <CreatePostBar />
-      <Communities />
+      <Communities communities={communities} />
       <FilterBar
         handleSavedToggle={handleShowSaveThreads}
         handleFilterByCategory={handleShowCategoryThreads}
