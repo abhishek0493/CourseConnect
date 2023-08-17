@@ -103,7 +103,10 @@ const CreateCommunity = ({ cmCategories, onCreateCommunity }) => {
                   required
                   value={formData.name}
                   onChange={handleChange}
-                  error={nameAvailability || validationError} // Set error prop based on nameAvailability value
+                  error={
+                    nameAvailability ||
+                    (validationError && validationMessage.includes('name'))
+                  }
                   onBlur={handleCommunityNameBlur}
                   helperText={
                     nameAvailability === true
@@ -215,12 +218,21 @@ const CreateCommunity = ({ cmCategories, onCreateCommunity }) => {
                 <TextField
                   label="Description"
                   fullWidth
+                  required
                   name="description"
                   multiline
                   rows={6}
                   type="text"
                   value={formData.description}
                   onChange={handleChange}
+                  error={
+                    validationError && validationMessage.includes('description')
+                  }
+                  helperText={
+                    validationError && validationMessage.includes('description')
+                      ? validationMessage
+                      : ''
+                  }
                 />
               </Grid>
               <Grid item xs={12}>
