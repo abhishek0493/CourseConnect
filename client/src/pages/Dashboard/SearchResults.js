@@ -6,7 +6,6 @@ import { InfoOutlined } from '@mui/icons-material';
 
 import ParentContext from '../../ParentContext';
 import { Refactor } from '../../components/Constants/Refactor';
-import ThreadCard from '../../components/Thread/ThreadCard';
 import axios from 'axios';
 import DashboardThreads from '../../components/Dashboard/DashboardThreads';
 import { AddCategoryIcon } from '../../utils/AddCategoryIcon';
@@ -53,7 +52,7 @@ const SearchResults = ({ updateTrigger }) => {
         return {
           ...thread,
           total_downvotes: thread.total_downvotes + 1,
-          total_upvotes: thread.total_upvotes - (toggle ? 1 : 0), // Decrement downvotes only if toggle is true
+          total_upvotes: thread.total_upvotes - (toggle ? 1 : 0),
           is_downvoted: 1,
           is_upvoted: 0,
         };

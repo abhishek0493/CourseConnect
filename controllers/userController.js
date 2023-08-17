@@ -32,7 +32,8 @@ const getAllCommunityJoinRequests = catchAsync(async (req, res) => {
     .join('users as u', 'u.id', '=', 'uc.user_id')
     .where('c.created_by', loggedInUser)
     .andWhere('c.access_type', '!=', 1)
-    .andWhere('uc.status', '!=', 1);
+    .andWhere('uc.status', '!=', 1)
+    .andWhere('uc.is_author', '!=', 1);
 
   if (communityName && (communityName != null || commuinityName != undefined)) {
     requestsQuery = requestsQuery.andWhere('c.name', communityName);
