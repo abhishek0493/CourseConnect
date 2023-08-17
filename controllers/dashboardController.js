@@ -8,6 +8,7 @@ const getRecentCommunites = catchAsync(async (req, res) => {
       'c.name as community_name',
       'ct.name as category_name',
       'c.category_id',
+      'c.access_type',
       db.raw(
         `(SELECT COUNT(*) FROM user_communities as uc WHERE uc.status = 1 AND uc.is_author != 1 AND uc.community_id = c.id) as total_users`
       ),
