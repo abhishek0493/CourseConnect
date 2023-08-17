@@ -103,11 +103,13 @@ const CreateCommunity = ({ cmCategories, onCreateCommunity }) => {
                   required
                   value={formData.name}
                   onChange={handleChange}
-                  error={nameAvailability} // Set error prop based on nameAvailability value
+                  error={nameAvailability || validationError} // Set error prop based on nameAvailability value
                   onBlur={handleCommunityNameBlur}
                   helperText={
                     nameAvailability === true
                       ? 'A Community with this name already exists.'
+                      : validationError === true
+                      ? validationMessage
                       : ''
                   }
                   InputProps={{

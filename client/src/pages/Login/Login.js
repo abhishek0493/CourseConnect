@@ -50,9 +50,7 @@ const Login = ({ isLoggedIn }) => {
         }
       })
       .catch((err) => {
-        // console.log(err);
         const response = err.response;
-        // console.log(response);
         if (!response.data.success) {
           setValidationError(true);
           setValidationMessage(response.data.message);
