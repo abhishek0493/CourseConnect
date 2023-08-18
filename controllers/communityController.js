@@ -32,13 +32,32 @@ const getCommunityByName = catchAsync(async (req, res) => {
     })
     .first();
 
-  if (community.access_type != 1 && !userCommunity) {
-    community.allow_access = false;
+  if (community.access_type != 1) {
+    if (!userCommunity) {
+      community.allow_access = false;
+      community.message = 'Join';
+    }
+
+    if (userCommunity && userCommunity.status == 0) {
+      community.allow_access = false;
+      community.message = 'Request pending';
+    }
+
+    if (userCommunity && userCommunity.status == 1) {
+      community.allow_access = true;
+      community.message = 'Joined';
+    }
   }
 
-  if (community.access_type != 1 && userCommunity) {
-    if (userCommunity.status != 1) {
-      community.allow_access = false;
+  if (community.access_type == 1) {
+    if (!userCommunity) {
+      community.allow_access = true;
+      community.message = 'Join';
+    }
+
+    if (userCommunity && userCommunity.status == 1) {
+      community.allow_access = true;
+      community.message = 'Joined';
     }
   }
 

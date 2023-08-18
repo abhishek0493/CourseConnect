@@ -194,7 +194,10 @@ function App() {
                   />
                 }
               />
-              <Route path="c" element={<ThreadsLayout />}>
+              <Route
+                path="c"
+                element={<ThreadsLayout triggerUpdate={handleUpdateTrigger} />}
+              >
                 <Route
                   path=":name"
                   index

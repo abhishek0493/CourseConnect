@@ -9,7 +9,7 @@ import { AddCategoryIcon } from '../../utils/AddCategoryIcon';
 import Filters from '../../components/Common/Filters';
 import ParentContext from '../../ParentContext';
 
-const ThreadsLayout = () => {
+const ThreadsLayout = ({ triggerUpdate }) => {
   const { baseUrl } = useContext(ParentContext);
   const { name } = useParams();
   const location = useLocation();
@@ -98,7 +98,11 @@ const ThreadsLayout = () => {
 
   return (
     <Box>
-      <ThreadTitleBar name={name} community={community} />
+      <ThreadTitleBar
+        name={name}
+        community={community}
+        isCommunityJoined={triggerUpdate}
+      />
       <CreatePostBar community={community} isAccess={isAccess} />
       <Filters
         filterState={filterState}

@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import Sidebar from './Sidebar/Sidebar';
 import { Outlet } from 'react-router-dom';
-import { Box, Grid, Card, Typography } from '@mui/material';
+import { Box, Grid, Card, Typography, useMediaQuery } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import SecondarySidebar from './Dashboard/SecondarySidebar';
 import ParentContext from '../ParentContext';
@@ -11,14 +11,13 @@ const useStyles = makeStyles((theme) => ({
     width: '280px',
     flexShrink: 0,
     position: 'fixed',
-    top: theme.spacing(8), // Adjust the top position as needed
+    top: theme.spacing(8),
     bottom: 0,
   },
   content: {
     flexGrow: 1,
     padding: `${theme.spacing(2)} ${theme.spacing(6)}`,
-    marginLeft: '254px', // Same as the width of the sidebar
-    // marginTop: theme.spacing(0.5)
+    marginLeft: '280px',
   },
   card: {
     marginBottom: theme.spacing(3),

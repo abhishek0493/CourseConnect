@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { renderMatches, useNavigate } from 'react-router-dom';
+import React, { useContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import {
   Typography,
@@ -17,6 +17,8 @@ import Diversity2TwoToneIcon from '@mui/icons-material/Diversity2TwoTone';
 import GroupWorkTwoToneIcon from '@mui/icons-material/GroupWorkTwoTone';
 import AllOutTwoToneIcon from '@mui/icons-material/AllOutTwoTone';
 import ErrorTwoToneIcon from '@mui/icons-material/ErrorTwoTone';
+import axios from 'axios';
+import ParentContext from '../../ParentContext';
 
 const style = {
   position: 'absolute',
@@ -30,9 +32,12 @@ const style = {
   p: 4,
 };
 
-const ThreadTitleBar = ({ community }) => {
+const ThreadTitleBar = ({ community, isCommunityJoined }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [open, setOpen] = useState(false);
+  const [joined, setJoined] = useState(community.is_joined);
+
+  const { baseUrl } = useContext(ParentContext);
 
   const navigate = useNavigate();
 
@@ -53,18 +58,47 @@ const ThreadTitleBar = ({ community }) => {
       return {
         message: 'Created',
         color: 'primary',
+        clickable: false,
       };
     } else if (!community.allow_access) {
       return {
         message: 'Reqeust Pending',
         color: 'warning',
+        clickable: false,
+      };
+    } else if (!community.is_joined) {
+      return {
+        message: 'Join',
+        color: 'primary',
+        clickable: true,
       };
     } else {
       return {
         message: 'Joined',
         color: 'success',
+        clickable: false,
       };
     }
+  };
+
+  const action = renderButtonContent();
+
+  const handleJoin = async () => {
+    await axios
+      .get(`${baseUrl}/api/v1/community/${community.id}/join`)
+      .then((res) => {
+        if (res.data.success) {
+          alert(res.data.data.message);
+          isCommunityJoined(true);
+          navigate(`/dashboard/c/${res.data.data.name}`);
+        }
+      })
+      .catch((err) => {
+        const response = err.response;
+        if (response) {
+          alert(response.data.message);
+        }
+      });
   };
 
   const handleTitleClick = () => {
@@ -176,7 +210,7 @@ const ThreadTitleBar = ({ community }) => {
 
     <Box sx={{ p: 2, mb: 1.5, width: '100%' }}>
       <Grid container>
-        <Grid item xs={10}>
+        <Grid item xs={9}>
           <Divider sx={{ width: '100%' }} textAlign="left">
             <Typography variant="h5" fontWeight={'bold'}>
               {community.title}
@@ -185,13 +219,13 @@ const ThreadTitleBar = ({ community }) => {
         </Grid>
         <Grid
           item
-          xs={2}
+          xs={3}
           sx={{ alignItems: 'center', justifyContent: 'center' }}
         >
           <Chip
             variant="outlined"
-            label={renderButtonContent().message}
-            color={renderButtonContent().color}
+            onClick={community.message == 'Join' ? handleJoin : undefined}
+            label={community.message}
           ></Chip>
         </Grid>
       </Grid>
@@ -207,10 +241,7 @@ const ThreadTitleBar = ({ community }) => {
       <Box sx={{ mt: 1.5, display: 'flex', justifyContent: 'space-between' }}>
         <Box sx={{ display: 'flex', columnGap: 1 }}>
           <Box>
-            <Tooltip
-              sx={{ mx: 1 }}
-              title={getAccessIcon(community.access_type).message}
-            >
+            <Tooltip sx={{ mx: 1 }} title={accessStyle.message}>
               <Chip
                 variant="outlined"
                 label={`${accessStyle.type} community`}
