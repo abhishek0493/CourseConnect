@@ -22,11 +22,14 @@ import ParentContext from './ParentContext';
 import Requests from './pages/Dashboard/Requests';
 import CommunityRequests from './pages/Dashboard/CommunityRequests';
 import NoAccess from './pages/NoAccess/NoAccess';
-import LoginNew from './pages/Login/LoginNew';
 import SavedThreads from './pages/Dashboard/SavedThreads';
 import SearchResults from './pages/Dashboard/SearchResults';
+import MobileNotSupported from './pages/NoAccess/MobileNotSupported';
 
 function App() {
+  const mobileScreenWidth = 768;
+  const isMobile = window.innerWidth < mobileScreenWidth;
+
   const [userTypes, setUserTypes] = useState([]);
   const [accessTypes, setAccessTypes] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -135,10 +138,14 @@ function App() {
         <Routes>
           <Route
             element={
-              <LayoutMain
-                isLoggedIn={isLoggedIn}
-                triggerAuthUpdate={handleUpdateTrigger}
-              />
+              isMobile ? (
+                <MobileNotSupported />
+              ) : (
+                <LayoutMain
+                  isLoggedIn={isLoggedIn}
+                  triggerAuthUpdate={handleUpdateTrigger}
+                />
+              )
             }
           >
             <Route path="/" element={<Home />} />
