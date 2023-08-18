@@ -25,6 +25,7 @@ import NoAccess from './pages/NoAccess/NoAccess';
 import SavedThreads from './pages/Dashboard/SavedThreads';
 import SearchResults from './pages/Dashboard/SearchResults';
 import MobileNotSupported from './pages/NoAccess/MobileNotSupported';
+import FeedbackForm from './pages/Feedback/FeedbackForm';
 
 function App() {
   const mobileScreenWidth = 768;
@@ -228,6 +229,7 @@ function App() {
                 path=":name/view-requests"
                 element={<CommunityRequests />}
               ></Route>
+              <Route path="user-feedback" element={<FeedbackForm />}></Route>
             </Route>
           </Route>
           <Route path="*" element={<NoAccess />} />
