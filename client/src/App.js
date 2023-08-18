@@ -139,14 +139,10 @@ function App() {
         <Routes>
           <Route
             element={
-              isMobile ? (
-                <MobileNotSupported />
-              ) : (
-                <LayoutMain
-                  isLoggedIn={isLoggedIn}
-                  triggerAuthUpdate={handleUpdateTrigger}
-                />
-              )
+              <LayoutMain
+                isLoggedIn={isLoggedIn}
+                triggerAuthUpdate={handleUpdateTrigger}
+              />
             }
           >
             <Route path="/" element={<Home />} />
