@@ -14,6 +14,7 @@ import {
   Alert,
   tableCellClasses,
   IconButton,
+  Divider,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
@@ -48,10 +49,12 @@ const RequestsTable = ({
   isLoading,
 }) => {
   return (
-    <Box>
-      <Typography variant="h5" gutterBottom fontWeight={'bold'} sx={{ mb: 2 }}>
-        Join Requests
-      </Typography>
+    <Box sx={{ mt: 1 }}>
+      <Divider sx={{ width: '100%' }} textAlign="left">
+        <Typography variant="h5" gutterBottom fontWeight={'bold'}>
+          Join Requests
+        </Typography>
+      </Divider>
       {isLoading ? (
         <CircularProgress />
       ) : (
@@ -59,7 +62,7 @@ const RequestsTable = ({
           {requests.length === 0 ? (
             <Alert severity="info">No join requests available.</Alert>
           ) : (
-            <TableContainer component={Paper}>
+            <TableContainer component={Paper} sx={{ mt: 1 }}>
               <Table
                 sx={{ minWidth: 650 }}
                 size="small"
@@ -68,7 +71,6 @@ const RequestsTable = ({
                 <TableHead>
                   <TableRow>
                     <StyledTableCell>Community</StyledTableCell>
-                    <StyledTableCell align="left">Access type</StyledTableCell>
                     <StyledTableCell align="left">User</StyledTableCell>
                     <StyledTableCell align="left">Requested at</StyledTableCell>
                     <StyledTableCell align="left">Action</StyledTableCell>
@@ -82,9 +84,6 @@ const RequestsTable = ({
                     >
                       <StyledTableCell component="th" scope="row">
                         {request.name}
-                      </StyledTableCell>
-                      <StyledTableCell align="left">
-                        {request.access_type}
                       </StyledTableCell>
                       <StyledTableCell align="left">
                         {request.request_user}

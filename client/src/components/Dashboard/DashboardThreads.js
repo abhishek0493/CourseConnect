@@ -28,6 +28,8 @@ import GppMaybeRoundedIcon from '@mui/icons-material/GppMaybeRounded';
 import RequestQuoteIcon from '@mui/icons-material/RequestQuote';
 import ChatTwoToneIcon from '@mui/icons-material/ChatTwoTone';
 import StarsTwoToneIcon from '@mui/icons-material/StarsTwoTone';
+import ManageAccountsTwoToneIcon from '@mui/icons-material/ManageAccountsTwoTone';
+import OutboundTwoToneIcon from '@mui/icons-material/OutboundTwoTone';
 
 import MarkChatUnreadIcon from '@mui/icons-material/MarkChatUnread';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
@@ -327,7 +329,7 @@ const DashboardThreads = ({
                         handleOpen();
                       }}
                     >
-                      <OutboundRoundedIcon color="primary" />
+                      <OutboundTwoToneIcon color="primary" />
                     </IconButton>
                   </Tooltip>
                   <Modal
@@ -363,7 +365,7 @@ const DashboardThreads = ({
                 </>
               ) : (
                 <Tooltip title="Community is created by you">
-                  <PersonPinIcon sx={{ color: 'primary.main' }} />
+                  <ManageAccountsTwoToneIcon sx={{ color: 'primary.main' }} />
                 </Tooltip>
               )}
             </Box>
