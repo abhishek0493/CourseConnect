@@ -15,6 +15,7 @@ const ThreadsLayout = () => {
   const location = useLocation();
 
   const [threads, setThreads] = useState([]);
+  const [isAccess, setIsAccess] = useState(true);
   const [community, setCommunity] = useState([]);
   const [filterState, setFilterState] = useState({
     isSaved: 0,
@@ -52,6 +53,7 @@ const ThreadsLayout = () => {
           const result = Refactor(res.data);
           const resultWithIcons = AddCategoryIcon(result);
           setThreads(resultWithIcons);
+          setIsAccess(res.data.access);
         }
       })
       .catch((err) => {
@@ -97,7 +99,7 @@ const ThreadsLayout = () => {
   return (
     <Box>
       <ThreadTitleBar name={name} community={community} />
-      <CreatePostBar community={community} />
+      <CreatePostBar community={community} isAccess={isAccess} />
       <Filters
         filterState={filterState}
         toggleSaved={handleShowSaveThreads}

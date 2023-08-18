@@ -13,6 +13,10 @@ router
   .route('/check-availability')
   .post(protect, commController.checkCommunityNameAvailability);
 
+router
+  .route('/:name/check-access')
+  .get(protect, commController.checkCommunityAccess);
+
 router.route('/categories').get(miscController.getCategories);
 router.route('/:name').get(protect, commController.getCommunityByName);
 router.route('/:id/join').get(protect, commController.joinCommunity);

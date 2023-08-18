@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import {
@@ -11,6 +11,8 @@ import {
   IconButton,
   Tooltip,
   Chip,
+  Snackbar,
+  Alert,
 } from '@mui/material';
 
 import ArrowCircleUpTwoToneIcon from '@mui/icons-material/ArrowCircleUpTwoTone';
@@ -47,10 +49,11 @@ const ThreadCard = ({
   downVoteTrigger,
   saveTrigger,
   isDetails,
-  isAllSaved,
 }) => {
   const { baseUrl } = useContext(ParentContext);
   const navigate = useNavigate();
+
+  const [open, setOpen] = useState(false);
   const savedColour = thread.is_saved ? 'green' : '';
   const savedText = thread.is_saved ? 'Saved' : 'Save';
 
@@ -59,6 +62,14 @@ const ThreadCard = ({
   const total_upvotes = thread.total_upvotes;
   const total_downvotes = thread.total_downvotes;
   const date = thread.created_at;
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const handleUpVote = async () => {
     await axios
@@ -125,6 +136,15 @@ const ThreadCard = ({
       >
         {/* Left vertical strip */}
         <Grid container>
+          <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+            <Alert
+              onClose={handleClose}
+              severity="error"
+              sx={{ width: '100%' }}
+            >
+              You are not a member of this community yet
+            </Alert>
+          </Snackbar>
           <Grid item xs={0.6}>
             <Box
               sx={{
@@ -139,8 +159,7 @@ const ThreadCard = ({
               <Box textAlign={'center'}>
                 <IconButton
                   size="small"
-                  onClick={handleUpVote}
-                  disabled={isAllSaved}
+                  onClick={!thread.is_access ? handleOpen : handleUpVote}
                   sx={{
                     m: 0,
                     '&:hover': {
@@ -164,8 +183,7 @@ const ThreadCard = ({
                 </Typography>
                 <IconButton
                   size="small"
-                  disabled={isAllSaved}
-                  onClick={handleDownVote}
+                  onClick={!thread.is_access ? handleOpen : handleDownVote}
                   sx={{
                     '&:hover': {
                       color: 'warning.main',
@@ -336,8 +354,7 @@ const ThreadCard = ({
 
                   <IconButton
                     sx={{ borderRadius: 2 }}
-                    onClick={handleSave}
-                    disabled={isAllSaved}
+                    onClick={!thread.is_access ? handleOpen : handleSave}
                   >
                     <BookmarkIcon
                       sx={{ fontSize: '1.2rem' }}

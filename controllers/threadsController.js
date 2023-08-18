@@ -7,6 +7,28 @@ const getCommunityUserThreads = catchAsync(async (req, res) => {
   const community = req.params.community;
   const loggedInUser = req.user.id;
   const { isSaved, isPosted, isCourse } = req.query;
+  let access = true;
+
+  const communityInfo = await db('communities as c')
+    .select('c.*', 'uc.is_author', 'uc.status')
+    .leftJoin('user_communities as uc', function () {
+      this.on('uc.community_id', '=', 'c.id').andOn(
+        'uc.user_id',
+        '=',
+        loggedInUser
+      );
+    })
+    .where('c.name', community)
+    .first();
+
+  if (
+    communityInfo &&
+    communityInfo.access_type != 1 &&
+    communityInfo.is_author != 1 &&
+    communityInfo.status == 0
+  ) {
+    access = false;
+  }
 
   let threadsQuery = db('threads as t')
     .select(
@@ -77,6 +99,7 @@ const getCommunityUserThreads = catchAsync(async (req, res) => {
       is_saved: isSaved ? 1 : 0,
       is_upvoted: isUpvoted ? 1 : 0,
       is_downvoted: isDownvoted ? 1 : 0,
+      is_access: access,
     };
   });
 
@@ -84,6 +107,7 @@ const getCommunityUserThreads = catchAsync(async (req, res) => {
     res.status(200).json({
       success: true,
       data: transformThreads,
+      access: access,
     });
   }
 });

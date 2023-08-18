@@ -1,13 +1,32 @@
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Box, Stack, Alert } from '@mui/material';
 import { InfoOutlined } from '@mui/icons-material';
 
-import { useOutletContext } from 'react-router-dom';
+import { useLocation, useOutletContext, useParams } from 'react-router-dom';
 import image from './empty2.svg';
 import ThreadCard from '../../components/Thread/ThreadCard';
+import axios from 'axios';
+import ParentContext from '../../ParentContext';
 
 const CommunityThreads = () => {
+  const { name } = useParams();
   const [threads, setThreads] = useOutletContext();
+  const { baseUrl } = useContext(ParentContext);
+  const [access, setAccess] = useState(true);
+  const location = useLocation();
+
+  const checkCommunityAccess = async () => {
+    await axios
+      .get(`${baseUrl}/api/v1/community/${name}/check-access`, {
+        withCredentials: true,
+      })
+      .then((res) => {
+        if (res.data.success) {
+          setAccess(res.data.access);
+        }
+      })
+      .catch((err) => {});
+  };
 
   const incrementUpvotes = (threadId, toggle) => {
     const updatedThreads = threads.map((thread) => {
@@ -54,6 +73,10 @@ const CommunityThreads = () => {
     setThreads(updatedThreads);
   };
 
+  useEffect(() => {
+    checkCommunityAccess();
+  }, [location]);
+
   return (
     <Box>
       {threads.length === 0 ? (
@@ -75,6 +98,7 @@ const CommunityThreads = () => {
           {threads.map((item) => (
             <ThreadCard
               thread={item}
+              isAccess={access}
               upVoteTrigger={incrementUpvotes}
               downVoteTrigger={incrementDownvotes}
               saveTrigger={handleSave}

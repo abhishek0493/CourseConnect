@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Card,
   Avatar,
@@ -6,22 +6,31 @@ import {
   Badge,
   TextField,
   Typography,
+  Snackbar,
+  Alert,
 } from '@mui/material';
 import PagesRoundedIcon from '@mui/icons-material/PagesRounded';
 import AccountCircleTwoToneIcon from '@mui/icons-material/AccountCircleTwoTone';
 import { useNavigate } from 'react-router-dom';
 
-const CreatePostBar = ({ community }) => {
+const CreatePostBar = ({ community, isAccess }) => {
   const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
 
   const onFocus = () => {
-    if (community) {
+    if (isAccess !== undefined && isAccess === false) {
+      setOpen(true);
+    } else if (community) {
       navigate(`/dashboard/create-thread?id=${community.id}`, {
         replace: true,
       });
     } else {
       navigate('/dashboard/create-thread', { replace: true });
     }
+  };
+
+  const handleClose = () => {
+    setOpen(false);
   };
 
   return (
@@ -57,6 +66,20 @@ const CreatePostBar = ({ community }) => {
             fullWidth
             onFocus={onFocus}
           ></TextField>
+          <Snackbar
+            open={open}
+            autoHideDuration={6000}
+            onClose={handleClose}
+            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          >
+            <Alert
+              onClose={handleClose}
+              severity="error"
+              sx={{ width: '100%' }}
+            >
+              You are not a member of this community yet
+            </Alert>
+          </Snackbar>
         </Grid>
         <Grid item xs={1}>
           <PagesRoundedIcon sx={{ fontSize: '40px', color: 'orangered' }} />

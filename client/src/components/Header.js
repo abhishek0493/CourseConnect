@@ -84,7 +84,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 const Header = (props) => {
-  const { baseUrl, setBaseUrl } = React.useContext(ParentContext);
+  const { baseUrl } = React.useContext(ParentContext);
   const { classes, isLoggedIn, onLogout } = props;
   const [searchQuery, setSearchQuery] = React.useState('');
 

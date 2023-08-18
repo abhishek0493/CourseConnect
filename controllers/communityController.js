@@ -253,6 +253,46 @@ const leaveCommunity = catchAsync(async (req, res) => {
   });
 });
 
+const checkCommunityAccess = catchAsync(async (req, res) => {
+  const loggedInUser = req.user.id;
+  let access = true;
+  const { name } = req.params;
+
+  const communityInfo = await db('communities as c')
+    .select('c.*', 'uc.is_author', 'uc.status')
+    .leftJoin('user_communities as uc', function () {
+      this.on('uc.community_id', '=', 'c.id').andOn(
+        'uc.user_id',
+        '=',
+        loggedInUser
+      );
+    })
+    .where('c.name', name)
+    .first();
+
+  if (!communityInfo) {
+    res.status(400).json({
+      success: false,
+      messaga: 'No results found',
+    });
+  }
+
+  if (
+    communityInfo &&
+    communityInfo.access_type != 1 &&
+    communityInfo.is_author != 1 &&
+    communityInfo.status == 0
+  ) {
+    access = false;
+  }
+
+  res.status(200).json({
+    success: true,
+    data: communityInfo,
+    access: access,
+  });
+});
+
 module.exports = {
   getCommunityByName,
   createCommunity,
@@ -260,4 +300,5 @@ module.exports = {
   checkCommunityNameAvailability,
   joinCommunity,
   leaveCommunity,
+  checkCommunityAccess,
 };
