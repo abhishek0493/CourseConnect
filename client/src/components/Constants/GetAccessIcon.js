@@ -10,14 +10,14 @@ export const getAccessIcon = (type) => {
   let color = '';
   switch (type) {
     case 1:
-      icon = <SupervisedUserCircleTwoToneIcon htmlColor="green" />;
+      icon = <SupervisedUserCircleTwoToneIcon color="success" />;
       message =
         'This community is open. Anyone can join and post in this community';
       color = 'success';
       type = 'Public';
       break;
     case 2:
-      icon = <LockPersonTwoToneIcon htmlColor="orange" />;
+      icon = <LockPersonTwoToneIcon color="warning" />;
       message =
         'This community is restricted. Threads can be viewed but requires creator approval for posting in this community';
       color = 'warning';
@@ -25,7 +25,7 @@ export const getAccessIcon = (type) => {
 
       break;
     case 3:
-      icon = <LockTwoToneIcon htmlColor="red" />;
+      icon = <LockTwoToneIcon color="error" />;
       message =
         'This community is protected. Viewing and creating threads requires creator approval';
       color = 'error';

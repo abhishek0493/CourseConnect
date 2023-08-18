@@ -43,7 +43,11 @@ const getCommunityByName = catchAsync(async (req, res) => {
       community.message = 'Request pending';
     }
 
-    if (userCommunity && userCommunity.status == 1) {
+    if (
+      userCommunity &&
+      userCommunity.status == 1 &&
+      userCommunity.is_author != 1
+    ) {
       community.allow_access = true;
       community.message = 'Joined';
     }
@@ -63,7 +67,7 @@ const getCommunityByName = catchAsync(async (req, res) => {
 
   if (community.created_by == loggedInUser) {
     community.allow_access = true;
-    community.messaga = 'Created by you';
+    community.message = 'Created by you';
   }
 
   res.status(200).json({
