@@ -1,4 +1,4 @@
-import { Box, Button, Grid } from '@mui/material';
+import { Box, Button, Divider, Grid } from '@mui/material';
 import React, { useContext, useEffect, useState } from 'react';
 import CreatePostBar from '../../components/Common/CreatePostBar';
 import { Outlet, useLocation, useParams } from 'react-router-dom';

@@ -18,6 +18,9 @@ import GroupsRoundedIcon from '@mui/icons-material/GroupsRounded';
 import BallotRoundedIcon from '@mui/icons-material/BallotRounded';
 import ErrorTwoToneIcon from '@mui/icons-material/ErrorTwoTone';
 import BookmarkTwoToneIcon from '@mui/icons-material/BookmarkTwoTone';
+import Diversity1TwoToneIcon from '@mui/icons-material/Diversity1TwoTone';
+import ConnectWithoutContactTwoToneIcon from '@mui/icons-material/ConnectWithoutContactTwoTone';
+import AccountCircleTwoToneIcon from '@mui/icons-material/AccountCircleTwoTone';
 
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -76,7 +79,9 @@ const SecondarySidebar = () => {
                 color: 'paper',
               }}
             >
-              <GroupsRoundedIcon sx={{ fontSize: '2.5rem', color: 'paper' }} />
+              <Diversity1TwoToneIcon
+                sx={{ fontSize: '2.5rem', color: 'paper' }}
+              />
             </Avatar>
           </Grid>
           <Grid item xs={8}>
@@ -124,8 +129,8 @@ const SecondarySidebar = () => {
                 color: 'paper',
               }}
             >
-              <RateReviewRoundedIcon
-                sx={{ fontSize: '2rem', color: 'paper' }}
+              <ConnectWithoutContactTwoToneIcon
+                sx={{ fontSize: '2.5rem', color: 'paper' }}
               />
             </Avatar>
           </Grid>
@@ -177,7 +182,9 @@ const SecondarySidebar = () => {
                 color: 'paper',
               }}
             >
-              <BallotRoundedIcon sx={{ fontSize: '2rem', color: 'paper' }} />
+              <AccountCircleTwoToneIcon
+                sx={{ fontSize: '2.5rem', color: 'paper' }}
+              />
             </Avatar>
           </Grid>
           <Grid item xs={8}>

@@ -28,7 +28,7 @@ export const getAccessIcon = (type) => {
       icon = <LockTwoToneIcon htmlColor="red" />;
       message =
         'This community is protected. Viewing and creating threads requires creator approval';
-      color = 'danger';
+      color = 'error';
       type = 'Private';
 
       break;
