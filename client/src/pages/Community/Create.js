@@ -17,6 +17,7 @@ import {
   InputLabel,
   MenuItem,
   Card,
+  Divider,
 } from '@mui/material';
 import InfoIcon from '@mui/icons-material/Info';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -86,11 +87,13 @@ const CreateCommunity = ({ cmCategories, onCreateCommunity }) => {
 
   return (
     <>
+      <Divider sx={{ width: '100%' }}>
+        <Typography variant="h5" sx={{ my: 3, fontWeight: 'bold' }}>
+          Create a community
+        </Typography>
+      </Divider>
       <Card variant="outlined">
         <Box sx={{ p: 3 }}>
-          <Typography variant="h5" sx={{ my: 3 }}>
-            Create a community
-          </Typography>
           <form onSubmit={handleCreate}>
             <Grid container spacing={2}>
               <Grid item xs={6}>
@@ -118,9 +121,9 @@ const CreateCommunity = ({ cmCategories, onCreateCommunity }) => {
                   InputProps={{
                     endAdornment: (
                       <InputAdornment position="end">
-                        <Tooltip title="Community name must be at least 3 and max 20 characters long and can contain letters, numbers, and hyphens. No Spaces are allowed">
+                        <Tooltip title="This will be your community username. Name must be at least 3 and max 20 characters long and can contain letters, numbers, and hyphens. No Spaces are allowed">
                           <IconButton size="small">
-                            <InfoIcon sx={{ color: 'primary.main' }} />
+                            <InfoIcon sx={{ color: 'warning.main' }} />
                           </IconButton>
                         </Tooltip>
                       </InputAdornment>
@@ -158,12 +161,21 @@ const CreateCommunity = ({ cmCategories, onCreateCommunity }) => {
                   required
                   value={formData.title}
                   onChange={handleChange}
+                  error={
+                    nameAvailability ||
+                    (validationError && validationMessage.includes('title'))
+                  }
+                  helperText={
+                    validationError && validationMessage.includes('title')
+                      ? validationMessage
+                      : ''
+                  }
                   InputProps={{
                     endAdornment: (
                       <InputAdornment position="end">
-                        <Tooltip title="Write a title for the community">
+                        <Tooltip title="Write a title for the community. Min 5 & Max 60 characters are allowed">
                           <IconButton size="small">
-                            <InfoIcon sx={{ color: 'primary.main' }} />
+                            <InfoIcon sx={{ color: 'warning.main' }} />
                           </IconButton>
                         </Tooltip>
                       </InputAdornment>
@@ -203,11 +215,11 @@ const CreateCommunity = ({ cmCategories, onCreateCommunity }) => {
                     />
                     <FormControlLabel
                       value="3"
-                      control={<Radio />}
+                      control={<Radio disabled />}
                       label={
                         <Typography variant="body2" color="textSecondary">
                           Private (Only approved users can view and submit to
-                          this community)
+                          this community) (*Future Release*)
                         </Typography>
                       }
                     />

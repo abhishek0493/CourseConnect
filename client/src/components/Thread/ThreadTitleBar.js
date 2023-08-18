@@ -14,6 +14,7 @@ import {
 
 import { getAccessIcon } from '../Constants/GetAccessIcon';
 import Diversity2TwoToneIcon from '@mui/icons-material/Diversity2TwoTone';
+import GroupWorkTwoToneIcon from '@mui/icons-material/GroupWorkTwoTone';
 import AllOutTwoToneIcon from '@mui/icons-material/AllOutTwoTone';
 import ErrorTwoToneIcon from '@mui/icons-material/ErrorTwoTone';
 
@@ -195,9 +196,9 @@ const ThreadTitleBar = ({ community }) => {
         </Grid>
       </Grid>
 
-      <Grid container>
+      <Grid container sx={{ mt: 0.5 }}>
         <Grid item xs={12}>
-          <Typography variant="caption" component={'p'}>
+          <Typography variant="caption" component={'p'} sx={{ ml: 3 }}>
             c/{community.name}
           </Typography>
         </Grid>
@@ -221,7 +222,7 @@ const ThreadTitleBar = ({ community }) => {
           <Box>
             <Tooltip title="Total members">
               <Chip
-                icon={<Diversity2TwoToneIcon color="primary" />}
+                icon={<GroupWorkTwoToneIcon color="primary" />}
                 color="primary"
                 label={
                   <Typography variant="subtitle2">
