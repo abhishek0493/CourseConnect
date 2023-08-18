@@ -7,7 +7,7 @@ import {
   Button,
 } from '@mui/material';
 
-const CreateCommentCard = ({ onSubmit, commentError, onChange }) => {
+const CreateCommentCard = ({ onSubmit, commentError, onChange, isAccess }) => {
   const [comment, setComment] = useState('');
 
   const handleCommentChange = (event) => {

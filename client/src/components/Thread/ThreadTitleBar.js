@@ -48,6 +48,8 @@ const ThreadTitleBar = ({ community }) => {
   const renderButtonContent = () => {
     if (community.is_author) {
       return isHovered ? 'Delete' : 'Created';
+    } else if (!community.allow_access) {
+      return isHovered ? 'Pending' : 'Pending';
     } else {
       return isHovered ? 'Leave' : 'Joined';
     }

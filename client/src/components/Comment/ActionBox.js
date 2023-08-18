@@ -1,6 +1,6 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 
-import { Typography, Box, IconButton } from '@mui/material';
+import { Typography, Box, IconButton, Snackbar, Alert } from '@mui/material';
 import ReplyAllRoundedIcon from '@mui/icons-material/ReplyAllRounded';
 
 import ArrowCircleUpTwoToneIcon from '@mui/icons-material/ArrowCircleUpTwoTone';
@@ -14,8 +14,19 @@ const ActionBox = ({
   comment,
   upVoteTrigger,
   downVoteTrigger,
+  isAccess,
 }) => {
-  const { baseUrl, setBaseUrl } = useContext(ParentContext);
+  const { baseUrl } = useContext(ParentContext);
+  const [open, setOpen] = useState(false);
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   const handleUpVote = async () => {
     await axios
       .get(`${baseUrl}/api/v1/comments/${commentId}/up-vote`, {
@@ -57,6 +68,11 @@ const ActionBox = ({
   return (
     <>
       <Box sx={{ mb: 2, color: 'primary.dark' }}>
+        <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+          <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
+            You are not a member of this community yet
+          </Alert>
+        </Snackbar>
         <Typography variant="caption" sx={{ mr: 0.5, fontSize: '0.7rem' }}>
           {comment && comment.total_upvotes && (
             <span>{comment.total_upvotes}</span>
@@ -66,7 +82,7 @@ const ActionBox = ({
           size="small"
           aria-label="up-vote"
           sx={{ mr: 1, p: 0 }}
-          onClick={handleUpVote}
+          onClick={isAccess == 'no-access' ? handleOpen : handleUpVote}
         >
           <ArrowCircleUpTwoToneIcon color="gray" sx={{ fontSize: '1.4rem' }} />
         </IconButton>
@@ -74,7 +90,7 @@ const ActionBox = ({
           size="small"
           aria-label="down-vote"
           sx={{ p: 0 }}
-          onClick={handleDownVote}
+          onClick={isAccess == 'no-access' ? handleOpen : handleDownVote}
         >
           <ArrowCircleDownTwoToneIcon
             color="gray"
@@ -89,6 +105,7 @@ const ActionBox = ({
         <IconButton
           size="small"
           aria-label="Reply"
+          disabled={isAccess == 'no-access'}
           onClick={() => {
             handleReplyButtonClick(commentId);
           }}

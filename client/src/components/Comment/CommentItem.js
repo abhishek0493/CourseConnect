@@ -10,7 +10,12 @@ const Indentation = styled(Box)(({ theme }) => ({
   paddingLeft: '1rem',
 }));
 
-const CommentItem = ({ comment, handleSubmitReply, updateComments }) => {
+const CommentItem = ({
+  comment,
+  handleSubmitReply,
+  updateComments,
+  isAccess,
+}) => {
   const [showNestedComments, setShowNestedComments] = useState(false);
   const [showReplyBoxId, setShowReplyBoxId] = useState(null);
 
@@ -63,6 +68,7 @@ const CommentItem = ({ comment, handleSubmitReply, updateComments }) => {
               {el.comment}
             </Typography>
             <ActionBox
+              isAccess={isAccess}
               commentId={el.id}
               comment={el}
               handleReplyButtonClick={handleReplyButtonClick}
@@ -119,6 +125,7 @@ const CommentItem = ({ comment, handleSubmitReply, updateComments }) => {
         {comment.comment}
       </Typography>
       <ActionBox
+        isAccess={isAccess}
         commentId={comment.id}
         comment={comment}
         handleReplyButtonClick={handleReplyButtonClick}

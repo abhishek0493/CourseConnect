@@ -147,6 +147,7 @@ const ThreadDetails = () => {
       <Stack spacing={2} sx={{ marginTop: '2rem' }}>
         <Box>
           <CreateCommentCard
+            isAccess={thread.is_access ? 'access' : 'no-access'}
             onSubmit={handleCreateComment}
             commentError={commentError}
             onChange={(val) => {
@@ -162,6 +163,7 @@ const ThreadDetails = () => {
           {comments && comments.length > 0 ? (
             comments.map((comment) => (
               <CommentItem
+                isAccess={thread.is_access ? 'access' : 'no-access'}
                 key={comment.id}
                 comment={comment}
                 handleSubmitReply={handleSubmitReply}
