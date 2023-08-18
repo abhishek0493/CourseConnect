@@ -26,6 +26,8 @@ import LeaderboardRoundedIcon from '@mui/icons-material/LeaderboardRounded';
 import BlockIcon from '@mui/icons-material/Block';
 import GppMaybeRoundedIcon from '@mui/icons-material/GppMaybeRounded';
 import RequestQuoteIcon from '@mui/icons-material/RequestQuote';
+import ChatTwoToneIcon from '@mui/icons-material/ChatTwoTone';
+import StarsTwoToneIcon from '@mui/icons-material/StarsTwoTone';
 
 import MarkChatUnreadIcon from '@mui/icons-material/MarkChatUnread';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
@@ -295,13 +297,13 @@ const DashboardThreads = ({
               {thread.type == 1 ? (
                 <>
                   <Tooltip title="Course thread">
-                    <StarsRoundedIcon sx={{ mr: 0.5 }} />
+                    <StarsTwoToneIcon sx={{ mr: 0.5 }} />
                   </Tooltip>
                 </>
               ) : (
                 <>
                   <Tooltip title="Comment Thread">
-                    <ForumRoundedIcon sx={{ mr: 0.5 }} />
+                    <ChatTwoToneIcon sx={{ mr: 0.5 }} />
                   </Tooltip>
                 </>
               )}

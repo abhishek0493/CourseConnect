@@ -9,8 +9,8 @@ import {
   Snackbar,
   Alert,
 } from '@mui/material';
-import PagesRoundedIcon from '@mui/icons-material/PagesRounded';
 import AccountCircleTwoToneIcon from '@mui/icons-material/AccountCircleTwoTone';
+import LightbulbCircleTwoToneIcon from '@mui/icons-material/LightbulbCircleTwoTone';
 import { useNavigate } from 'react-router-dom';
 
 const CreatePostBar = ({ community, isAccess }) => {
@@ -82,7 +82,9 @@ const CreatePostBar = ({ community, isAccess }) => {
           </Snackbar>
         </Grid>
         <Grid item xs={1}>
-          <PagesRoundedIcon sx={{ fontSize: '40px', color: 'orangered' }} />
+          <LightbulbCircleTwoToneIcon
+            sx={{ fontSize: '40px', color: 'orangered' }}
+          />
         </Grid>
       </Grid>
     </Card>

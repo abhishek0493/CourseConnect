@@ -1,8 +1,8 @@
 import React from 'react';
 
-import SupervisedUserCircleRoundedIcon from '@mui/icons-material/SupervisedUserCircleRounded';
-import LockPersonRoundedIcon from '@mui/icons-material/LockPersonRounded';
-import LockRoundedIcon from '@mui/icons-material/LockRounded';
+import SupervisedUserCircleTwoToneIcon from '@mui/icons-material/SupervisedUserCircleTwoTone';
+import LockPersonTwoToneIcon from '@mui/icons-material/LockPersonTwoTone';
+import LockTwoToneIcon from '@mui/icons-material/LockTwoTone';
 
 export const getAccessIcon = (type) => {
   let icon = null;
@@ -10,14 +10,14 @@ export const getAccessIcon = (type) => {
   let color = '';
   switch (type) {
     case 1:
-      icon = <SupervisedUserCircleRoundedIcon htmlColor="green" />;
+      icon = <SupervisedUserCircleTwoToneIcon htmlColor="green" />;
       message =
         'This community is open. Anyone can join and post in this community';
       color = 'success';
       type = 'Public';
       break;
     case 2:
-      icon = <LockPersonRoundedIcon htmlColor="orange" />;
+      icon = <LockPersonTwoToneIcon htmlColor="orange" />;
       message =
         'This community is restricted. Threads can be viewed but requires creator approval for posting in this community';
       color = 'warning';
@@ -25,7 +25,7 @@ export const getAccessIcon = (type) => {
 
       break;
     case 3:
-      icon = <LockRoundedIcon htmlColor="red" />;
+      icon = <LockTwoToneIcon htmlColor="red" />;
       message =
         'This community is protected. Viewing and creating threads requires creator approval';
       color = 'danger';

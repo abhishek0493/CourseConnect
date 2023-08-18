@@ -15,9 +15,9 @@ import {
 import InsertEmoticonRoundedIcon from '@mui/icons-material/InsertEmoticonRounded';
 import RateReviewRoundedIcon from '@mui/icons-material/RateReviewRounded';
 import GroupsRoundedIcon from '@mui/icons-material/GroupsRounded';
-import NotificationImportantRoundedIcon from '@mui/icons-material/NotificationImportantRounded';
 import BallotRoundedIcon from '@mui/icons-material/BallotRounded';
-import BookmarkIcon from '@mui/icons-material/Bookmark';
+import ErrorTwoToneIcon from '@mui/icons-material/ErrorTwoTone';
+import BookmarkTwoToneIcon from '@mui/icons-material/BookmarkTwoTone';
 
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -99,11 +99,11 @@ const SecondarySidebar = () => {
               </Button>
               <Badge
                 badgeContent={user.total_requests}
-                color="warning"
+                color="error"
                 sx={{ mt: 0.5 }}
                 showZero
               >
-                <NotificationImportantRoundedIcon color="primary" />
+                <ErrorTwoToneIcon color="primary" />
               </Badge>
             </Box>
           </Grid>
@@ -156,7 +156,7 @@ const SecondarySidebar = () => {
                 sx={{ mt: 0.5 }}
                 showZero
               >
-                <BookmarkIcon color="primary" />
+                <BookmarkTwoToneIcon color="primary" />
               </Badge>
             </Box>
           </Grid>
