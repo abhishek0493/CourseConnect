@@ -9,7 +9,7 @@ const Home = () => {
     <Box>
       <Grid container>
         <Grid item xs={6}>
-          <Box sx={{ display: 'flex' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <img
               src={image5}
               alt="logo"
@@ -17,13 +17,17 @@ const Home = () => {
             ></img>
           </Box>
         </Grid>
-        <Grid item xs={6} sx={{ padding: '45px' }}>
+        <Grid
+          item
+          xs={6}
+          sx={{ padding: '45px', alignItems: 'center', margin: 'auto 0' }}
+        >
           <Typography variant="h2" color="action.main">
-            Welcome to CourseConnect
+            Welcome to Course Connect
           </Typography>
           <Box sx={{ mt: 3 }}>
             <Typography variant="p">
-              CourseConnect is an online platform that brings together learners
+              Course Connect is an online platform that brings together learners
               and instructors from various fields. Whether you're looking to
               expand your knowledge, enhance your skills, or share your
               expertise, CourseConnect has something for everyone.

@@ -220,6 +220,7 @@ function App() {
               ></Route>
             </Route>
           </Route>
+          <Route path="*" element={<NoAccess />} />
         </Routes>
       </ParentContext.Provider>
     </BrowserRouter>

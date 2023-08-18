@@ -84,7 +84,12 @@ const SignupNew = ({ userTypes, onSignUpSuccess }) => {
               Course Connect
             </Typography>
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid
+            item
+            xs={12}
+            sm={6}
+            sx={{ alignItems: 'center', margin: 'auto 0' }}
+          >
             <Typography
               variant="h5"
               component="h4"

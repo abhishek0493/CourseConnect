@@ -1,23 +1,52 @@
 import React, { useContext } from 'react';
 import {
-  Box,
-  Grid,
-  TextField,
   Button,
   Typography,
   Container,
+  Avatar,
+  CssBaseline,
+  TextField,
+  FormControlLabel,
+  Checkbox,
+  Link,
+  Grid,
+  Box,
 } from '@mui/material';
+import { makeStyles } from '@mui/styles';
 
 import loginImage from '../../images/Login.png';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 
 import { useState } from 'react';
-import { useLocation, Link, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import ParentContext from '../../ParentContext';
+
+const useStyles = makeStyles((theme) => ({
+  paper: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  avatar: {
+    margin: theme.spacing(4),
+    backgroundColor: theme.palette.secondary.main,
+  },
+  form: {
+    width: '100%', // Fix IE 11 issue.
+    marginTop: theme.spacing(1),
+  },
+  submit: {
+    margin: theme.spacing(3, 0, 2),
+    marginTop: '2rem',
+  },
+}));
 
 axios.defaults.withCredentials = true;
 
 const Login = ({ isLoggedIn }) => {
+  const classes = useStyles();
+
   const { baseUrl } = useContext(ParentContext);
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -59,72 +88,8 @@ const Login = ({ isLoggedIn }) => {
   };
 
   return (
-    <Container sx={{ p: 8 }}>
+    <Container component="main" sx={{ p: 8 }}>
       <Grid container spacing={3}>
-        <Grid
-          item
-          xs={12}
-          sm={6}
-          sx={{ alignContent: 'center', margin: 'auto 0' }}
-        >
-          <Typography
-            variant="h5"
-            component="h2"
-            color="primary"
-            align="center"
-            sx={{ mb: '2rem', textTransform: 'uppercase', fontWeight: 'bold' }}
-          >
-            LOGIN
-          </Typography>
-
-          <form onSubmit={handleLogin}>
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <TextField
-                  label="Email"
-                  fullWidth
-                  size="small"
-                  name="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                {/* Password and Confirm Password row */}
-                <TextField
-                  label="Password"
-                  fullWidth
-                  size="small"
-                  name="password"
-                  type="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  error={
-                    validationError && validationMessage.includes('password')
-                  }
-                  helperText={
-                    validationError && validationMessage.includes('password')
-                      ? validationMessage
-                      : ''
-                  }
-                />
-              </Grid>
-              <Grid item xs={12}>
-                {/* Submit button */}
-                <Button
-                  variant="contained"
-                  color="primary"
-                  size="small"
-                  fullWidth
-                  type="submit"
-                >
-                  Login
-                </Button>
-              </Grid>
-            </Grid>
-          </form>
-        </Grid>
         <Grid item xs={12} sm={6}>
           <img
             src={loginImage}
@@ -139,6 +104,84 @@ const Login = ({ isLoggedIn }) => {
           >
             Course Connect
           </Typography>
+        </Grid>
+        <Grid item sx={12} sm={6}>
+          <div className={classes.paper}>
+            <Avatar
+              className={classes.avatar}
+              sx={{ width: '120px', height: '120px' }}
+            >
+              <LockOutlinedIcon sx={{ fontSize: '80px', color: 'orangered' }} />
+            </Avatar>
+            <Typography component="h1" variant="h5" fontWeight={'bold'}>
+              Sign in
+            </Typography>
+            <form className={classes.form} onSubmit={handleLogin}>
+              <TextField
+                variant="outlined"
+                margin="normal"
+                type="email"
+                required
+                fullWidth
+                id="email"
+                label="Email Address"
+                name="email"
+                autoComplete="email"
+                autoFocus
+                value={formData.email}
+                onChange={handleChange}
+                error={validationError && validationMessage.includes('email')}
+                helperText={
+                  validationError && validationMessage.includes('email')
+                    ? validationMessage
+                    : ''
+                }
+              />
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+                value={formData.password}
+                onChange={handleChange}
+                error={
+                  validationError && validationMessage.includes('password')
+                }
+                helperText={
+                  validationError && validationMessage.includes('password')
+                    ? validationMessage
+                    : ''
+                }
+              />
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                color="primary"
+                className={classes.submit}
+                sx={{ mt: 2 }}
+              >
+                Sign In
+              </Button>
+              <Grid container sx={{ mt: 2 }}>
+                <Grid item>
+                  <Link
+                    onClick={() => {
+                      navigate('/consent', { replace: true });
+                    }}
+                    variant="body2"
+                  >
+                    {"Don't have an account? Sign Up"}
+                  </Link>
+                </Grid>
+              </Grid>
+            </form>
+          </div>
         </Grid>
       </Grid>
     </Container>

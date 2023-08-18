@@ -17,7 +17,6 @@ import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
-    marginTop: theme.spacing(8),
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -110,9 +109,72 @@ const LoginNew = ({ isLoggedIn }) => {
           </Grid>
         </form>
       </div>
+      {/* <Grid
+        item
+        xs={12}
+        sm={6}
+        sx={{ alignContent: 'center', margin: 'auto 0' }}
+      >
+        <Typography
+          variant="h5"
+          component="h2"
+          color="primary"
+          align="center"
+          sx={{ mb: '2rem', textTransform: 'uppercase', fontWeight: 'bold' }}
+        >
+          LOGIN
+        </Typography>
+
+        <form onSubmit={handleLogin}>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <TextField
+                label="Email"
+                fullWidth
+                size="small"
+                name="email"
+                type="email"
+                value={formData.email}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                label="Password"
+                fullWidth
+                size="small"
+                name="password"
+                type="password"
+                value={formData.password}
+                onChange={handleChange}
+                error={
+                  validationError && validationMessage.includes('password')
+                }
+                helperText={
+                  validationError && validationMessage.includes('password')
+                    ? validationMessage
+                    : ''
+                }
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Button
+                variant="contained"
+                color="primary"
+                size="small"
+                fullWidth
+                type="submit"
+              >
+                Login
+              </Button>
+            </Grid>
+          </Grid>
+        </form>
+      </Grid> */}
+
       <Box mt={8}>
         <Typography variant="body2" color="textSecondary" align="center">
-          © {new Date().getFullYear()} Company Name
+          © {new Date().getFullYear()} Course Connect
         </Typography>
       </Box>
     </Container>
