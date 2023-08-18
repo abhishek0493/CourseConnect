@@ -61,7 +61,7 @@ const getCommunityByName = catchAsync(async (req, res) => {
     }
   }
 
-  if (community.is_author == 1) {
+  if (userCommunity && userCommunity.is_author == 1) {
     community.allow_access = true;
     community.messaga = 'Created by you';
   }
