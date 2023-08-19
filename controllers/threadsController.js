@@ -309,13 +309,14 @@ const getThreadWithNestedComments = async (req, res) => {
     })
     .first();
 
+  thread.is_access = access;
+
   if (userThreadAction) {
     thread = {
       ...thread,
       is_upvoted: userThreadAction.is_upvoted ? 1 : 0,
       is_downvoted: userThreadAction.is_downvoted ? 1 : 0,
       is_saved: userThreadAction.is_saved ? 1 : 0,
-      is_access: access,
     };
   }
 

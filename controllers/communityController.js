@@ -135,7 +135,7 @@ const createCommunity = catchAsync(async (req, res) => {
     user_id: loggedInUser,
     community_id: id,
     is_author: 1,
-    status: 2,
+    status: 1,
   });
 
   res.status(200).json({
@@ -223,13 +223,13 @@ const joinCommunity = catchAsync(async (req, res) => {
         },
       });
     }
-  }
 
-  const request = await db('user_communities').insert({
-    user_id: loggedInUser,
-    community_id: community.id,
-    is_author: 0,
-  });
+    const request = await db('user_communities').insert({
+      user_id: loggedInUser,
+      community_id: community.id,
+      is_author: 0,
+    });
+  }
 
   return res.status(200).json({
     success: true,
