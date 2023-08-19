@@ -257,7 +257,7 @@ const getThreadWithNestedComments = async (req, res) => {
   }
 
   let thread = await db('threads as t')
-    .select('t.*', 'u.name as thread_author', 'c.access_type')
+    .select('t.*', 'u.name as thread_author', 'c.access_type', 'c.created_by')
     .join('communities as c', 'c.id', '=', 't.community_id')
     .join('users as u', 'u.id', '=', 't.user_id')
     .where('t.id', req.params.id)
@@ -296,6 +296,10 @@ const getThreadWithNestedComments = async (req, res) => {
     if (userCommunity && userCommunity.status == 1) {
       access = true;
     }
+  }
+
+  if (thread.created_by == loggedInUser) {
+    access = true;
   }
 
   const userThreadAction = await db('user_thread_actions')
