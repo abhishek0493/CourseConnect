@@ -87,6 +87,7 @@ const CreatePostCard = ({ communities, selectedId }) => {
                 <InputLabel>Select a community</InputLabel>
                 <Select
                   label="Select a community"
+                  required
                   variant="outlined"
                   value={Number(formData.community)}
                   name="community"
@@ -153,6 +154,7 @@ const CreatePostCard = ({ communities, selectedId }) => {
                 <Select
                   label="Type"
                   variant="outlined"
+                  required
                   name="type"
                   size="small"
                   value={formData.type}
