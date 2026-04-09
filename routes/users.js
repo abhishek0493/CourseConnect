@@ -17,6 +17,6 @@ router
 
 router
   .route('/community/request/:id/reject')
-  .get(protect, userController.approveRequest);
+  .get(protect, userController.rejectRequest);
 
 module.exports = router;

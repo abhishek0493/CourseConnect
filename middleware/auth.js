@@ -1,8 +1,7 @@
 const jwt = require('jsonwebtoken');
 const catchAsync = require('../utils/catchAsync');
 const { promisify } = require('util');
-const db = require('../db');
-const helpers = require('../utils/helpers');
+const userRepository = require('../repositories/userRepository');
 
 const protect = catchAsync(async (req, res, next) => {
   // 1) Getting token and check of it's there
@@ -21,10 +20,7 @@ const protect = catchAsync(async (req, res, next) => {
   );
 
   // 3) Check if user still exists
-  const currentUser = await db
-    .from('users')
-    .select('name', 'id', 'uuid', 'type', 'email')
-    .where({ uuid: decoded.id });
+  const currentUser = await userRepository.findByUuid(decoded.id);
 
   if (!currentUser) {
     return res.status(401).json({
@@ -33,12 +29,9 @@ const protect = catchAsync(async (req, res, next) => {
     });
   }
 
-  const refactor = helpers.refactorResponse(currentUser);
-
-  // console.log(currentUser);
   // GRANT ACCESS TO PROTECTED ROUTE
-  req.user = refactor[0];
-  res.locals.user = refactor[0];
+  req.user = currentUser;
+  res.locals.user = currentUser;
   next();
 });
 

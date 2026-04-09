@@ -23,4 +23,9 @@ module.exports = {
       },
     },
   },
+  accessTypes: {
+    public: { name: 'Public', type_id: 1 },
+    private: { name: 'Private', type_id: 2 },
+    restricted: { name: 'Restricted', type_id: 3 },
+  },
 };
