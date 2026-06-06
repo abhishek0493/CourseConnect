@@ -1,45 +1,19 @@
-import React from 'react';
-import SettingsAccessibilityIcon from '@mui/icons-material/SettingsAccessibility';
-import PsychologyTwoToneIcon from '@mui/icons-material/PsychologyTwoTone';
-import ColorLensTwoToneIcon from '@mui/icons-material/ColorLensTwoTone';
-import TranslateTwoToneIcon from '@mui/icons-material/TranslateTwoTone';
-import BusinessCenterTwoToneIcon from '@mui/icons-material/BusinessCenterTwoTone';
+import { getCategoryIcon } from '../components/Constants/Categories';
 
-export const AddCategoryIcon = (data, size = '') => {
+/**
+ * Attaches a lucide icon *component* (item.Icon) based on category_id.
+ * Call sites render it with <item.Icon className="..." />.
+ */
+export const AddCategoryIcon = (data) => {
   const processData = (item) => {
-    let icon = null;
-
-    switch (item.category_id) {
-      case 1:
-        icon = <PsychologyTwoToneIcon fontSize={size} />;
-        break;
-      case 2:
-        icon = <BusinessCenterTwoToneIcon fontSize={size} />;
-        break;
-      case 3:
-        icon = <ColorLensTwoToneIcon fontSize={size} />;
-        break;
-      case 4:
-        icon = <SettingsAccessibilityIcon fontSize={size} />;
-        break;
-      case 5:
-        icon = <TranslateTwoToneIcon fontSize={size} />;
-        break;
-      default:
-        break;
-    }
-
-    item.icon = icon;
+    item.Icon = getCategoryIcon(item.category_id);
     return item;
   };
 
   if (Array.isArray(data)) {
-    // If data is an array of objects
     return data.map((item) => processData(item));
-  } else if (typeof data === 'object') {
-    // If data is a single object
+  } else if (data && typeof data === 'object') {
     return processData(data);
   }
-
-  return null; // Return null for invalid data types
+  return null;
 };

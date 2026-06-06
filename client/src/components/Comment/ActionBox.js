@@ -1,12 +1,10 @@
-import React, { useContext, useState } from 'react';
-
-import { Typography, Box, IconButton, Snackbar, Alert } from '@mui/material';
-import ReplyAllRoundedIcon from '@mui/icons-material/ReplyAllRounded';
-
-import ArrowCircleUpTwoToneIcon from '@mui/icons-material/ArrowCircleUpTwoTone';
-import ArrowCircleDownTwoToneIcon from '@mui/icons-material/ArrowCircleDownTwoTone';
+import React, { useContext } from 'react';
 import axios from 'axios';
+import { ArrowBigUp, ArrowBigDown, Reply } from 'lucide-react';
+
 import ParentContext from '../../ParentContext';
+import { toast } from '../ui/toaster';
+import { cn } from '../../lib/utils';
 
 const ActionBox = ({
   commentId,
@@ -17,103 +15,49 @@ const ActionBox = ({
   isAccess,
 }) => {
   const { baseUrl } = useContext(ParentContext);
-  const [open, setOpen] = useState(false);
+  const noAccess = isAccess === 'no-access';
 
-  const handleOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const handleUpVote = async () => {
-    await axios
-      .get(`${baseUrl}/api/v1/comments/${commentId}/up-vote`, {
+  const vote = async (dir, trigger) => {
+    if (noAccess) {
+      toast.error('You are not a member of this community yet.');
+      return;
+    }
+    try {
+      const res = await axios.get(`${baseUrl}/api/v1/comments/${commentId}/${dir}`, {
         withCredentials: true,
-      })
-      .then((res) => {
-        if (res.data.success) {
-          upVoteTrigger(commentId);
-        }
-      })
-      .catch((err) => {
-        const res = err.response;
-        if (res) {
-          // console.log(res.data);
-        }
-        // console.log(err);
       });
+      if (res.data.success) trigger(commentId);
+    } catch {
+      /* silent */
+    }
   };
 
-  const handleDownVote = async () => {
-    await axios
-      .get(`${baseUrl}/api/v1/comments/${commentId}/down-vote`, {
-        withCredentials: true,
-      })
-      .then((res) => {
-        if (res.data.success) {
-          downVoteTrigger(commentId);
-        }
-      })
-      .catch((err) => {
-        const res = err.response;
-        if (res) {
-          // console.log(res.data);
-        }
-        // console.log(err);
-      });
-  };
+  const pill =
+    'inline-flex items-center gap-1 rounded-full bg-muted/60 px-1 py-0.5 text-xs font-semibold text-muted-foreground';
+  const iconBtn =
+    'flex h-6 w-6 items-center justify-center rounded-full transition-colors active:scale-90';
 
   return (
-    <>
-      <Box sx={{ mb: 2, color: 'primary.dark' }}>
-        <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-          <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
-            You are not a member of this community yet
-          </Alert>
-        </Snackbar>
-        <Typography variant="caption" sx={{ mr: 0.5, fontSize: '0.7rem' }}>
-          {comment && comment.total_upvotes && (
-            <span>{comment.total_upvotes}</span>
-          )}
-        </Typography>
-        <IconButton
-          size="small"
-          aria-label="up-vote"
-          sx={{ mr: 1, p: 0 }}
-          onClick={isAccess == 'no-access' ? handleOpen : handleUpVote}
-        >
-          <ArrowCircleUpTwoToneIcon color="gray" sx={{ fontSize: '1.4rem' }} />
-        </IconButton>
-        <IconButton
-          size="small"
-          aria-label="down-vote"
-          sx={{ p: 0 }}
-          onClick={isAccess == 'no-access' ? handleOpen : handleDownVote}
-        >
-          <ArrowCircleDownTwoToneIcon
-            color="gray"
-            sx={{ mr: 0.5, fontSize: '1.4rem' }}
-          />
-        </IconButton>
-        <Typography variant="caption" sx={{ mr: 1, fontSize: '0.7rem' }}>
-          {comment && comment.total_downvotes && (
-            <span>{comment.total_downvotes}</span>
-          )}
-        </Typography>
-        <IconButton
-          size="small"
-          aria-label="Reply"
-          disabled={isAccess == 'no-access'}
-          onClick={() => {
-            handleReplyButtonClick(commentId);
-          }}
-        >
-          <ReplyAllRoundedIcon color="success" fontSize="1rem" />
-        </IconButton>
-      </Box>
-    </>
+    <div className="flex items-center gap-2">
+      <div className={pill}>
+        <button onClick={() => vote('up-vote', upVoteTrigger)} className={cn(iconBtn, 'hover:bg-success/15 hover:text-success')} aria-label="Upvote">
+          <ArrowBigUp className="h-4 w-4" />
+        </button>
+        <span className="min-w-3 text-center tabular-nums">
+          {(Number(comment?.total_upvotes) || 0) - (Number(comment?.total_downvotes) || 0)}
+        </span>
+        <button onClick={() => vote('down-vote', downVoteTrigger)} className={cn(iconBtn, 'hover:bg-accent/15 hover:text-accent')} aria-label="Downvote">
+          <ArrowBigDown className="h-4 w-4" />
+        </button>
+      </div>
+      <button
+        onClick={() => handleReplyButtonClick(commentId)}
+        disabled={noAccess}
+        className="inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-semibold text-muted-foreground transition-colors hover:bg-muted hover:text-foreground disabled:opacity-50"
+      >
+        <Reply className="h-3.5 w-3.5" /> Reply
+      </button>
+    </div>
   );
 };
 

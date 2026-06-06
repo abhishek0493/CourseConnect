@@ -1,154 +1,73 @@
-import React, { useContext } from 'react';
-import { makeStyles } from '@mui/styles';
-import { useTheme } from '@mui/material/styles';
-import { useMediaQuery } from '@mui/material';
-
-import {
-  Paper,
-  Typography,
-  Tooltip,
-  Chip,
-  Link,
-  Box,
-  Divider,
-  Alert,
-} from '@mui/material';
-
-import AcUnitIcon from '@mui/icons-material/AcUnit';
-import Groups3Icon from '@mui/icons-material/Groups3';
-import DrawRoundedIcon from '@mui/icons-material/DrawRounded';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getAccessIcon } from '../Constants/GetAccessIcon';
+import { Users, PencilRuler, Compass } from 'lucide-react';
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    padding: theme.spacing(2),
-    width: '100%',
-    marginBottom: theme.spacing(2),
-    marginRight: theme.spacing(2),
-  },
-  communityInfo: {
-    width: '100%',
-    display: 'flex',
-    alignItems: 'center',
-    marginBottom: theme.spacing(1),
-  },
-  communityName: {
-    marginRight: theme.spacing(1),
-    fontSize: '0.5rem',
-    textDecoration: 'underline',
-    fontWeight: 'bold',
-  },
-  icons: {
-    display: 'flex',
-    alignItems: 'center',
-    width: '100%',
-    marginTop: theme.spacing(1),
-  },
-  icon: {
-    marginRight: theme.spacing(1),
-  },
-}));
+import { getAccessIcon } from '../Constants/GetAccessIcon';
+import { SectionHeading } from '../Common/SectionHeading';
+import { EmptyState } from '../Common/EmptyState';
+import { Card } from '../ui/card';
+import { Badge } from '../ui/badge';
+import { Tooltip } from '../ui/tooltip';
 
 const Communities = ({ communities }) => {
-  const classes = useStyles();
   const navigate = useNavigate();
-  const theme = useTheme();
-  const isXs = useMediaQuery(theme.breakpoints.down('sm'));
-  const isSm = useMediaQuery(theme.breakpoints.between('sm', 'md'));
-
-  const cardWidth = isXs ? '100%' : isSm ? 'calc(50% - 16px)' : 'calc(33.33% - 16px)';
 
   return (
-    <>
-      <Divider sx={{ my: 3 }} textAlign="left">
-        <Typography variant="h5" fontWeight={'bold'}>
-          # Popular Communities
-        </Typography>
-      </Divider>
+    <section className="space-y-4">
+      <SectionHeading icon={Compass}>Popular Communities</SectionHeading>
 
-      {communities && communities.length === 0 && (
-        <>
-          <Alert severity="warning">
-            No popular communities found. Be the first to create one and start a
-            discussion!
-          </Alert>
-        </>
-      )}
-      <div style={{ display: 'flex', flexWrap: 'wrap', marginTop: '1rem' }}>
-        {communities &&
-          communities.length > 0 &&
-          communities.map((community) => {
-            const accessIcon = getAccessIcon(community.access_type);
-            return (
-              <Paper key={community.id} elevation={0} className={classes.root} style={{ width: cardWidth }}>
-                <div className={classes.communityInfo}>
-                  <Link
-                    component="button"
-                    variant="subtitle2"
-                    fontWeight={'bold'}
-                    className={classes.communityName}
-                    onClick={() => {
-                      navigate(`/dashboard/c/${community.community_name}`, {
-                        replace: true,
-                      });
-                    }}
-                  >
-                    {community.community_name}
-                  </Link>
-                </div>
-                <Box sx={{ display: 'flex' }}>
-                  <Chip
-                    size="small"
-                    icon={community.icon}
-                    label={
-                      <Typography variant="caption">
+      {communities && communities.length === 0 ? (
+        <EmptyState
+          icon={Compass}
+          title="No communities yet"
+          description="Be the first to create one and start a discussion!"
+        />
+      ) : (
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {communities &&
+            communities.map((community) => {
+              const access = getAccessIcon(community.access_type);
+              const AccessIcon = access.Icon;
+              const CategoryIcon = community.Icon;
+              return (
+                <Card
+                  key={community.id}
+                  interactive
+                  onClick={() =>
+                    navigate(`/dashboard/c/${community.community_name}`, { replace: true })
+                  }
+                  className="cursor-pointer p-4"
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-gradient text-white">
+                      {CategoryIcon ? <CategoryIcon className="h-5 w-5" /> : null}
+                    </span>
+                    <div className="min-w-0">
+                      <p className="truncate font-display text-sm font-bold">
+                        c/{community.community_name}
+                      </p>
+                      <p className="truncate text-xs text-muted-foreground">
                         {community.category_name}
-                      </Typography>
-                    }
-                  ></Chip>
-                </Box>
-                <Divider />
-                <div className={classes.icons}>
-                  <Tooltip title={accessIcon.message}>
-                    {accessIcon.icon}
-                  </Tooltip>
-                  <Box sx={{ display: 'flex', alignItems: 'center', ml: 1 }}>
-                    <Tooltip title="Members">
-                      <Chip
-                        size="small"
-                        icon={<Groups3Icon />}
-                        label={
-                          <Typography variant="caption" component={'p'}>
-                            {community.total_users}
-                          </Typography>
-                        }
-                      ></Chip>
+                      </p>
+                    </div>
+                    <Tooltip label={access.message}>
+                      <span className="ml-auto"><Badge variant={access.tone}><AccessIcon /></Badge></span>
                     </Tooltip>
-                  </Box>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mx: 1 }}>
-                    <Tooltip title="Threads Created">
-                      <Chip
-                        size="small"
-                        icon={<DrawRoundedIcon />}
-                        label={
-                          <Typography variant="caption" component={'p'}>
-                            {community.total_threads}
-                          </Typography>
-                        }
-                      ></Chip>
-                    </Tooltip>
-                  </Box>
-                </div>
-              </Paper>
-            );
-          })}
-      </div>
-    </>
+                  </div>
+                  <div className="mt-3 flex items-center gap-4 border-t border-border pt-3 text-xs text-muted-foreground">
+                    <span className="flex items-center gap-1.5">
+                      <Users className="h-3.5 w-3.5" /> {community.total_users} members
+                    </span>
+                    <span className="flex items-center gap-1.5">
+                      <PencilRuler className="h-3.5 w-3.5" /> {community.total_threads} threads
+                    </span>
+                  </div>
+                </Card>
+              );
+            })}
+        </div>
+      )}
+    </section>
   );
 };
 

@@ -1,311 +1,152 @@
-import * as React from 'react';
-import { styled, alpha } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
-import {
-  AppBar,
-  Paper,
-  Box,
-  Toolbar,
-  IconButton,
-  InputBase,
-  Badge,
-  MenuItem,
-  Menu,
-} from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
-import AccountCircle from '@mui/icons-material/AccountCircle';
-import MailIcon from '@mui/icons-material/Mail';
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import MoreIcon from '@mui/icons-material/MoreVert';
-import TripOriginRoundedIcon from '@mui/icons-material/TripOriginRounded';
-import { withStyles, makeStyles } from '@mui/styles';
+import React, { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import logo from '../images/HeaderLogo.png';
 import axios from 'axios';
+import { Search, LogOut, LogIn, User, ChevronDown } from 'lucide-react';
+
 import ParentContext from '../ParentContext';
+import { Logo } from './Logo';
+import { ThemeToggle } from './theme-toggle';
+import { Button } from './ui/button';
+import { Avatar, AvatarFallback } from './ui/avatar';
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+} from './ui/dropdown-menu';
+import { toast } from './ui/toaster';
 
-const styles = (theme) => ({
-  toolbar: theme.mixins.toolbar,
-});
+const SearchField = ({ value, onChange, onSubmit, className }) => (
+  <div className={className}>
+    <div className="relative">
+      <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+      <input
+        type="search"
+        value={value}
+        onChange={onChange}
+        onKeyDown={(e) => e.key === 'Enter' && onSubmit()}
+        placeholder="Search topics or communities…"
+        aria-label="Search"
+        className="h-10 w-full rounded-full border border-border bg-muted/60 pl-10 pr-4 text-sm text-foreground outline-none transition-all placeholder:text-muted-foreground/70 focus:border-ring focus:bg-card focus:ring-2 focus:ring-ring/25"
+      />
+    </div>
+  </div>
+);
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: 'flex',
-  },
-  appBar: {
-    zIndex: theme.zIndex.drawer + 1,
-  },
-  content: {
-    flexGrow: 1,
-    padding: theme.spacing(3),
-    overflow: 'auto',
-    height: '100vh',
-  },
-}));
-
-const Search = styled('div')(({ theme }) => ({
-  position: 'relative',
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
-  '&:hover': {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
-  },
-  marginRight: theme.spacing(2),
-  marginLeft: 0,
-  width: '100%',
-  [theme.breakpoints.up('sm')]: {
-    marginLeft: theme.spacing(3),
-    width: 'auto',
-  },
-}));
-
-const SearchIconWrapper = styled('div')(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: '100%',
-  position: 'absolute',
-  pointerEvents: 'none',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: 'inherit',
-  '& .MuiInputBase-input': {
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('md')]: {
-      width: '80ch',
-    },
-  },
-}));
-
-const Header = (props) => {
-  const { baseUrl } = React.useContext(ParentContext);
-  const { classes, isLoggedIn, onLogout } = props;
-  const [searchQuery, setSearchQuery] = React.useState('');
-
-  const styleClasses = useStyles();
+const Header = ({ isLoggedIn, onLogout }) => {
+  const { baseUrl, user } = useContext(ParentContext);
   const navigate = useNavigate();
-
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
-
-  const isMenuOpen = Boolean(anchorEl);
-  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-
-  const handleSearchInputChange = (event) => {
-    setSearchQuery(event.target.value);
-  };
+  const [searchQuery, setSearchQuery] = useState('');
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
 
   const handleSearchSubmit = () => {
+    if (!searchQuery.trim()) return;
+    const q = searchQuery;
     setSearchQuery('');
-    navigate(`/dashboard/custom-search?query=${searchQuery}`, {
-      replace: true,
-    });
+    setMobileSearchOpen(false);
+    navigate(`/dashboard/custom-search?query=${q}`, { replace: true });
   };
 
   const handleLogout = async () => {
-    await axios
-      .get(`${baseUrl}/api/v1/auth/logout`, {
+    try {
+      const res = await axios.get(`${baseUrl}/api/v1/auth/logout`, {
         withCredentials: true,
-      })
-      .then((res) => {
-        if (res.data.success) {
-          onLogout(true);
-          navigate('/', { replace: true });
-        }
       });
+      if (res.data.success) {
+        onLogout(true);
+        toast.success('Signed out successfully');
+        navigate('/', { replace: true });
+      }
+    } catch {
+      toast.error('Could not sign out. Please try again.');
+    }
   };
 
-  const handleLogin = () => {
-    navigate('/login', { replace: true });
-  };
-
-  const handleProfileMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleMobileMenuClose = () => {
-    setMobileMoreAnchorEl(null);
-  };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-    handleMobileMenuClose();
-  };
-
-  const handleMobileMenuOpen = (event) => {
-    setMobileMoreAnchorEl(event.currentTarget);
-  };
-
-  const menuId = 'primary-search-account-menu';
-  const renderMenu = (
-    <Menu
-      anchorEl={anchorEl}
-      anchorOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      id={menuId}
-      keepMounted
-      transformOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      open={isMenuOpen}
-      onClose={handleMenuClose}
-    >
-      {isLoggedIn ? (
-        <MenuItem onClick={handleLogout}>Logout</MenuItem>
-      ) : (
-        <MenuItem onClick={handleLogin}>Login</MenuItem>
-      )}
-    </Menu>
-  );
-
-  const mobileMenuId = 'primary-search-account-menu-mobile';
-  const renderMobileMenu = (
-    <Menu
-      anchorEl={mobileMoreAnchorEl}
-      anchorOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      id={mobileMenuId}
-      keepMounted
-      transformOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      open={isMobileMenuOpen}
-      onClose={handleMobileMenuClose}
-    >
-      <MenuItem>
-        <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={4} color="error">
-            <MailIcon />
-          </Badge>
-        </IconButton>
-        <p>Messages</p>
-      </MenuItem>
-      <MenuItem>
-        <IconButton
-          size="large"
-          aria-label="show 17 new notifications"
-          color="inherit"
-        >
-          <Badge badgeContent={17} color="error">
-            <NotificationsIcon />
-          </Badge>
-        </IconButton>
-        <p>Notifications</p>
-      </MenuItem>
-      <MenuItem onClick={handleProfileMenuOpen}>
-        <IconButton
-          size="large"
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-        >
-          <AccountCircle />
-        </IconButton>
-        <p>Profile</p>
-      </MenuItem>
-    </Menu>
-  );
+  const displayName = user && user.name ? user.name : 'Account';
+  const initial = displayName.charAt(0).toUpperCase();
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <CssBaseline />
-      <AppBar position="fixed" className={styleClasses.appBar}>
-        <Toolbar>
-          <Box>
-            <TripOriginRoundedIcon
-              sx={{ fontSize: '2.5rem', mx: 1, color: 'orangered' }}
-            />
-            <Link
-              to={isLoggedIn ? '/dashboard' : '/'}
-              style={{ textDecoration: 'none', color: 'inherit' }}
+    <header className="sticky top-0 z-40 w-full border-b border-border glass">
+      <div className="mx-auto flex h-16 max-w-[1600px] items-center gap-3 px-4 sm:px-6">
+        <Link
+          to={isLoggedIn ? '/dashboard' : '/'}
+          className="flex items-center transition-opacity hover:opacity-90"
+        >
+          <Logo textClassName="hidden sm:inline-block" />
+        </Link>
+
+        {isLoggedIn && (
+          <SearchField
+            className="mx-2 hidden flex-1 md:block md:max-w-xl"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onSubmit={handleSearchSubmit}
+          />
+        )}
+
+        <div className="ml-auto flex items-center gap-2">
+          {isLoggedIn && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="md:hidden"
+              aria-label="Search"
+              onClick={() => setMobileSearchOpen((o) => !o)}
             >
-              <img alt="logo" src={logo} style={{ width: '100px', display: 'block' }} className="header-logo" />
-            </Link>
-          </Box>
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              fullWidth
-              placeholder="Search any topic or community..."
-              value={searchQuery}
-              onChange={handleSearchInputChange}
-              inputProps={{ 'aria-label': 'search' }}
-              onKeyDownCapture={(event) => {
-                if (event.key === 'Enter') {
-                  handleSearchSubmit(event);
-                  // alert(searchQuery);
-                }
-              }}
-            />
-          </Search>
-          <Box sx={{ flexGrow: 1 }} />
-          <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-            {/* <IconButton
-              size="large"
-              aria-label="show 4 new mails"
-              color="inherit"
-            >
-              <Badge badgeContent={4} color="action">
-                <MailIcon />
-              </Badge>
-            </IconButton> */}
-            {/* <IconButton
-              size="large"
-              aria-label="show 17 new notifications"
-              color="inherit"
-            >
-              <Badge badgeContent={17} color="action">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton> */}
-            <IconButton
-              size="large"
-              edge="end"
-              aria-label="account of current user"
-              aria-controls={menuId}
-              aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
-              color="inherit"
-            >
-              <AccountCircle />
-            </IconButton>
-          </Box>
-          <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
-            <IconButton
-              size="large"
-              aria-label="show more"
-              aria-controls={mobileMenuId}
-              aria-haspopup="true"
-              onClick={handleMobileMenuOpen}
-              color="inherit"
-            >
-              <MoreIcon />
-            </IconButton>
-          </Box>
-        </Toolbar>
-      </AppBar>
-      <Paper>
-        <div className={classes.toolbar} />
-      </Paper>
-      {renderMobileMenu}
-      {renderMenu}
-    </Box>
+              <Search />
+            </Button>
+          )}
+
+          <ThemeToggle />
+
+          {isLoggedIn ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="flex items-center gap-1.5 rounded-full pl-0.5 pr-2 transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                  <Avatar className="h-9 w-9 border border-border">
+                    <AvatarFallback className="text-sm">{initial}</AvatarFallback>
+                  </Avatar>
+                  <ChevronDown className="hidden h-4 w-4 text-muted-foreground sm:block" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuLabel className="normal-case">
+                  <p className="text-sm font-semibold text-foreground">{displayName}</p>
+                  <p className="text-xs font-normal text-muted-foreground">Signed in</p>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => navigate('/dashboard')}>
+                  <User /> Dashboard
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={handleLogout}
+                  className="text-destructive focus:bg-destructive/10 [&_svg]:text-destructive"
+                >
+                  <LogOut /> Sign out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <Button onClick={() => navigate('/login', { replace: true })} className="gap-2">
+              <LogIn className="h-4 w-4" /> Login
+            </Button>
+          )}
+        </div>
+      </div>
+
+      {isLoggedIn && mobileSearchOpen && (
+        <div className="border-t border-border px-4 py-3 md:hidden">
+          <SearchField
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onSubmit={handleSearchSubmit}
+          />
+        </div>
+      )}
+    </header>
   );
 };
 
-export default withStyles(styles)(Header);
+export default Header;

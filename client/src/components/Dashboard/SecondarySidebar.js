@@ -1,206 +1,139 @@
 import React, { useContext, useEffect, useState } from 'react';
-
-import {
-  Box,
-  Typography,
-  Divider,
-  Grid,
-  Chip,
-  Button,
-  Avatar,
-  Badge,
-  LinearProgress,
-} from '@mui/material';
-
-import InsertEmoticonRoundedIcon from '@mui/icons-material/InsertEmoticonRounded';
-import RateReviewRoundedIcon from '@mui/icons-material/RateReviewRounded';
-import GroupsRoundedIcon from '@mui/icons-material/GroupsRounded';
-import BallotRoundedIcon from '@mui/icons-material/BallotRounded';
-import ErrorTwoToneIcon from '@mui/icons-material/ErrorTwoTone';
-import BookmarkTwoToneIcon from '@mui/icons-material/BookmarkTwoTone';
-import Diversity1TwoToneIcon from '@mui/icons-material/Diversity1TwoTone';
-import ConnectWithoutContactTwoToneIcon from '@mui/icons-material/ConnectWithoutContactTwoTone';
-import AccountCircleTwoToneIcon from '@mui/icons-material/AccountCircleTwoTone';
-
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import {
+  Users,
+  MessageSquare,
+  CornerDownRight,
+  ArrowUp,
+  ArrowDown,
+  Bookmark,
+  Bell,
+  FilePlus2,
+  UserPlus,
+} from 'lucide-react';
+
 import { Refactor } from '../Constants/Refactor';
 import ParentContext from '../../ParentContext';
+import { Card } from '../ui/card';
+import { Button } from '../ui/button';
+import { Avatar, AvatarFallback } from '../ui/avatar';
+import { Skeleton } from '../ui/skeleton';
+import { cn } from '../../lib/utils';
+
+const StatTile = ({ icon: Icon, label, value, tone = 'default' }) => (
+  <div className="flex flex-col gap-1 rounded-xl border border-border bg-muted/40 p-3">
+    <div className="flex items-center gap-1.5 text-muted-foreground">
+      <Icon
+        className={cn(
+          'h-3.5 w-3.5',
+          tone === 'up' && 'text-success',
+          tone === 'down' && 'text-accent'
+        )}
+      />
+      <span className="text-[11px] font-medium uppercase tracking-wide">{label}</span>
+    </div>
+    <span className="font-display text-xl font-bold tabular-nums">{value ?? 0}</span>
+  </div>
+);
 
 const SecondarySidebar = () => {
   const { baseUrl } = useContext(ParentContext);
   const navigate = useNavigate();
-  const [user, setUser] = useState([]);
+  const [user, setUser] = useState(null);
 
-  const fetchUserStats = async () => {
-    await axios
-      .get(`${baseUrl}/api/v1/users/get-stats`, {
-        withCredentials: true,
-      })
+  useEffect(() => {
+    let active = true;
+    axios
+      .get(`${baseUrl}/api/v1/users/get-stats`, { withCredentials: true })
       .then((res) => {
-        if (res.data.success) {
+        if (res.data.success && active) {
           const result = Refactor(res.data);
           setUser(result[0]);
         }
-      });
-  };
+      })
+      .catch(() => {});
+    return () => {
+      active = false;
+    };
+  }, [baseUrl]);
 
-  useEffect(() => {
-    fetchUserStats();
-  }, []);
+  if (!user) {
+    return (
+      <Card className="p-5">
+        <div className="flex items-center gap-3">
+          <Skeleton className="h-12 w-12 rounded-full" />
+          <Skeleton className="h-5 w-28" />
+        </div>
+        <div className="mt-5 grid grid-cols-2 gap-3">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <Skeleton key={i} className="h-16 rounded-xl" />
+          ))}
+        </div>
+      </Card>
+    );
+  }
+
+  const initial = (user.name || 'U').charAt(0).toUpperCase();
 
   return (
-    <Box sx={{ height: 'auto', p: 3 }}>
-      <Box sx={{ display: 'flex' }}>
-        <Typography variant="body2" fontWeight={'bold'}>
-          {user && Object.keys(user).length > 0 ? (
-            <Box sx={{ display: 'flex' }}>
-              <InsertEmoticonRoundedIcon sx={{ mr: 1, color: 'green' }} />
-              <Typography variant="body2" fontWeight={'bold'}>
-                u/{user.name}
-              </Typography>
-            </Box>
-          ) : (
-            <Box sx={{ width: '100%' }}>
-              <LinearProgress />
-            </Box>
-          )}
-        </Typography>
-      </Box>
-      <Divider sx={{ mt: 1, borderWidth: '1px' }} />
-      <Box sx={{ mt: 3 }}>
-        <Grid container alignItems={'center'}>
-          <Grid item xs={4}>
-            <Avatar
-              sx={{
-                bgcolor: '#090979',
-                width: '4rem',
-                height: '4rem',
-                color: 'paper',
-              }}
-            >
-              <Diversity1TwoToneIcon
-                sx={{ fontSize: '2.5rem', color: 'paper' }}
-              />
-            </Avatar>
-          </Grid>
-          <Grid item xs={8}>
-            <Typography variant="caption" component={'p'}>
-              Total Created: {user.total_communities_created}
-            </Typography>
-            <Typography variant="caption" component={'p'}>
-              Total Joined: {user.total_communities_joined}
-            </Typography>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Button
-                size="small"
-                variant="outlined"
-                sx={{ fontSize: '10px', mt: 1, mr: 1 }}
-                onClick={() =>
-                  navigate('/dashboard/view-all-requests', { replace: true })
-                }
-              >
-                Join Requests
-              </Button>
-              <Badge
-                badgeContent={user.total_requests}
-                color="error"
-                sx={{ mt: 0.5 }}
-                showZero
-              >
-                <ErrorTwoToneIcon color="primary" />
-              </Badge>
-            </Box>
-          </Grid>
-        </Grid>
-      </Box>
-      <Divider sx={{ mt: 3 }} textAlign="left">
-        <Chip size="small" label="COMMUNITIES" />
-      </Divider>
+    <Card className="overflow-hidden">
+      {/* Banner + identity */}
+      <div className="h-16 bg-brand-gradient" />
+      <div className="px-5 pb-5">
+        <div className="-mt-8 flex items-end gap-3">
+          <Avatar className="h-16 w-16 border-4 border-card shadow-soft">
+            <AvatarFallback className="text-lg">{initial}</AvatarFallback>
+          </Avatar>
+          <div className="pb-1">
+            <p className="font-display text-base font-bold leading-tight">{user.name}</p>
+            <p className="text-xs text-muted-foreground">u/{user.name}</p>
+          </div>
+        </div>
 
-      <Box sx={{ mt: 5 }}>
-        <Grid container alignItems={'center'}>
-          <Grid item xs={4}>
-            <Avatar
-              sx={{
-                bgcolor: '#090979',
-                width: '4rem',
-                height: '4rem',
-                color: 'paper',
-              }}
-            >
-              <ConnectWithoutContactTwoToneIcon
-                sx={{ fontSize: '2.5rem', color: 'paper' }}
-              />
-            </Avatar>
-          </Grid>
-          <Grid item xs={8}>
-            <Typography variant="caption" component={'p'}>
-              Total Threads Created: {user.total_threads_created}
-            </Typography>
-            <Typography variant="caption" component={'p'}>
-              Total Comments: {user.total_comments}
-            </Typography>
-            <Typography variant="caption" component={'p'}>
-              Total Replies: {user.total_replies}
-            </Typography>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Button
-                size="small"
-                variant="outlined"
-                sx={{ fontSize: '10px', mt: 1, mr: 1 }}
-                onClick={() =>
-                  navigate('/dashboard/view-all-saved', { replace: true })
-                }
-              >
-                My Saved Threads
-              </Button>
-              <Badge
-                color="success"
-                badgeContent={user.total_saved}
-                sx={{ mt: 0.5 }}
-                showZero
-              >
-                <BookmarkTwoToneIcon color="primary" />
-              </Badge>
-            </Box>
-          </Grid>
-        </Grid>
-      </Box>
-      <Divider sx={{ mt: 3 }} textAlign="left">
-        <Chip size="small" label="INTERACTIONS" />
-      </Divider>
+        <div className="mt-5 grid grid-cols-2 gap-3">
+          <StatTile icon={Users} label="Created" value={user.total_communities_created} />
+          <StatTile icon={UserPlus} label="Joined" value={user.total_communities_joined} />
+          <StatTile icon={FilePlus2} label="Threads" value={user.total_threads_created} />
+          <StatTile icon={MessageSquare} label="Comments" value={user.total_comments} />
+          <StatTile icon={CornerDownRight} label="Replies" value={user.total_replies} />
+          <StatTile icon={Bookmark} label="Saved" value={user.total_saved} />
+          <StatTile icon={ArrowUp} label="Upvotes" value={user.total_upvotes} tone="up" />
+          <StatTile icon={ArrowDown} label="Downvotes" value={user.total_downvotes} tone="down" />
+        </div>
 
-      <Box sx={{ mt: 5 }}>
-        <Grid container alignItems={'center'}>
-          <Grid item xs={4}>
-            <Avatar
-              sx={{
-                bgcolor: '#090979',
-                width: '4rem',
-                height: '4rem',
-                color: 'paper',
-              }}
-            >
-              <AccountCircleTwoToneIcon
-                sx={{ fontSize: '2.5rem', color: 'paper' }}
-              />
-            </Avatar>
-          </Grid>
-          <Grid item xs={8}>
-            <Typography variant="caption" component={'p'}>
-              Upvotes Received: {user.total_upvotes}
-            </Typography>
-            <Typography variant="caption" component={'p'}>
-              Downvotes Received: {user.total_downvotes}
-            </Typography>
-          </Grid>
-        </Grid>
-      </Box>
-      <Divider sx={{ mt: 3 }} textAlign="left">
-        <Chip size="small" label="PROFILE STATS" />
-      </Divider>
-    </Box>
+        <div className="mt-5 flex flex-col gap-2">
+          <Button
+            variant="outline"
+            className="w-full justify-between"
+            onClick={() => navigate('/dashboard/view-all-requests', { replace: true })}
+          >
+            <span className="flex items-center gap-2">
+              <Bell className="h-4 w-4" /> Join Requests
+            </span>
+            {user.total_requests > 0 && (
+              <span className="rounded-full bg-destructive px-2 py-0.5 text-xs font-semibold text-destructive-foreground">
+                {user.total_requests}
+              </span>
+            )}
+          </Button>
+          <Button
+            variant="outline"
+            className="w-full justify-between"
+            onClick={() => navigate('/dashboard/view-all-saved', { replace: true })}
+          >
+            <span className="flex items-center gap-2">
+              <Bookmark className="h-4 w-4" /> Saved Threads
+            </span>
+            {user.total_saved > 0 && (
+              <span className="rounded-full bg-success px-2 py-0.5 text-xs font-semibold text-success-foreground">
+                {user.total_saved}
+              </span>
+            )}
+          </Button>
+        </div>
+      </div>
+    </Card>
   );
 };
 

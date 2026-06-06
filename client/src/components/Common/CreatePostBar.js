@@ -1,92 +1,40 @@
-import React, { useState } from 'react';
-import {
-  Card,
-  Avatar,
-  Grid,
-  Badge,
-  TextField,
-  Typography,
-  Snackbar,
-  Alert,
-} from '@mui/material';
-import AccountCircleTwoToneIcon from '@mui/icons-material/AccountCircleTwoTone';
-import LightbulbCircleTwoToneIcon from '@mui/icons-material/LightbulbCircleTwoTone';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { PenLine, Lightbulb } from 'lucide-react';
+
+import { Card } from '../ui/card';
+import { Avatar, AvatarFallback } from '../ui/avatar';
+import { toast } from '../ui/toaster';
 
 const CreatePostBar = ({ community, isAccess }) => {
   const navigate = useNavigate();
-  const [open, setOpen] = useState(false);
 
-  const onFocus = () => {
+  const handleClick = () => {
     if (isAccess !== undefined && isAccess === false) {
-      setOpen(true);
-    } else if (community) {
-      navigate(`/dashboard/create-thread?id=${community.id}`, {
-        replace: true,
-      });
+      toast.error('You are not a member of this community yet.');
+    } else if (community && community.id) {
+      navigate(`/dashboard/create-thread?id=${community.id}`, { replace: true });
     } else {
       navigate('/dashboard/create-thread', { replace: true });
     }
   };
 
-  const handleClose = () => {
-    setOpen(false);
-  };
-
   return (
-    <Card
-      sx={{
-        display: 'flex',
-        px: 1,
-        py: 3,
-        maxHeight: '60px',
-        alignItems: 'center',
-      }}
-      elevation={0}
-    >
-      <Grid container columnSpacing={2}>
-        <Grid item xs={2} sm={1}>
-          <Badge
-            overlap="circular"
-            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-            variant="dot"
-            color="success"
-          >
-            <Avatar
-              sx={{ bgcolor: 'secondary.main', color: 'primary.dark', ml: 1 }}
-            >
-              <AccountCircleTwoToneIcon />
-            </Avatar>
-          </Badge>
-        </Grid>
-        <Grid item xs={9} sm={10}>
-          <TextField
-            label={<Typography variant="body2">Create a thread</Typography>}
-            size="small"
-            fullWidth
-            onFocus={onFocus}
-          ></TextField>
-          <Snackbar
-            open={open}
-            autoHideDuration={6000}
-            onClose={handleClose}
-            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-          >
-            <Alert
-              onClose={handleClose}
-              severity="error"
-              sx={{ width: '100%' }}
-            >
-              You are not a member of this community yet
-            </Alert>
-          </Snackbar>
-        </Grid>
-        <Grid item xs={1}>
-          <LightbulbCircleTwoToneIcon
-            sx={{ fontSize: '40px', color: 'orangered' }}
-          />
-        </Grid>
-      </Grid>
+    <Card className="flex items-center gap-3 p-3">
+      <Avatar className="h-9 w-9 shrink-0">
+        <AvatarFallback>
+          <PenLine className="h-4 w-4 text-white" />
+        </AvatarFallback>
+      </Avatar>
+      <button
+        onClick={handleClick}
+        className="h-10 flex-1 rounded-full border border-input bg-muted/50 px-4 text-left text-sm text-muted-foreground transition-colors hover:border-ring hover:bg-card"
+      >
+        Create a thread…
+      </button>
+      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent/12 text-accent">
+        <Lightbulb className="h-5 w-5" />
+      </span>
     </Card>
   );
 };

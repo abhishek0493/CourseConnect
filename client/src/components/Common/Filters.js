@@ -1,99 +1,41 @@
 import React from 'react';
+import { Bookmark, GraduationCap, UserCircle2, RotateCcw } from 'lucide-react';
+import { cn } from '../../lib/utils';
 
-import {
-  Box,
-  Checkbox,
-  FormGroup,
-  FormControlLabel,
-  FormControl,
-  IconButton,
-  Typography,
-} from '@mui/material';
+const FilterChip = ({ active, icon: Icon, label, onClick }) => (
+  <button
+    type="button"
+    onClick={onClick}
+    aria-pressed={active}
+    className={cn(
+      'inline-flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-sm font-medium transition-all active:scale-95',
+      active
+        ? 'border-primary bg-primary/10 text-primary'
+        : 'border-border bg-card text-muted-foreground hover:border-primary/40 hover:text-foreground'
+    )}
+  >
+    <Icon className="h-4 w-4" />
+    {label}
+  </button>
+);
 
-import BookmarkAddedOutlinedIcon from '@mui/icons-material/BookmarkAddedOutlined';
-import BookmarkAddedIcon from '@mui/icons-material/BookmarkAdded';
-import StarsOutlinedIcon from '@mui/icons-material/StarsOutlined';
-import StarsRoundedIcon from '@mui/icons-material/StarsRounded';
-import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
-import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
-import RestartAltOutlinedIcon from '@mui/icons-material/RestartAltOutlined';
-
-const Filters = ({
-  handleReset,
-  filterState,
-  toggleSaved,
-  toggleCourse,
-  togglePosted,
-}) => {
+const Filters = ({ handleReset, filterState, toggleSaved, toggleCourse, togglePosted }) => {
   return (
-    <Box
-      sx={{ mt: 1, display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, p: 1.2, justifyContent: 'space-between', flexWrap: 'wrap', gap: 1 }}
-    >
-      <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
-        <FormControl component="fieldset">
-          <FormGroup aria-label="position" row>
-            <FormControlLabel
-              value="end"
-              control={
-                <Checkbox
-                  icon={<BookmarkAddedOutlinedIcon />}
-                  checkedIcon={<BookmarkAddedIcon />}
-                  color="warning"
-                  checked={filterState.isSaved}
-                  onChange={() => toggleSaved(filterState.isSaved ? 0 : 1)}
-                />
-              }
-              label="Saved Threads"
-              labelPlacement="end"
-            />
-          </FormGroup>
-        </FormControl>
-        <FormControl component="fieldset">
-          <FormGroup aria-label="position" row>
-            <FormControlLabel
-              value="end"
-              control={
-                <Checkbox
-                  icon={<StarsOutlinedIcon />}
-                  checkedIcon={<StarsRoundedIcon />}
-                  color="warning"
-                  checked={filterState.isCourse}
-                  onChange={() => toggleCourse(filterState.isCourse ? 0 : 1)}
-                />
-              }
-              label="Course Threads"
-              labelPlacement="end"
-            />
-          </FormGroup>
-        </FormControl>
-        <FormControl component="fieldset">
-          <FormGroup aria-label="position" row>
-            <FormControlLabel
-              value="end"
-              control={
-                <Checkbox
-                  icon={<AccountCircleOutlinedIcon />}
-                  checkedIcon={<AccountCircleRoundedIcon />}
-                  color="warning"
-                  checked={filterState.isAuthorPosted}
-                  onChange={() =>
-                    togglePosted(filterState.isAuthorPosted ? 0 : 1)
-                  }
-                />
-              }
-              label="Posted by me"
-              labelPlacement="end"
-            />
-          </FormGroup>
-        </FormControl>
-      </Box>
-      <IconButton sx={{ borderRadius: 2 }} onClick={handleReset}>
-        <RestartAltOutlinedIcon />
-        <Typography variant="body1" sx={{ mx: 1, color: '#333333' }}>
-          Reset Filters
-        </Typography>
-      </IconButton>
-    </Box>
+    <div className="flex flex-wrap items-center gap-2">
+      <FilterChip active={!!filterState.isSaved} icon={Bookmark} label="Saved"
+        onClick={() => toggleSaved(filterState.isSaved ? 0 : 1)} />
+      <FilterChip active={!!filterState.isCourse} icon={GraduationCap} label="Courses"
+        onClick={() => toggleCourse(filterState.isCourse ? 0 : 1)} />
+      <FilterChip active={!!filterState.isAuthorPosted} icon={UserCircle2} label="Posted by me"
+        onClick={() => togglePosted(filterState.isAuthorPosted ? 0 : 1)} />
+      <button
+        type="button"
+        onClick={handleReset}
+        className="ml-auto inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+      >
+        <RotateCcw className="h-4 w-4" /> Reset
+      </button>
+    </div>
   );
 };
 

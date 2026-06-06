@@ -1,44 +1,36 @@
-import React from 'react';
+import { Globe2, Lock, ShieldCheck } from 'lucide-react';
 
-import SupervisedUserCircleTwoToneIcon from '@mui/icons-material/SupervisedUserCircleTwoTone';
-import LockPersonTwoToneIcon from '@mui/icons-material/LockPersonTwoTone';
-import LockTwoToneIcon from '@mui/icons-material/LockTwoTone';
-
+/**
+ * Access-type metadata for a community.
+ * Returns a lucide icon component (Icon), a human message, a Badge `tone`,
+ * and a short `type` label. Theme-agnostic — no hardcoded colors.
+ */
 export const getAccessIcon = (type) => {
-  let icon = null;
-  let message = '';
-  let color = '';
-  switch (type) {
+  switch (Number(type)) {
     case 1:
-      icon = <SupervisedUserCircleTwoToneIcon color="success" />;
-      message =
-        'This community is open. Anyone can join and post in this community';
-      color = 'success';
-      type = 'Public';
-      break;
+      return {
+        Icon: Globe2,
+        message: 'This community is open. Anyone can join and post here.',
+        tone: 'success',
+        type: 'Public',
+      };
     case 2:
-      icon = <LockPersonTwoToneIcon color="warning" />;
-      message =
-        'This community is restricted. Threads can be viewed but requires creator approval for posting in this community';
-      color = 'warning';
-      type = 'Restricted';
-
-      break;
+      return {
+        Icon: ShieldCheck,
+        message:
+          'This community is restricted. Threads are visible, but posting needs creator approval.',
+        tone: 'warning',
+        type: 'Restricted',
+      };
     case 3:
-      icon = <LockTwoToneIcon color="error" />;
-      message =
-        'This community is protected. Viewing and creating threads requires creator approval';
-      color = 'error';
-      type = 'Private';
-
-      break;
+      return {
+        Icon: Lock,
+        message:
+          'This community is private. Viewing and posting require creator approval.',
+        tone: 'destructive',
+        type: 'Private',
+      };
     default:
-      break;
+      return { Icon: Globe2, message: '', tone: 'muted', type: '' };
   }
-  return {
-    icon: icon,
-    message: message,
-    color: color,
-    type: type,
-  };
 };

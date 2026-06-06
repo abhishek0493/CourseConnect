@@ -1,60 +1,46 @@
 import React, { useState } from 'react';
-import {
-  Card,
-  CardContent,
-  Typography,
-  TextField,
-  Button,
-  Tooltip,
-} from '@mui/material';
+import { Send } from 'lucide-react';
+
+import { Card } from '../ui/card';
+import { Textarea } from '../ui/textarea';
+import { Button } from '../ui/button';
+import { Tooltip } from '../ui/tooltip';
 
 const CreateCommentCard = ({ onSubmit, commentError, onChange, isAccess }) => {
   const [comment, setComment] = useState('');
+  const noAccess = isAccess === 'no-access';
 
-  const handleCommentChange = (event) => {
-    setComment(event.target.value);
-  };
-
-  const handleSubmit = () => {
+  const handleSubmit = (e) => {
+    e?.preventDefault?.();
+    if (!comment.trim()) return;
     onSubmit(comment);
     setComment('');
     onChange(false);
   };
 
-  return (
-    <Card variant="outlined">
-      <form onSubmit={handleSubmit}>
-        <CardContent>
-          <Tooltip
-            title={isAccess == 'no-access' ? 'Community not joined yet' : ''}
-          >
-            <TextField
-              multiline
-              required
-              rows={4}
-              variant="outlined"
-              placeholder="Have something to say?"
-              value={comment}
-              disabled={isAccess == 'no-access'}
-              onChange={handleCommentChange}
-              fullWidth
-              error={commentError.state}
-              helperText={commentError.state ? commentError.message : ''}
-            />
-          </Tooltip>
+  const field = (
+    <Textarea
+      rows={3}
+      placeholder={noAccess ? 'Join this community to comment' : 'Have something to say?'}
+      value={comment}
+      disabled={noAccess}
+      onChange={(e) => setComment(e.target.value)}
+      error={commentError.state}
+    />
+  );
 
-          <Button
-            variant="contained"
-            size="small"
-            fullWidth
-            disabled={isAccess == 'no-access'}
-            sx={{ mt: 2 }}
-            color="primary"
-            onClick={handleSubmit}
-          >
-            Comment
+  return (
+    <Card className="p-4">
+      <form onSubmit={handleSubmit} className="space-y-3">
+        {noAccess ? <Tooltip label="Community not joined yet"><div>{field}</div></Tooltip> : field}
+        {commentError.state && (
+          <p className="text-sm font-medium text-destructive">{commentError.message}</p>
+        )}
+        <div className="flex justify-end">
+          <Button type="submit" disabled={noAccess || !comment.trim()}>
+            <Send className="h-4 w-4" /> Comment
           </Button>
-        </CardContent>
+        </div>
       </form>
     </Card>
   );
