@@ -38,9 +38,9 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState([]);
   const [baseUrl, setBaseUrl] = useState(
-    process.env.REACT_APP_ENV == 'production'
-      ? process.env.REACT_APP_BASE_URL
-      : process.env.REACT_APP_SERVER_URL
+    import.meta.env.VITE_ENV == 'production'
+      ? import.meta.env.VITE_BASE_URL
+      : import.meta.env.VITE_SERVER_URL
   );
 
   const fetchLoggedInStatus = () => {
