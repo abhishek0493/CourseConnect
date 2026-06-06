@@ -1,119 +1,69 @@
 import React, { useContext, useState } from 'react';
-import Sidebar from './Sidebar/Sidebar';
 import { Outlet } from 'react-router-dom';
-import {
-  Box,
-  Grid,
-  Card,
-  Drawer,
-  IconButton,
-  useMediaQuery,
-  useTheme,
-} from '@mui/material';
-import { makeStyles } from '@mui/styles';
+import { Menu } from 'lucide-react';
+
+import Sidebar from './Sidebar/Sidebar';
 import SecondarySidebar from './Dashboard/SecondarySidebar';
 import ParentContext from '../ParentContext';
-import MenuIcon from '@mui/icons-material/Menu';
+import { Sheet, SheetContent } from './ui/sheet';
+import { Button } from './ui/button';
+import { Logo } from './Logo';
 
-const useStyles = makeStyles((theme) => ({
-  sidebar: {
-    width: '280px',
-    flexShrink: 0,
-    position: 'fixed',
-    top: theme.spacing(8),
-    bottom: 0,
-  },
-  content: {
-    flexGrow: 1,
-    padding: `${theme.spacing(2)} ${theme.spacing(6)}`,
-    marginLeft: '280px',
-    [theme.breakpoints.down('md')]: {
-      marginLeft: 0,
-      padding: theme.spacing(2),
-    },
-  },
-  card: {
-    marginBottom: theme.spacing(3),
-    padding: theme.spacing(2),
-    height: '500px',
-  },
-}));
-
-const LayoutSecondary = ({ communities, isUpdateTrigger }) => {
-  const classes = useStyles();
-  const { user, setUser } = useContext(ParentContext);
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+const LayoutSecondary = ({ communities }) => {
+  const { user } = useContext(ParentContext);
   const [drawerOpen, setDrawerOpen] = useState(false);
 
-  const handleDrawerToggle = () => {
-    setDrawerOpen(!drawerOpen);
-  };
-
   return (
-    <>
-      <Box sx={{ display: 'flex', bgcolor: '#DAE0E6' }}>
-        {/* Desktop sidebar — visible only on md+ */}
-        {!isMobile && <Sidebar communities={communities} />}
+    <div className="mx-auto w-full max-w-[1600px] px-4 sm:px-6">
+      <div className="flex gap-6 py-6">
+        {/* Desktop sidebar */}
+        <aside className="hidden w-64 shrink-0 lg:block">
+          <div className="sticky top-[88px] h-[calc(100vh-112px)] overflow-hidden rounded-2xl border border-border bg-card shadow-soft">
+            <Sidebar communities={communities} />
+          </div>
+        </aside>
 
         {/* Mobile drawer */}
-        {isMobile && (
-          <Drawer
-            anchor="left"
-            open={drawerOpen}
-            onClose={handleDrawerToggle}
-            sx={{
-              '& .MuiDrawer-paper': {
-                width: 260,
-                top: '64px',
-                boxSizing: 'border-box',
-              },
-            }}
-          >
-            <Sidebar
-              communities={communities}
-              isMobile={true}
-              onClose={handleDrawerToggle}
-            />
-          </Drawer>
-        )}
+        <Sheet open={drawerOpen} onOpenChange={setDrawerOpen}>
+          <SheetContent side="left" className="p-0">
+            <div className="flex h-14 items-center border-b border-border px-4">
+              <Logo />
+            </div>
+            <div className="h-[calc(100%-3.5rem)]">
+              <Sidebar
+                communities={communities}
+                isMobile
+                onClose={() => setDrawerOpen(false)}
+              />
+            </div>
+          </SheetContent>
+        </Sheet>
 
-        <main className={classes.content}>
-          {/* Mobile hamburger button */}
-          {isMobile && (
-            <Box sx={{ mb: 1 }}>
-              <IconButton
-                onClick={handleDrawerToggle}
-                sx={{
-                  bgcolor: 'white',
-                  boxShadow: 1,
-                  '&:hover': { bgcolor: '#f5f5f5' },
-                }}
-                aria-label="Open sidebar menu"
+        {/* Main + right rail */}
+        <div className="flex min-w-0 flex-1 gap-6">
+          <div className="min-w-0 flex-1 animate-fade-rise">
+            <div className="mb-4 lg:hidden">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setDrawerOpen(true)}
+                className="gap-2"
               >
-                <MenuIcon />
-              </IconButton>
-            </Box>
-          )}
+                <Menu className="h-4 w-4" />
+                Menu
+              </Button>
+            </div>
+            <Outlet />
+          </div>
 
-          <Grid container spacing={2}>
-            <Grid item xs={12} md={8}>
-              <Box>
-                <Outlet />
-              </Box>
-            </Grid>
-            <Grid item xs={12} md={4} sx={{ p: { xs: 1, md: 6 } }}>
-              <Card
-                variant="outlined"
-                sx={{ position: { xs: 'static', md: 'sticky' }, top: 80 }}
-              >
-                <SecondarySidebar user={user} />
-              </Card>
-            </Grid>
-          </Grid>
-        </main>
-      </Box>
-    </>
+          <aside className="hidden w-80 shrink-0 xl:block">
+            <div className="sticky top-[88px]">
+              <SecondarySidebar user={user} />
+            </div>
+          </aside>
+        </div>
+      </div>
+    </div>
   );
 };
 

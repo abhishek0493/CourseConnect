@@ -1,12 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react';
-import CreatePostBar from '../../components/Common/CreatePostBar';
-import { Box, Divider, Typography, Alert, Stack } from '@mui/material';
-import { InfoOutlined } from '@mui/icons-material';
-
 import axios from 'axios';
+import { Bookmark } from 'lucide-react';
+
+import CreatePostBar from '../../components/Common/CreatePostBar';
+import DashboardThreads from '../../components/Dashboard/DashboardThreads';
+import { SectionHeading } from '../../components/Common/SectionHeading';
+import { EmptyState } from '../../components/Common/EmptyState';
 import ParentContext from '../../ParentContext';
 import { Refactor } from '../../components/Constants/Refactor';
-import DashboardThreads from '../../components/Dashboard/DashboardThreads';
 import { AddCategoryIcon } from '../../utils/AddCategoryIcon';
 
 const SavedThreads = ({ updateTrigger }) => {
@@ -14,101 +15,46 @@ const SavedThreads = ({ updateTrigger }) => {
   const [threads, setThreads] = useState([]);
 
   const fetchSavedThreads = async () => {
-    await axios
-      .get(`${baseUrl}/api/v1/dashboard/get-saved-threads`)
-      .then((res) => {
-        if (res.data.success) {
-          const response = Refactor(res.data);
-          const resWithIcons = AddCategoryIcon(response);
-          setThreads(resWithIcons);
-        }
-      })
-      .catch((err) => {
-        // console.log(err);
-      });
+    try {
+      const res = await axios.get(`${baseUrl}/api/v1/dashboard/get-saved-threads`);
+      if (res.data.success) setThreads(AddCategoryIcon(Refactor(res.data)));
+    } catch {
+      /* noop */
+    }
   };
 
-  const incrementUpvotes = (threadId, toggle) => {
-    const updatedThreads = threads.map((thread) => {
-      if (thread.id === threadId) {
-        return {
-          ...thread,
-          total_upvotes: thread.total_upvotes + 1,
-          total_downvotes: thread.total_downvotes - (toggle ? 1 : 0),
-          is_upvoted: 1,
-          is_downvoted: 0,
-        };
-      }
-      return thread;
-    });
-    setThreads(updatedThreads);
-  };
-
-  const incrementDownvotes = (threadId, toggle) => {
-    const updatedThreads = threads.map((thread) => {
-      if (thread.id === threadId) {
-        return {
-          ...thread,
-          total_downvotes: thread.total_downvotes + 1,
-          total_upvotes: thread.total_upvotes - (toggle ? 1 : 0), // Decrement downvotes only if toggle is true
-          is_downvoted: 1,
-          is_upvoted: 0,
-        };
-      }
-      return thread;
-    });
-    setThreads(updatedThreads);
-  };
-
-  const handleSave = (threadId, toggle) => {
-    const updatedThreads = threads.map((thread) => {
-      if (thread.id === threadId) {
-        return {
-          ...thread,
-          is_saved: toggle ? (thread.is_saved ? 0 : 1) : 1,
-        };
-      }
-      return thread;
-    });
-    setThreads(updatedThreads);
-  };
+  const incrementUpvotes = (threadId, toggle) =>
+    setThreads((prev) => prev.map((t) => (t.id === threadId ? { ...t, total_upvotes: t.total_upvotes + 1, total_downvotes: t.total_downvotes - (toggle ? 1 : 0), is_upvoted: 1, is_downvoted: 0 } : t)));
+  const incrementDownvotes = (threadId, toggle) =>
+    setThreads((prev) => prev.map((t) => (t.id === threadId ? { ...t, total_downvotes: t.total_downvotes + 1, total_upvotes: t.total_upvotes - (toggle ? 1 : 0), is_downvoted: 1, is_upvoted: 0 } : t)));
+  const handleSave = (threadId, toggle) =>
+    setThreads((prev) => prev.map((t) => (t.id === threadId ? { ...t, is_saved: toggle ? (t.is_saved ? 0 : 1) : 1 } : t)));
 
   useEffect(() => {
     fetchSavedThreads();
   }, []);
 
   return (
-    <>
+    <div className="space-y-6">
       <CreatePostBar />
-      <Box sx={{ mt: 2 }}>
-        <Divider textAlign="left">
-          <Typography variant="h5" fontWeight={'bold'}>
-            # Saved Threads
-          </Typography>
-        </Divider>
-        <Box sx={{ mt: 2 }}>
-          {threads.length === 0 ? (
-            <>
-              <Alert severity="warning" icon={<InfoOutlined />}>
-                No Results found.
-              </Alert>
-            </>
-          ) : (
-            <Stack spacing={2}>
-              {threads.map((item) => (
-                <DashboardThreads
-                  thread={item}
-                  upVoteTrigger={incrementUpvotes}
-                  downVoteTrigger={incrementDownvotes}
-                  saveTrigger={handleSave}
-                  isCommunityJoined={updateTrigger}
-                />
-              ))}
-            </Stack>
-          )}
-        </Box>
-      </Box>
-    </>
+      <SectionHeading icon={Bookmark}>Saved Threads</SectionHeading>
+      {threads.length === 0 ? (
+        <EmptyState icon={Bookmark} title="Nothing saved yet" description="Threads you bookmark will show up here." />
+      ) : (
+        <div className="space-y-3">
+          {threads.map((item) => (
+            <DashboardThreads
+              key={item.id}
+              thread={item}
+              upVoteTrigger={incrementUpvotes}
+              downVoteTrigger={incrementDownvotes}
+              saveTrigger={handleSave}
+              isCommunityJoined={updateTrigger}
+            />
+          ))}
+        </div>
+      )}
+    </div>
   );
 };
 

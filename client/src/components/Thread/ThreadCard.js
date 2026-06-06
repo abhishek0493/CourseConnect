@@ -1,47 +1,21 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-
-import {
-  Card,
-  CardContent,
-  Typography,
-  Avatar,
-  Box,
-  Grid,
-  IconButton,
-  Tooltip,
-  Chip,
-  Snackbar,
-  Alert,
-} from '@mui/material';
-
-import ArrowCircleUpTwoToneIcon from '@mui/icons-material/ArrowCircleUpTwoTone';
-import ArrowCircleDownTwoToneIcon from '@mui/icons-material/ArrowCircleDownTwoTone';
-import StarsRoundedIcon from '@mui/icons-material/StarsRounded';
-import LanguageRoundedIcon from '@mui/icons-material/LanguageRounded';
-import GppMaybeRoundedIcon from '@mui/icons-material/GppMaybeRounded';
-
-import MarkChatUnreadIcon from '@mui/icons-material/MarkChatUnread';
-import BookmarkIcon from '@mui/icons-material/Bookmark';
-
-import VerifiedRoundedIcon from '@mui/icons-material/VerifiedRounded';
-import LeaderboardRoundedIcon from '@mui/icons-material/LeaderboardRounded';
-
-import RequestQuoteIcon from '@mui/icons-material/RequestQuote';
-
 import axios from 'axios';
-import { FormatCount } from '../Constants/RefactorCount';
-
 import { formatDistanceToNow } from 'date-fns';
+import { MessageSquare, Bookmark, GraduationCap } from 'lucide-react';
+
 import ParentContext from '../../ParentContext';
+import { Card } from '../ui/card';
+import { Button } from '../ui/button';
+import { Tooltip } from '../ui/tooltip';
+import { Avatar, AvatarFallback } from '../ui/avatar';
+import { toast } from '../ui/toaster';
+import { VoteRail } from './VoteRail';
+import { CourseMeta } from './CourseMeta';
+import { cn } from '../../lib/utils';
 
-const HumanReadableDate = ({ date }) => {
-  const formattedDate = formatDistanceToNow(new Date(date), {
-    addSuffix: true,
-  });
-
-  return <span>{formattedDate}</span>;
-};
+const timeAgo = (date) =>
+  date ? formatDistanceToNow(new Date(date), { addSuffix: true }) : '';
 
 const ThreadCard = ({
   thread,
@@ -53,329 +27,100 @@ const ThreadCard = ({
   const { baseUrl } = useContext(ParentContext);
   const navigate = useNavigate();
 
-  const [open, setOpen] = useState(false);
-  const savedColour = thread.is_saved ? 'green' : '';
-  const savedText = thread.is_saved ? 'Saved' : 'Save';
+  const canInteract = !!thread.is_access;
+  const noAccess = () => toast.error('You are not a member of this community yet.');
 
-  const upVoteColor = thread.is_upvoted == 1 ? 'green' : '';
-  const downVoteColor = thread.is_downvoted == 1 ? 'orangered' : '';
-  const total_upvotes = thread.total_upvotes;
-  const total_downvotes = thread.total_downvotes;
-  const date = thread.created_at;
-
-  const handleOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const handleUpVote = async () => {
-    await axios
-      .get(`${baseUrl}/api/v1/threads/${thread.id}/up-vote-thread`, {
+  const vote = async (path, trigger) => {
+    if (!canInteract) return noAccess();
+    try {
+      const res = await axios.get(`${baseUrl}/api/v1/threads/${thread.id}/${path}`, {
         withCredentials: true,
-      })
-      .then((res) => {
-        if (res.data.success) {
-          upVoteTrigger(thread.id, res.data.data.toggle);
-        }
-      })
-      .catch((err) => {
-        const res = err.response;
-        if (res) {
-          alert(res.data.message);
-        }
       });
-  };
-
-  const handleDownVote = async () => {
-    await axios
-      .get(`${baseUrl}/api/v1/threads/${thread.id}/down-vote-thread`, {
-        withCredentials: true,
-      })
-      .then((res) => {
-        if (res.data.success) {
-          downVoteTrigger(thread.id, res.data.data.toggle);
-        }
-      })
-      .catch((err) => {
-        const res = err.response;
-        if (res) {
-          alert(res.data.message);
-        }
-        // console.log(err);
-      });
+      if (res.data.success) trigger(thread.id, res.data.data.toggle);
+    } catch (err) {
+      toast.error(err?.response?.data?.message || 'Action failed.');
+    }
   };
 
   const handleSave = async () => {
-    await axios
-      .get(`${baseUrl}/api/v1/threads/${thread.id}/save`, {
+    if (!canInteract) return noAccess();
+    try {
+      const res = await axios.get(`${baseUrl}/api/v1/threads/${thread.id}/save`, {
         withCredentials: true,
-      })
-      .then((res) => {
-        if (res.data.success) {
-          saveTrigger(thread.id, res.data.data.toggle);
-        }
-      })
-      .catch((err) => {
-        const res = err.response;
-        alert(res.data.message);
-        // console.log(err);
       });
+      if (res.data.success) saveTrigger(thread.id, res.data.data.toggle);
+    } catch (err) {
+      toast.error(err?.response?.data?.message || 'Action failed.');
+    }
   };
 
   return (
-    <>
-      <Card
-        key={thread.id}
-        sx={{
-          display: 'flex',
-        }}
-        variant="outlined"
-      >
-        {/* Left vertical strip */}
-        <Grid container>
-          <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-            <Alert
-              onClose={handleClose}
-              severity="error"
-              sx={{ width: '100%' }}
-            >
-              You are not a member of this community yet
-            </Alert>
-          </Snackbar>
-          <Grid item xs={1.5} sm={0.6}>
-            <Box
-              sx={{
-                height: '100%',
-                bgcolor: 'secondary.light',
-                py: 1,
-                display: 'flex',
-                justifyContent: 'space-between',
-                flexDirection: 'column',
-              }}
-            >
-              <Box textAlign={'center'}>
-                <IconButton
-                  size="small"
-                  onClick={!thread.is_access ? handleOpen : handleUpVote}
-                  sx={{
-                    m: 0,
-                    '&:hover': {
-                      color: 'primary.main',
-                    },
-                  }}
-                >
-                  <ArrowCircleUpTwoToneIcon htmlColor={upVoteColor} />
-                </IconButton>
-                <Typography variant="caption" fontWeight={'bold'}>
-                  {total_upvotes &&
-                    total_upvotes != undefined &&
-                    FormatCount(total_upvotes)}
-                </Typography>
-              </Box>
-              <Box textAlign={'center'}>
-                <Typography variant="caption" fontWeight={'bold'}>
-                  {total_downvotes &&
-                    total_downvotes != undefined &&
-                    FormatCount(total_downvotes)}
-                </Typography>
-                <IconButton
-                  size="small"
-                  onClick={!thread.is_access ? handleOpen : handleDownVote}
-                  sx={{
-                    '&:hover': {
-                      color: 'warning.main',
-                    },
-                  }}
-                >
-                  <ArrowCircleDownTwoToneIcon htmlColor={downVoteColor} />
-                </IconButton>
-              </Box>
-            </Box>
-          </Grid>
-          {/* Left vertical strip ends */}
+    <Card interactive={!isDetails} className="flex overflow-hidden">
+      <VoteRail
+        upvotes={thread.total_upvotes}
+        downvotes={thread.total_downvotes}
+        isUpvoted={thread.is_upvoted == 1}
+        isDownvoted={thread.is_downvoted == 1}
+        onUp={() => vote('up-vote-thread', upVoteTrigger)}
+        onDown={() => vote('down-vote-thread', downVoteTrigger)}
+        disabled={!canInteract}
+        disabledReason="Join this community to vote"
+      />
 
-          {/* Main body starts */}
-          <Grid item xs={10.5} sm={11.4}>
-            <Box
-              sx={{
-                p: 1,
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                borderBottom: '0.5px solid #e3e3e3',
-                flexWrap: 'wrap',
-                gap: 0.5,
-              }}
-            >
-              <Box sx={{ display: 'flex' }}>
-                {thread && thread.thread_author && (
-                  <Avatar
-                    sx={{
-                      width: 24,
-                      height: 24,
-                      bgcolor: '#2e2e78',
-                      fontSize: '1rem',
-                      // border: '2px solid #2e2e78',
-                      color: 'paper',
-                      p: 1.5,
-                    }}
-                  >
-                    {thread.thread_author.charAt(0)}
-                  </Avatar>
-                )}
-                <Typography
-                  variant="caption"
-                  fontWeight="light"
-                  color="gray"
-                  sx={{ mx: 1 }}
-                >
-                  Posted By
-                  {thread.is_author == 1 ? (
-                    <Typography
-                      variant="caption"
-                      sx={{
-                        color: 'primary.dark',
-                        borderRadius: 4,
-                        p: 0.5,
-                        fontWeight: 'bold',
-                      }}
-                    >
-                      You
-                    </Typography>
-                  ) : (
-                    <Typography variant="caption" sx={{ ml: 0.5 }}>
-                      u/{thread.thread_author}
-                    </Typography>
-                  )}
-                </Typography>
-                <Typography variant="caption" color={'gray'}>
-                  {date && date != undefined && (
-                    <HumanReadableDate date={date} />
-                  )}
-                  {/* {thread.created_at} */}
-                </Typography>
-              </Box>
-              <Box>
-                {thread.type == 1 && (
-                  <>
-                    <Tooltip title="Course thread">
-                      <StarsRoundedIcon sx={{ mr: 0.5 }} />
-                    </Tooltip>
-                  </>
-                )}
-              </Box>
-            </Box>
-            <Box sx={{ p: 1.5 }}>
-              <Typography variant="body1" sx={{ ml: 1 }}>
-                {thread.title}
-              </Typography>
-            </Box>
-            <CardContent>
-              <Typography variant="body2" color="text.secondary" sx={{ my: 1 }}>
-                {thread.body}
-              </Typography>
-              {thread.type == 1 && (
-                <Box sx={{ mt: 2, display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                  {thread.is_course_completed ? (
-                    <Chip
-                      icon={<VerifiedRoundedIcon />}
-                      size="small"
-                      sx={{ mx: 1 }}
-                      label="I have completed this course"
-                    />
-                  ) : (
-                    <Chip
-                      icon={<GppMaybeRoundedIcon />}
-                      size="small"
-                      sx={{ mx: 1 }}
-                      label="I have not completed this course"
-                    />
-                  )}
-                  <Chip
-                    icon={<LeaderboardRoundedIcon />}
-                    size="small"
-                    sx={{ mx: 1, alignItems: 'center' }}
-                    label={`Rating ${thread.author_rating}/5`}
-                  />
-                  <Chip
-                    icon={<RequestQuoteIcon />}
-                    size="small"
-                    sx={{ mx: 1 }}
-                    label={
-                      thread.pricing == 1 ? 'Pricing: Free' : 'Pricing: Paid'
-                    }
-                  />
-                  <Chip
-                    icon={<LanguageRoundedIcon />}
-                    label={thread.link}
-                    size="small"
-                    sx={{ my: 1 }}
-                    onClick={() => {
-                      alert(thread.link);
-                    }}
-                  />
-                </Box>
-              )}
-            </CardContent>
-            <Box
-              sx={{
-                display: 'flex',
-                p: 1,
-                borderTop: '1px solid #e3e3e3',
-              }}
-            >
-              <Box
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  width: '100%',
-                }}
-              >
-                <Box>
-                  {!isDetails && (
-                    <IconButton
-                      sx={{ borderRadius: 2 }}
-                      onClick={() => {
-                        navigate(
-                          `/dashboard/c/${thread.name}/${thread.id}/comments`
-                        );
-                      }}
-                    >
-                      <MarkChatUnreadIcon sx={{ fontSize: '1.2rem' }} />
-                      <Typography
-                        variant="caption"
-                        sx={{ mx: 1, color: '#333333' }}
-                      >
-                        {thread.total_comments} Comments
-                      </Typography>
-                    </IconButton>
-                  )}
+      <div className="min-w-0 flex-1">
+        <div className="flex items-center gap-2 px-4 pt-3 text-xs text-muted-foreground">
+          {thread.thread_author && (
+            <Avatar className="h-6 w-6">
+              <AvatarFallback className="text-[10px]">
+                {thread.thread_author.charAt(0).toUpperCase()}
+              </AvatarFallback>
+            </Avatar>
+          )}
+          <span>
+            Posted by{' '}
+            {thread.is_author == 1 ? (
+              <span className="font-semibold text-primary">You</span>
+            ) : (
+              <span className="font-medium text-foreground">u/{thread.thread_author}</span>
+            )}
+          </span>
+          <span>•</span>
+          <span>{timeAgo(thread.created_at)}</span>
+          {thread.type == 1 && (
+            <Tooltip label="Course thread">
+              <span className="ml-auto text-primary"><GraduationCap className="h-4 w-4" /></span>
+            </Tooltip>
+          )}
+        </div>
 
-                  <IconButton
-                    sx={{ borderRadius: 2 }}
-                    onClick={!thread.is_access ? handleOpen : handleSave}
-                  >
-                    <BookmarkIcon
-                      sx={{ fontSize: '1.2rem' }}
-                      htmlColor={savedColour}
-                    />
-                    <Typography
-                      variant="caption"
-                      sx={{ mx: 1, color: '#333333' }}
-                    >
-                      {savedText}
-                    </Typography>
-                  </IconButton>
-                </Box>
-              </Box>
-            </Box>
-          </Grid>
-        </Grid>
-      </Card>
-    </>
+        <div className="px-4 pt-3">
+          <h3 className="font-display text-lg font-bold leading-snug tracking-tight">
+            {thread.title}
+          </h3>
+          {thread.body && (
+            <p className="mt-2 whitespace-pre-line text-sm leading-relaxed text-muted-foreground">
+              {thread.body}
+            </p>
+          )}
+          {thread.type == 1 && <CourseMeta thread={thread} />}
+        </div>
+
+        <div className="mt-3 flex items-center gap-1 border-t border-border px-2 py-1.5">
+          {!isDetails && (
+            <Button variant="ghost" size="sm" className="text-muted-foreground"
+              onClick={() => navigate(`/dashboard/c/${thread.name}/${thread.id}/comments`)}>
+              <MessageSquare className="h-4 w-4" />
+              {thread.total_comments || 0} Comments
+            </Button>
+          )}
+          <Button variant="ghost" size="sm" onClick={handleSave}
+            className={cn('text-muted-foreground', thread.is_saved && 'text-success')}>
+            <Bookmark className={cn('h-4 w-4', thread.is_saved && 'fill-success')} />
+            {thread.is_saved ? 'Saved' : 'Save'}
+          </Button>
+        </div>
+      </div>
+    </Card>
   );
 };
 

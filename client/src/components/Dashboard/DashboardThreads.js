@@ -1,66 +1,38 @@
 import React, { useContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { formatDistanceToNow } from 'date-fns';
 import {
-  Card,
-  CardContent,
-  Typography,
-  Avatar,
-  Box,
-  Grid,
-  Tooltip,
-  Modal,
-  IconButton,
-  Button,
-  Link,
-  Chip,
-} from '@mui/material';
-
-import ArrowCircleUpTwoToneIcon from '@mui/icons-material/ArrowCircleUpTwoTone';
-import ArrowCircleDownTwoToneIcon from '@mui/icons-material/ArrowCircleDownTwoTone';
-import PersonPinIcon from '@mui/icons-material/PersonPin';
-import OutboundRoundedIcon from '@mui/icons-material/OutboundRounded';
-import LanguageRoundedIcon from '@mui/icons-material/LanguageRounded';
-import StarsRoundedIcon from '@mui/icons-material/StarsRounded';
-import ForumRoundedIcon from '@mui/icons-material/ForumRounded';
-import VerifiedRoundedIcon from '@mui/icons-material/VerifiedRounded';
-import LeaderboardRoundedIcon from '@mui/icons-material/LeaderboardRounded';
-import BlockIcon from '@mui/icons-material/Block';
-import GppMaybeRoundedIcon from '@mui/icons-material/GppMaybeRounded';
-import RequestQuoteIcon from '@mui/icons-material/RequestQuote';
-import ChatTwoToneIcon from '@mui/icons-material/ChatTwoTone';
-import StarsTwoToneIcon from '@mui/icons-material/StarsTwoTone';
-import ManageAccountsTwoToneIcon from '@mui/icons-material/ManageAccountsTwoTone';
-import OutboundTwoToneIcon from '@mui/icons-material/OutboundTwoTone';
-
-import MarkChatUnreadIcon from '@mui/icons-material/MarkChatUnread';
-import BookmarkIcon from '@mui/icons-material/Bookmark';
+  MessageSquare,
+  Bookmark,
+  Ban,
+  Star,
+  GraduationCap,
+  ShieldCheck,
+} from 'lucide-react';
 
 import { FormatCount } from '../Constants/RefactorCount';
-import { useNavigate } from 'react-router-dom';
 import { getAccessIcon } from '../Constants/GetAccessIcon';
-import axios from 'axios';
-
-import { formatDistanceToNow } from 'date-fns';
 import ParentContext from '../../ParentContext';
+import { Card } from '../ui/card';
+import { Badge } from '../ui/badge';
+import { Button } from '../ui/button';
+import { Tooltip } from '../ui/tooltip';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from '../ui/dialog';
+import { toast } from '../ui/toaster';
+import { VoteRail } from '../Thread/VoteRail';
+import { CourseMeta } from '../Thread/CourseMeta';
+import { cn } from '../../lib/utils';
 
-const HumanReadableDate = ({ date }) => {
-  const formattedDate = formatDistanceToNow(new Date(date), {
-    addSuffix: true,
-  });
-
-  return <span>{formattedDate}</span>;
-};
-
-const style = {
-  position: 'absolute',
-  top: '30%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: { xs: '90vw', sm: 600, md: 800 },
-  bgcolor: 'background.paper',
-  borderRadius: 2,
-  boxShadow: 24,
-  p: 4,
-};
+const timeAgo = (date) =>
+  date ? formatDistanceToNow(new Date(date), { addSuffix: true }) : '';
 
 const DashboardThreads = ({
   thread,
@@ -71,437 +43,156 @@ const DashboardThreads = ({
 }) => {
   const { baseUrl } = useContext(ParentContext);
   const navigate = useNavigate();
-
   const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
 
   const { is_joined, is_request_pending } = thread;
   const label =
     is_joined === 1 ? 'Joined' : is_request_pending === 1 ? 'Pending' : 'Join';
-
-  const accessIcon = getAccessIcon(thread.access_type);
-  const communityIcon = thread.icon;
-
-  const savedColour = thread.is_saved ? 'green' : '';
-  const savedText = thread.is_saved ? 'Saved' : 'Save';
-
-  const upVoteColor = thread.is_upvoted == 1 ? 'green' : '';
-  const downVoteColor = thread.is_downvoted == 1 ? 'orangered' : '';
+  const canInteract = thread.is_joined === 1 || thread.is_author === 1;
+  const access = getAccessIcon(thread.access_type);
+  const AccessIcon = access.Icon;
+  const CategoryIcon = thread.Icon;
 
   const handleJoin = async (id) => {
-    await axios
-      .get(`${baseUrl}/api/v1/community/${id}/join`)
-      .then((res) => {
-        if (res.data.success) {
-          alert(res.data.data.message);
-          isCommunityJoined(true);
-          navigate(`/dashboard/c/${res.data.data.name}`);
-        }
-      })
-      .catch((err) => {
-        const response = err.response;
-        if (response) {
-          alert(response.data.message);
-        }
-        // console.log(err);
-      });
+    try {
+      const res = await axios.get(`${baseUrl}/api/v1/community/${id}/join`);
+      if (res.data.success) {
+        toast.success(res.data.data.message);
+        setOpen(false);
+        isCommunityJoined(true);
+        navigate(`/dashboard/c/${res.data.data.name}`);
+      }
+    } catch (err) {
+      toast.error(err?.response?.data?.message || 'Could not join community.');
+    }
   };
 
-  const handleUpVote = async () => {
-    await axios
-      .get(`${baseUrl}/api/v1/threads/${thread.id}/up-vote-thread`, {
+  const vote = async (path, trigger) => {
+    try {
+      const res = await axios.get(`${baseUrl}/api/v1/threads/${thread.id}/${path}`, {
         withCredentials: true,
-      })
-      .then((res) => {
-        if (res.data.success) {
-          upVoteTrigger(thread.id, res.data.data.toggle);
-        }
-      })
-      .catch((err) => {
-        const res = err.response;
-        alert(res.data.message);
-        // console.log(err);
       });
-  };
-
-  const handleDownVote = async () => {
-    await axios
-      .get(`${baseUrl}/api/v1/threads/${thread.id}/down-vote-thread`, {
-        withCredentials: true,
-      })
-      .then((res) => {
-        if (res.data.success) {
-          downVoteTrigger(thread.id, res.data.data.toggle);
-        }
-      })
-      .catch((err) => {
-        const res = err.response;
-        console.log(err);
-        if (res) {
-          alert(res.data.message);
-        }
-      });
+      if (res.data.success) trigger(thread.id, res.data.data.toggle);
+    } catch (err) {
+      toast.error(err?.response?.data?.message || 'Action failed.');
+    }
   };
 
   const handleSave = async () => {
-    await axios
-      .get(`${baseUrl}/api/v1/threads/${thread.id}/save`, {
+    try {
+      const res = await axios.get(`${baseUrl}/api/v1/threads/${thread.id}/save`, {
         withCredentials: true,
-      })
-      .then((res) => {
-        if (res.data.success) {
-          saveTrigger(thread.id, res.data.data.toggle);
-        }
-      })
-      .catch((err) => {
-        const res = err.response;
-        alert(res.data.message);
-        // console.log(err);
       });
+      if (res.data.success) saveTrigger(thread.id, res.data.data.toggle);
+    } catch (err) {
+      toast.error(err?.response?.data?.message || 'Action failed.');
+    }
   };
 
   return (
-    <Card
-      key={thread.id}
-      sx={{
-        display: 'flex',
-      }}
-      variant="outlined"
-    >
-      {/* Left vertical strip */}
-      <Grid container>
-        <Grid item xs={1.5} sm={0.6}>
-          <Box
-            sx={{
-              height: '100%',
-              bgcolor: 'secondary.main',
-              py: 1,
-              display: 'flex',
-              justifyContent: 'space-between',
-              flexDirection: 'column',
-            }}
+    <Card interactive className="flex overflow-hidden">
+      <VoteRail
+        upvotes={thread.total_upvotes}
+        downvotes={thread.total_downvotes}
+        isUpvoted={thread.is_upvoted == 1}
+        isDownvoted={thread.is_downvoted == 1}
+        onUp={() => vote('up-vote-thread', upVoteTrigger)}
+        onDown={() => vote('down-vote-thread', downVoteTrigger)}
+        disabled={!canInteract}
+        disabledReason="Join this community to vote"
+      />
+
+      <div className="min-w-0 flex-1">
+        {/* Meta header */}
+        <div className="flex flex-wrap items-center gap-x-2 gap-y-1 px-4 pt-3 text-xs text-muted-foreground">
+          <span className="flex h-6 w-6 items-center justify-center rounded-md bg-brand-gradient text-white">
+            {CategoryIcon ? <CategoryIcon className="h-3.5 w-3.5" /> : null}
+          </span>
+          <button
+            onClick={() => navigate(`/dashboard/c/${thread.community_name}`)}
+            className="font-semibold text-foreground hover:text-primary hover:underline"
           >
-            <Box textAlign={'center'}>
-              <Tooltip
-                title={
-                  thread.is_joined || thread.is_author
-                    ? 'Upvote Thread'
-                    : 'Join community to up-vote'
-                }
-              >
-                <span>
-                  <IconButton
-                    size="small"
-                    onClick={handleUpVote}
-                    disabled={thread.is_joined == 0 && thread.is_author == 0}
-                    sx={{
-                      m: 0,
-                      '&:hover': {
-                        color: 'primary.main',
-                      },
-                    }}
-                  >
-                    <ArrowCircleUpTwoToneIcon htmlColor={upVoteColor} />
-                  </IconButton>
-                </span>
+            c/{thread.community_name}
+          </button>
+          <span>•</span>
+          <span>Posted by {thread.author}</span>
+          <span>•</span>
+          <span>{timeAgo(thread.created_at)}</span>
+
+          <div className="ml-auto flex items-center gap-1.5">
+            <Tooltip label={thread.type == 1 ? 'Course thread' : 'Discussion thread'}>
+              <span className="text-muted-foreground">
+                {thread.type == 1 ? <GraduationCap className="h-4 w-4" /> : <MessageSquare className="h-4 w-4" />}
+              </span>
+            </Tooltip>
+            <Tooltip label={access.message}>
+              <Badge variant={access.tone}><AccessIcon /> {access.type}</Badge>
+            </Tooltip>
+            {thread.is_creator != 1 ? (
+              <Button size="sm" variant={label === 'Joined' ? 'secondary' : 'outline'} onClick={() => setOpen(true)} className="h-7">
+                {label}
+              </Button>
+            ) : (
+              <Tooltip label="You manage this community">
+                <span className="flex items-center gap-1 text-primary"><ShieldCheck className="h-4 w-4" /></span>
               </Tooltip>
+            )}
+          </div>
+        </div>
 
-              <Typography variant="caption" fontWeight={'bold'}>
-                {FormatCount(thread.total_upvotes)}
-              </Typography>
-            </Box>
-            <Box textAlign={'center'}>
-              <Typography variant="caption" fontWeight={'bold'}>
-                {FormatCount(thread.total_downvotes)}
-              </Typography>
-              <Tooltip
-                title={
-                  thread.is_joined || thread.is_author
-                    ? 'Downvote Thread'
-                    : 'Join community to down-vote'
-                }
-              >
-                <span>
-                  <IconButton
-                    size="small"
-                    onClick={handleDownVote}
-                    disabled={thread.is_joined == 0 && thread.is_author == 0}
-                    sx={{
-                      '&:hover': {
-                        color: 'warning.main',
-                      },
-                    }}
-                  >
-                    <ArrowCircleDownTwoToneIcon htmlColor={downVoteColor} />
-                  </IconButton>
-                </span>
-              </Tooltip>
-            </Box>
-          </Box>
-        </Grid>
-        {/* Left vertical strip ends */}
+        {/* Title + body */}
+        <button
+          onClick={() => navigate(`/dashboard/c/${thread.name}/${thread.id}/comments`)}
+          className="block w-full px-4 pt-3 text-left"
+        >
+          <h3 className="font-display text-lg font-bold leading-snug tracking-tight hover:text-primary">
+            {thread.title}
+          </h3>
+        </button>
+        {thread.body && (
+          <p className="px-4 pt-2 text-sm leading-relaxed text-muted-foreground line-clamp-4">
+            {thread.body}
+          </p>
+        )}
+        {thread.type == 1 && <div className="px-4">{<CourseMeta thread={thread} />}</div>}
 
-        {/* Main body starts */}
-        <Grid item xs={10.5} sm={11.4}>
-          <Box
-            sx={{
-              p: 1,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              borderBottom: '0.5px solid #e3e3e3',
-              flexWrap: 'wrap',
-              gap: 0.5,
-            }}
-          >
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Avatar
-                sx={{
-                  width: 24,
-                  height: 24,
-                  bgcolor: 'primary.main',
-                  color: 'paper',
-                  p: 1.5,
-                }}
-              >
-                {communityIcon}
-              </Avatar>
-              <Link
-                component="button"
-                sx={{
-                  fontSize: '0.5rem',
-                  textDecoration: 'underline',
-                }}
-                onClick={() => {
-                  navigate(`/dashboard/c/${thread.community_name}`);
-                }}
-              >
-                <Typography
-                  variant="caption"
-                  sx={{ mx: 1, fontWeight: 'bold' }}
-                >
-                  c/{thread.community_name}.
-                </Typography>
-              </Link>
+        {/* Footer actions */}
+        <div className="mt-3 flex items-center gap-1 border-t border-border px-2 py-1.5">
+          <Button variant="ghost" size="sm" className="text-muted-foreground"
+            onClick={() => navigate(`/dashboard/c/${thread.name}/${thread.id}/comments`)}>
+            <MessageSquare className="h-4 w-4" />
+            {FormatCount(thread.total_comments || 0)} Comments
+          </Button>
+          {canInteract ? (
+            <Button variant="ghost" size="sm" onClick={handleSave}
+              className={cn('text-muted-foreground', thread.is_saved && 'text-success')}>
+              <Bookmark className={cn('h-4 w-4', thread.is_saved && 'fill-success')} />
+              {thread.is_saved ? 'Saved' : 'Save'}
+            </Button>
+          ) : (
+            <Tooltip label="Join this community to save">
+              <span className="flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-semibold text-muted-foreground/60">
+                <Ban className="h-4 w-4" /> Save
+              </span>
+            </Tooltip>
+          )}
+        </div>
+      </div>
 
-              <Typography variant="caption" fontWeight="light" color="gray">
-                Posted by {thread.author}.
-              </Typography>
-              <Typography
-                variant="caption"
-                fontWeight="light"
-                color={'GrayText'}
-                sx={{ ml: 1 }}
-              >
-                <HumanReadableDate date={thread.created_at} />
-              </Typography>
-            </Box>
-            <Box sx={{ display: 'flex' }}>
-              {thread.type == 1 ? (
-                <>
-                  <Tooltip title="Course thread">
-                    <StarsTwoToneIcon sx={{ mr: 0.5 }} />
-                  </Tooltip>
-                </>
-              ) : (
-                <>
-                  <Tooltip title="Comment Thread">
-                    <ChatTwoToneIcon sx={{ mr: 0.5 }} />
-                  </Tooltip>
-                </>
-              )}
-              <Tooltip title={accessIcon.message}>
-                <Chip
-                  label={accessIcon.type}
-                  icon={accessIcon.icon}
-                  size="small"
-                  sx={{ p: 0, mr: 1 }}
-                  color={accessIcon.color}
-                ></Chip>
-              </Tooltip>
-
-              {thread.is_creator != 1 ? (
-                <>
-                  <Tooltip title={label}>
-                    <IconButton
-                      sx={{ p: 0 }}
-                      onClick={(event) => {
-                        event.stopPropagation(); // Prevent the event from bubbling up to the parent elements
-                        handleOpen();
-                      }}
-                    >
-                      <OutboundTwoToneIcon color="primary" />
-                    </IconButton>
-                  </Tooltip>
-                  <Modal
-                    open={open}
-                    onClose={handleClose}
-                    aria-labelledby="modal-modal-title"
-                    aria-describedby="modal-modal-description"
-                  >
-                    <Box sx={style}>
-                      <Typography
-                        id="modal-modal-title"
-                        variant="h5"
-                        component="h2"
-                      >
-                        {thread.community_name}
-                      </Typography>
-                      <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                        {accessIcon.message}
-                      </Typography>
-                      <Button
-                        variant="contained"
-                        key={thread.id}
-                        size="small"
-                        sx={{ my: 2 }}
-                        onClick={() => {
-                          handleJoin(thread.community_id);
-                        }}
-                      >
-                        {label}
-                      </Button>
-                    </Box>
-                  </Modal>
-                </>
-              ) : (
-                <Tooltip title="Community is created by you">
-                  <ManageAccountsTwoToneIcon sx={{ color: 'primary.main' }} />
-                </Tooltip>
-              )}
-            </Box>
-          </Box>
-          <Box
-            sx={{
-              p: 1,
-            }}
-          >
-            <Typography variant="body1">{thread.title}</Typography>
-          </Box>
-          <CardContent>
-            <Box sx={{ p: 1 }}>
-              <Typography variant="body2" color="text.secondary" sx={{ my: 1 }}>
-                {thread.body}
-              </Typography>
-              {thread.type == 1 && (
-                <Box sx={{ mt: 2, display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                  {thread.is_course_completed ? (
-                    <Chip
-                      icon={<VerifiedRoundedIcon />}
-                      size="small"
-                      sx={{ mx: 1 }}
-                      label="I have completed this course"
-                    />
-                  ) : (
-                    <Chip
-                      icon={<GppMaybeRoundedIcon />}
-                      size="small"
-                      sx={{ mx: 1 }}
-                      label="I have not completed this course"
-                    />
-                  )}
-                  <Chip
-                    icon={<LeaderboardRoundedIcon />}
-                    size="small"
-                    sx={{ mx: 1, alignItems: 'center' }}
-                    label={`Rating ${thread.author_rating}/5`}
-                  />
-                  <Chip
-                    icon={<RequestQuoteIcon />}
-                    size="small"
-                    sx={{ mx: 1 }}
-                    label={
-                      thread.pricing == 1 ? 'Pricing: Free' : 'Pricing: Paid'
-                    }
-                  />
-                  <Chip
-                    icon={<LanguageRoundedIcon />}
-                    label={thread.link}
-                    size="small"
-                    sx={{ my: 1 }}
-                    onClick={() => {
-                      alert(thread.link);
-                    }}
-                  />
-                </Box>
-              )}
-            </Box>
-          </CardContent>
-          <Box
-            sx={{
-              display: 'flex',
-              p: 1,
-              borderTop: '1px solid #e3e3e3',
-            }}
-          >
-            <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                width: '100%',
-              }}
-            >
-              <Box>
-                <IconButton
-                  sx={{ borderRadius: 2 }}
-                  onClick={() => {
-                    navigate(
-                      `/dashboard/c/${thread.name}/${thread.id}/comments`
-                    );
-                  }}
-                >
-                  <MarkChatUnreadIcon sx={{ fontSize: '1.2rem' }} />
-                  <Typography
-                    variant="caption"
-                    sx={{ mx: 1, color: '#333333' }}
-                  >
-                    {thread.total_comments} Comments
-                  </Typography>
-                </IconButton>
-                <Tooltip
-                  title={
-                    thread.is_joined || thread.is_author
-                      ? 'Save Thread'
-                      : 'Join community to save this thread'
-                  }
-                >
-                  <span>
-                    <IconButton
-                      sx={{ borderRadius: 2 }}
-                      onClick={handleSave}
-                      disabled={thread.is_joined == 0 && thread.is_author == 0}
-                    >
-                      {thread.is_joined == 0 && thread.is_author == 0 && (
-                        <BlockIcon sx={{ fontSize: '1.2rem' }} />
-                      )}
-                      {thread.is_joined == 1 ||
-                        (thread.is_author == 1 && (
-                          <BookmarkIcon
-                            sx={{ fontSize: '1.2rem' }}
-                            htmlColor={savedColour}
-                          />
-                        ))}
-                      {thread.is_joined == 1 && thread.is_author == 0 && (
-                        <BookmarkIcon
-                          sx={{ fontSize: '1.2rem' }}
-                          htmlColor={savedColour}
-                        />
-                      )}
-                      <Typography
-                        variant="caption"
-                        sx={{ mx: 1, color: '#333333' }}
-                      >
-                        {savedText}
-                      </Typography>
-                    </IconButton>
-                  </span>
-                </Tooltip>
-              </Box>
-            </Box>
-          </Box>
-        </Grid>
-      </Grid>
+      {/* Join dialog */}
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>c/{thread.community_name}</DialogTitle>
+            <DialogDescription>{access.message}</DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="gradient" onClick={() => handleJoin(thread.community_id)}>
+              {label}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Card>
   );
 };

@@ -1,236 +1,105 @@
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import { styled, ThemeProvider, createTheme } from '@mui/material/styles';
+import React from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import {
-  Divider,
-  List,
-  Avatar,
-  Alert,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  Paper,
-  IconButton,
-  Tooltip,
-} from '@mui/material';
+  PlusCircle,
+  Home,
+  PenSquare,
+  Bookmark,
+  Users,
+  Hash,
+} from 'lucide-react';
 
-import ArrowRight from '@mui/icons-material/ArrowRight';
-import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
-import GridViewIcon from '@mui/icons-material/GridView';
-import { useNavigate } from 'react-router-dom';
+import { Button } from '../ui/button';
+import { cn } from '../../lib/utils';
 
-const FireNav = styled(List)({
-  '& .MuiListItemButton-root': {
-    paddingLeft: 24,
-    paddingRight: 24,
-  },
-  '& .MuiListItemIcon-root': {
-    minWidth: 0,
-    marginRight: 16,
-  },
-  '& .MuiSvgIcon-root': {
-    fontSize: 20,
-  },
-});
+const navItems = [
+  { label: 'Home Feed', icon: Home, path: '/dashboard', exact: true },
+  { label: 'Create Thread', icon: PenSquare, path: '/dashboard/create-thread' },
+  { label: 'Saved Threads', icon: Bookmark, path: '/dashboard/view-all-saved' },
+  { label: 'Join Requests', icon: Users, path: '/dashboard/view-all-requests' },
+];
 
 const Sidebar = ({ communities, isMobile, onClose }) => {
-  const [open, setOpen] = React.useState(true);
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const handleNavigate = (path) => {
+  const go = (path) => {
     navigate(path);
-    if (isMobile && onClose) {
-      onClose();
-    }
+    if (isMobile && onClose) onClose();
   };
 
+  const isActive = (item) =>
+    item.exact
+      ? location.pathname === item.path
+      : location.pathname.startsWith(item.path);
+
   return (
-    <Box sx={{ display: 'flex' }}>
-      <ThemeProvider
-        theme={createTheme({
-          palette: {
-            primary: {
-              main: '#4f4fab',
-              dark: '#2e2e78',
-            },
-            secondary: {
-              main: '#E6EDFF',
-              dark: '#E5E5E5',
-            },
-            action: {
-              main: 'orangered',
-            },
-          },
-          components: {
-            MuiListItemText: {
-              styleOverrides: {
-                root: {
-                  fontSize: '3rem !important',
-                },
-              },
-            },
-            MuiListItemButton: {
-              defaultProps: {
-                disableTouchRipple: true,
-              },
-            },
-          },
-        })}
-      >
-        <Paper
-          elevation={0}
-          sx={{
-            maxWidth: isMobile ? '100%' : 256,
-            width: isMobile ? '100%' : 'auto',
-            flexShrink: 0,
-            position: isMobile ? 'static' : 'fixed',
-          }}
-        >
-          <FireNav component="nav" disablePadding>
-            <Divider />
-            <ListItem component="div" disablePadding>
-              <ListItemButton
-                sx={{ height: 30 }}
-                onClick={() => handleNavigate('create-community')}
-              >
-                <ListItemIcon>
-                  <AddCircleIcon color="#333333" />
-                </ListItemIcon>
-                <ListItemText
-                  primary="Create Community"
-                  primaryTypographyProps={{
-                    fontWeight: 'medium',
-                    variant: 'body2',
-                  }}
-                />
-              </ListItemButton>
-              <Tooltip title="View All Communities">
-                <IconButton
-                  size="large"
-                  sx={{
-                    '& svg': {
-                      color: '#333333',
-                      transition: '0.2s',
-                      transform: 'translateX(0) rotate(0)',
-                    },
-                    '&:hover, &:focus': {
-                      bgcolor: 'unset',
-                      '& svg:first-of-type': {
-                        transform: 'translateX(-4px) rotate(-20deg)',
-                      },
-                      '& svg:last-of-type': {
-                        right: 0,
-                        opacity: 1,
-                      },
-                    },
-                    '&:after': {
-                      content: '""',
-                      position: 'absolute',
-                      height: '80%',
-                      display: 'block',
-                      left: 0,
-                      width: '1px',
-                      bgcolor: 'divider',
-                    },
-                  }}
-                >
-                  <GridViewIcon />
-                  <ArrowRight
-                    sx={{ position: 'absolute', right: 4, opacity: 0 }}
-                  />
-                </IconButton>
-              </Tooltip>
-            </ListItem>
-            <Divider />
-            <Box
-              sx={{
-                pb: open ? 2 : 0,
-                height: '85vh',
-                overflowY: 'auto', // Add this to make the content scrollable
-              }}
+    <nav className="flex h-full flex-col gap-5 p-4">
+      <Button variant="gradient" className="w-full" onClick={() => go('/dashboard/create-community')}>
+        <PlusCircle className="h-4 w-4" />
+        Create Community
+      </Button>
+
+      <div className="flex flex-col gap-1">
+        {navItems.map((item) => {
+          const Icon = item.icon;
+          const active = isActive(item);
+          return (
+            <button
+              key={item.path}
+              onClick={() => go(item.path)}
+              className={cn(
+                'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors',
+                active
+                  ? 'bg-primary/10 text-primary'
+                  : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+              )}
             >
-              <ListItemButton
-                alignItems="flex-start"
-                onClick={() => setOpen(!open)}
-                sx={{
-                  px: 3,
-                  pt: 2.5,
-                  pb: open ? 0 : 2.5,
-                  '&:hover, &:focus': { '& svg': { opacity: open ? 1 : 0 } },
-                }}
-              >
-                <ListItemText
-                  primary="Your Communities"
-                  primaryTypographyProps={{
-                    fontSize: 12,
-                    fontWeight: 'medium',
-                    lineHeight: '20px',
-                    mb: '2px',
-                  }}
-                  secondary="Authentication, Firestore Database, Realtime Database, Storage, Hosting, Functions, and Machine Learning"
-                  secondaryTypographyProps={{
-                    noWrap: true,
-                    fontSize: 12,
-                    lineHeight: '16px',
-                    color: open ? 'rgba(0,0,0,0)' : 'rgba(255,255,255,0.5)',
-                  }}
-                  sx={{ my: 0 }}
-                />
-                <KeyboardArrowDown
-                  sx={{
-                    mr: -1,
-                    opacity: 0,
-                    transform: open ? 'rotate(-180deg)' : 'rotate(0)',
-                    transition: '0.2s',
-                  }}
-                />
-              </ListItemButton>
-              {open && communities !== null ? (
-                communities.length > 0 ? (
-                  communities.map((item) => (
-                    <ListItemButton
-                      key={item.id}
-                      sx={{ py: 1, minHeight: 32 }}
-                      onClick={() => {
-                        handleNavigate(`/dashboard/c/${item.name}`);
-                      }}
-                    >
-                      <ListItemIcon>
-                        <Avatar
-                          sx={{
-                            width: 28,
-                            height: 28,
-                            bgcolor: '#090979',
-                            // border: '2px solid #2e2e78',
-                            color: 'paper',
-                            p: 1.5,
-                          }}
-                        >
-                          {item.icon}
-                        </Avatar>
-                      </ListItemIcon>
-                      <ListItemText
-                        primary={`c/${item.name}`}
-                        primaryTypographyProps={{
-                          fontSize: 13,
-                          fontWeight: 'medium',
-                        }}
-                      />
-                    </ListItemButton>
-                  ))
-                ) : (
-                  <Alert severity="info">
-                    No communities created or joined!
-                  </Alert>
-                )
-              ) : null}
-            </Box>
-          </FireNav>
-        </Paper>
-      </ThemeProvider>
-    </Box>
+              <Icon className="h-[1.15rem] w-[1.15rem]" />
+              {item.label}
+            </button>
+          );
+        })}
+      </div>
+
+      <div className="flex min-h-0 flex-1 flex-col">
+        <div className="mb-2 flex items-center gap-2 px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+          <Hash className="h-3.5 w-3.5" />
+          Your Communities
+        </div>
+        <div className="-mx-1 flex-1 overflow-y-auto px-1">
+          {communities && communities.length > 0 ? (
+            <div className="flex flex-col gap-0.5">
+              {communities.map((item) => {
+                const Icon = item.Icon;
+                const active = location.pathname === `/dashboard/c/${item.name}`;
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => go(`/dashboard/c/${item.name}`)}
+                    className={cn(
+                      'group flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
+                      active
+                        ? 'bg-secondary text-secondary-foreground'
+                        : 'text-foreground hover:bg-muted'
+                    )}
+                  >
+                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-brand-gradient text-white">
+                      {Icon ? <Icon className="h-4 w-4" /> : item.name?.charAt(0)}
+                    </span>
+                    <span className="truncate">c/{item.name}</span>
+                  </button>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="mx-1 rounded-lg border border-dashed border-border bg-muted/40 px-3 py-4 text-center text-xs text-muted-foreground">
+              No communities yet. Create or join one to get started!
+            </div>
+          )}
+        </div>
+      </div>
+    </nav>
   );
 };
 

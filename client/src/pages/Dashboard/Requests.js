@@ -73,6 +73,7 @@ const Requests = () => {
   return (
     <RequestsTable
       requests={requests}
+      isLoading={isLoading}
       handleApprove={handleApprove}
       handleReject={handleReject}
     />

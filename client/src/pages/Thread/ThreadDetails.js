@@ -1,103 +1,48 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Card, Typography, Box, Stack, Alert, Divider } from '@mui/material';
-
-import axios from 'axios';
 import { useParams } from 'react-router-dom';
-import { Refactor } from '../../components/Constants/Refactor';
+import axios from 'axios';
+import { MessageSquare } from 'lucide-react';
 
+import { Refactor } from '../../components/Constants/Refactor';
 import CreateCommentCard from '../../components/Comment/CreateCommentCard';
 import CommentItem from '../../components/Comment/CommentItem';
 import ThreadCard from '../../components/Thread/ThreadCard';
+import { Card } from '../../components/ui/card';
+import { Alert } from '../../components/ui/alert';
+import { Skeleton } from '../../components/ui/skeleton';
 import ParentContext from '../../ParentContext';
 
 const ThreadDetails = () => {
   const { baseUrl } = useContext(ParentContext);
   const { name, thread_id } = useParams();
-  const [thread, setThread] = useState([]);
+  const [thread, setThread] = useState(null);
   const [comments, setComments] = useState([]);
-  const [commentError, setCommentError] = useState({
-    state: false,
-    message: '',
-  });
+  const [commentError, setCommentError] = useState({ state: false, message: '' });
 
   const fetchthreadDetails = async () => {
-    await axios.get(`${baseUrl}/api/v1/threads/${thread_id}`).then((res) => {
-      const result = Refactor(res.data);
-      setThread(result.thread);
-      setComments(result.comments);
-    });
+    const res = await axios.get(`${baseUrl}/api/v1/threads/${thread_id}`);
+    const result = Refactor(res.data);
+    setThread(result.thread);
+    setComments(result.comments);
   };
 
   useEffect(() => {
     fetchthreadDetails();
   }, []);
 
-  const incrementUpvotes = (threadId, toggle) => {
-    const updatedThread = (thread) => {
-      if (thread.id === threadId) {
-        return {
-          ...thread,
-          total_upvotes: thread.total_upvotes + 1,
-          total_downvotes: thread.total_downvotes - (toggle ? 1 : 0),
-          is_upvoted: 1,
-          is_downvoted: 0,
-        };
-      }
-      return thread;
-    };
-    setThread(updatedThread);
-    fetchthreadDetails();
-  };
-
-  const incrementDownvotes = (threadId, toggle) => {
-    const updatedThread = (thread) => {
-      if (thread.id === threadId) {
-        return {
-          total_downvotes: thread.total_downvotes + 1,
-          total_upvotes: thread.total_upvotes - (toggle ? 1 : 0), // Decrement downvotes only if toggle is true
-          is_downvoted: 1,
-          is_upvoted: 0,
-        };
-      }
-      return thread;
-    };
-    setThread(updatedThread);
-    fetchthreadDetails();
-  };
-
-  const handleSave = (threadId, toggle) => {
-    const updatedThread = (thread) => {
-      if (thread.id === threadId) {
-        return {
-          ...thread,
-          is_saved: toggle ? (thread.is_saved ? 0 : 1) : 1,
-        };
-      }
-      return thread;
-    };
-    setThread(updatedThread);
-    fetchthreadDetails();
-  };
+  const refresh = () => fetchthreadDetails();
 
   const handleCreateComment = async (comment) => {
-    await axios
-      .post(
+    try {
+      const res = await axios.post(
         `${baseUrl}/api/v1/comments/${thread_id}`,
-        { comment: comment },
+        { comment },
         { withCredentials: true }
-      )
-      .then((res) => {
-        if (res.data.success) {
-          fetchthreadDetails();
-        }
-      })
-      .catch((err) => {
-        const response = err.response;
-        if (!response.data.success) {
-          setCommentError({ state: true, message: response.data.message });
-        }
-        // console.log(err);
-      });
+      );
+      if (res.data.success) refresh();
+    } catch (err) {
+      setCommentError({ state: true, message: err?.response?.data?.message || 'Failed to comment.' });
+    }
   };
 
   const handleSubmitReply = (reply, commentId) => {
@@ -107,75 +52,56 @@ const ThreadDetails = () => {
         { comment: reply },
         { withCredentials: true }
       )
-      .then((res) => {
-        if (res.data.success) {
-          fetchthreadDetails();
-          // console.log(res.data.data);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  const commentActionTrigger = (val) => {
-    if (val) {
-      fetchthreadDetails();
-    }
+      .then((res) => res.data.success && refresh())
+      .catch(() => {});
   };
 
   return (
-    <Box>
-      <Divider textAlign="left" sx={{ mb: 2 }}>
-        <Typography sx={{ fontWeight: 'bold' }} variant="subtitle1">
-          c/{name}
-        </Typography>
-      </Divider>
-
+    <div className="space-y-5">
       {thread ? (
-        <ThreadCard
-          thread={thread}
-          isDetails={true}
-          upVoteTrigger={incrementUpvotes}
-          downVoteTrigger={incrementDownvotes}
-          saveTrigger={handleSave}
-        />
+        <ThreadCard thread={thread} isDetails upVoteTrigger={refresh} downVoteTrigger={refresh} saveTrigger={refresh} />
       ) : (
-        <Typography>Loading thread details...</Typography>
+        <Card className="p-5 space-y-3">
+          <Skeleton className="h-5 w-1/3" />
+          <Skeleton className="h-4 w-2/3" />
+          <Skeleton className="h-20 w-full" />
+        </Card>
       )}
 
-      <Stack spacing={2} sx={{ marginTop: '2rem' }}>
-        <Box>
-          <CreateCommentCard
-            isAccess={thread.is_access ? 'access' : 'no-access'}
-            onSubmit={handleCreateComment}
-            commentError={commentError}
-            onChange={(val) => {
-              setCommentError({ state: val, message: '' });
-            }}
-          />
-        </Box>
-        <Typography variant="h6" fontWeight="bold">
-          Comments
-        </Typography>
+      <CreateCommentCard
+        isAccess={thread && thread.is_access ? 'access' : 'no-access'}
+        onSubmit={handleCreateComment}
+        commentError={commentError}
+        onChange={(val) => setCommentError({ state: val, message: '' })}
+      />
 
-        <Card sx={{ p: 2 }}>
-          {comments && comments.length > 0 ? (
-            comments.map((comment) => (
+      <div className="flex items-center gap-2 pt-1">
+        <MessageSquare className="h-5 w-5 text-primary" />
+        <h2 className="font-display text-lg font-bold">
+          Comments {comments?.length ? `(${comments.length})` : ''}
+        </h2>
+      </div>
+
+      <Card className="p-2 sm:p-4">
+        {comments && comments.length > 0 ? (
+          <div className="divide-y divide-border">
+            {comments.map((comment) => (
               <CommentItem
-                isAccess={thread.is_access ? 'access' : 'no-access'}
                 key={comment.id}
+                isAccess={thread && thread.is_access ? 'access' : 'no-access'}
                 comment={comment}
                 handleSubmitReply={handleSubmitReply}
-                updateComments={commentActionTrigger}
+                updateComments={refresh}
               />
-            ))
-          ) : (
-            <Alert severity="info">No comments on this thread yet!</Alert>
-          )}
-        </Card>
-      </Stack>
-    </Box>
+            ))}
+          </div>
+        ) : (
+          <div className="p-2">
+            <Alert variant="info">No comments on this thread yet — start the conversation!</Alert>
+          </div>
+        )}
+      </Card>
+    </div>
   );
 };
 

@@ -1,15 +1,14 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
 import Header from './Header';
-import './LayoutMain.css';
 
 const LayoutMain = ({ isLoggedIn, triggerAuthUpdate }) => {
   return (
-    <div className="layout-main-container">
+    <div className="flex min-h-screen flex-col bg-background">
       <Header isLoggedIn={isLoggedIn} onLogout={triggerAuthUpdate} />
-      <div className="content-container">
+      <main className="flex-1">
         <Outlet />
-      </div>
+      </main>
     </div>
   );
 };

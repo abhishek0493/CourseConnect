@@ -1,114 +1,63 @@
 import React, { useState } from 'react';
-import {
-  Box,
-  Container,
-  Typography,
-  FormControl,
-  FormControlLabel,
-  Radio,
-  RadioGroup,
-  Button,
-  Grid,
-  Paper,
-} from '@mui/material';
-import { makeStyles } from '@mui/styles';
+import { MessageSquareHeart } from 'lucide-react';
 
-const useStyles = makeStyles((theme) => ({
-  paper: {
-    padding: theme.spacing(4),
-    marginBottom: theme.spacing(4),
-  },
-  submitButton: {
-    marginTop: theme.spacing(2),
-  },
-}));
+import { SectionHeading } from '../../components/Common/SectionHeading';
+import { Card, CardContent } from '../../components/ui/card';
+import { Button } from '../../components/ui/button';
+import { RadioGroup, RadioGroupItem } from '../../components/ui/radio-group';
+import { Label } from '../../components/ui/label';
+import { toast } from '../../components/ui/toaster';
+
+const options = [
+  { value: 'excellent', label: 'Excellent' },
+  { value: 'good', label: 'Good' },
+  { value: 'average', label: 'Average' },
+  { value: 'below-average', label: 'Below Average' },
+  { value: 'poor', label: 'Poor' },
+];
 
 const FeedbackForm = () => {
-  const classes = useStyles();
-  const [answers, setAnswers] = useState({
-    lookAndFeel: '',
-    easeOfUse: '',
-    functionality: '',
-    likedFeature: '',
-    considerUsing: '',
-    improvements: '',
-  });
+  const [answers, setAnswers] = useState({ lookAndFeel: '' });
 
-  const handleAnswerChange = (question, answer) => {
-    setAnswers((prevAnswers) => ({
-      ...prevAnswers,
-      [question]: answer,
-    }));
-  };
-
-  const handleSubmit = () => {
-    // Submit answers to the backend or perform any desired action
-    console.log(answers);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    toast.success('Thanks for your feedback!');
   };
 
   return (
-    <Container>
-      <Paper elevation={3} className={classes.paper}>
-        <Typography variant="h5" textAlign={'center'} mb={4}>
-          User Feedback Form
-        </Typography>
-        <form>
-          {/* Overall Look & Feel */}
-          <FormControl component="fieldset" fullWidth>
-            <Typography variant="body1" fontWeight={'bold'}>
-              Overall Look & Feel
-            </Typography>
-            <Typography variant="subtitle1">
-              1. How would you describe the visual appeal of the application?
-            </Typography>
-            <RadioGroup
-              row
-              aria-label="look-and-feel"
-              name="look-and-feel"
-              value={answers.lookAndFeel}
-              onChange={(e) =>
-                handleAnswerChange('lookAndFeel', e.target.value)
-              }
-            >
-              <FormControlLabel
-                value="excellent"
-                control={<Radio size="small" />}
-                label="Excellent"
-              />
-              <FormControlLabel value="good" control={<Radio />} label="Good" />
-              <FormControlLabel
-                value="average"
-                control={<Radio size="small" />}
-                label="Average"
-              />
-              <FormControlLabel
-                value="below-average"
-                control={<Radio size="small" />}
-                label="Below Average"
-              />
-              <FormControlLabel
-                value="poor"
-                control={<Radio size="small" />}
-                label="Poor"
-              />
-            </RadioGroup>
-          </FormControl>
+    <div className="mx-auto max-w-2xl space-y-6">
+      <SectionHeading icon={MessageSquareHeart} subtitle="Help us make CourseConnect better">
+        User Feedback
+      </SectionHeading>
 
-          {/* Other questions follow the same pattern */}
+      <Card>
+        <CardContent className="p-6">
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div>
+              <h3 className="font-display text-base font-bold">Overall Look & Feel</h3>
+              <p className="mt-1 text-sm text-muted-foreground">
+                How would you describe the visual appeal of the application?
+              </p>
+              <RadioGroup
+                value={answers.lookAndFeel}
+                onValueChange={(v) => setAnswers((p) => ({ ...p, lookAndFeel: v }))}
+                className="mt-4 flex flex-wrap gap-2"
+              >
+                {options.map((o) => (
+                  <label key={o.value}
+                    className="flex cursor-pointer items-center gap-2 rounded-full border border-border px-3.5 py-2 text-sm font-medium transition-colors hover:border-primary/40 has-[[data-state=checked]]:border-primary has-[[data-state=checked]]:bg-primary/5">
+                    <RadioGroupItem value={o.value} className="h-4 w-4" />
+                    {o.label}
+                  </label>
+                ))}
+              </RadioGroup>
+            </div>
 
-          {/* Submit Button */}
-          <Button
-            variant="contained"
-            color="primary"
-            className={classes.submitButton}
-            onClick={handleSubmit}
-            sx={{ mt: 3 }}
-          >
-            Submit Feedback
-          </Button>
-        </form>
-      </Paper>
-    </Container>
+            <Button type="submit" variant="gradient">Submit feedback</Button>
+          </form>
+        </CardContent>
+      </Card>
+    </div>
   );
 };
 

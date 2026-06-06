@@ -1,142 +1,83 @@
 import React, { useState } from 'react';
-import { Typography, Avatar, Box, Button } from '@mui/material';
-import { styled } from '@mui/system';
 
+import { Avatar, AvatarFallback } from '../ui/avatar';
+import { Button } from '../ui/button';
 import ReplyBox from './ReplyBox';
 import ActionBox from './ActionBox';
 
-const Indentation = styled(Box)(({ theme }) => ({
-  borderLeft: `1.5px solid ${theme.palette.divider}`,
-  paddingLeft: '1rem',
-}));
+const CommentBody = ({ author, comment }) => (
+  <>
+    <div className="flex items-center gap-2">
+      <Avatar className="h-6 w-6">
+        <AvatarFallback className="text-[10px]">
+          {author ? author.charAt(0).toUpperCase() : '?'}
+        </AvatarFallback>
+      </Avatar>
+      <span className="text-sm font-semibold text-foreground">{author}</span>
+    </div>
+    <p className="mt-1.5 whitespace-pre-line text-sm leading-relaxed text-foreground/90">
+      {comment}
+    </p>
+  </>
+);
 
-const CommentItem = ({
-  comment,
-  handleSubmitReply,
-  updateComments,
-  isAccess,
-}) => {
+const CommentItem = ({ comment, handleSubmitReply, updateComments, isAccess }) => {
   const [showNestedComments, setShowNestedComments] = useState(false);
   const [showReplyBoxId, setShowReplyBoxId] = useState(null);
 
-  const handleReplyButtonClick = (commentId) => {
-    setShowReplyBoxId((prevId) => (prevId === commentId ? null : commentId));
-  };
+  const handleReplyButtonClick = (commentId) =>
+    setShowReplyBoxId((prev) => (prev === commentId ? null : commentId));
 
-  const handleToggleNestedComments = () => {
-    setShowNestedComments((prevShowNested) => !prevShowNested);
-  };
-
-  const handleCommentUpdate = (commentId) => {
-    updateComments(true);
-  };
+  const handleCommentUpdate = () => updateComments(true);
 
   const renderNestedComments = (comments, depth) => {
-    if (!showNestedComments && depth >= 3) {
-      return null;
-    }
+    if (!showNestedComments && depth >= 3) return null;
 
     return comments.map((el) => (
-      <React.Fragment key={el.id}>
-        <Indentation>
-          <Box sx={{ ml: 1, my: 2 }}>
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                p: 1,
-              }}
-            >
-              <Avatar
-                sx={{
-                  width: '1.5rem',
-                  height: '1.5rem',
-                  bgcolor: 'primary.dark',
-                }}
-              >
-                {el.author && el.author.charAt(0)}
-              </Avatar>
-              <Typography
-                variant="body2"
-                color="textSecondary"
-                sx={{ ml: '0.5rem' }}
-              >
-                {el.author}
-              </Typography>
-            </Box>
-            <Typography variant="body2" sx={{ mb: '0.5rem' }}>
-              {el.comment}
-            </Typography>
-            <ActionBox
-              isAccess={isAccess}
-              commentId={el.id}
-              comment={el}
-              handleReplyButtonClick={handleReplyButtonClick}
-              upVoteTrigger={handleCommentUpdate}
-              downVoteTrigger={handleCommentUpdate}
-            />
-            {el.id === showReplyBoxId && (
-              <ReplyBox commentId={el.id} onSubmit={handleSubmitReply} />
+      <div key={el.id} className="mt-3 border-l-2 border-border pl-3 sm:pl-4">
+        <CommentBody author={el.author} comment={el.comment} />
+        <div className="mt-2">
+          <ActionBox
+            isAccess={isAccess}
+            commentId={el.id}
+            comment={el}
+            handleReplyButtonClick={handleReplyButtonClick}
+            upVoteTrigger={handleCommentUpdate}
+            downVoteTrigger={handleCommentUpdate}
+          />
+        </div>
+        {el.id === showReplyBoxId && <ReplyBox commentId={el.id} onSubmit={handleSubmitReply} />}
+        {el.comments.length > 0 && (
+          <>
+            {renderNestedComments(el.comments, depth + 1)}
+            {depth === 2 && (
+              <Button variant="link" size="sm" className="mt-1 h-auto p-0"
+                onClick={() => setShowNestedComments((s) => !s)}>
+                {showNestedComments ? 'Hide replies' : 'Show more replies'}
+              </Button>
             )}
-
-            {el.comments.length > 0 && (
-              <>
-                {renderNestedComments(el.comments, depth + 1)}
-                {depth === 2 && (
-                  <Button
-                    size="small"
-                    onClick={handleToggleNestedComments}
-                    sx={{ fontSize: '12px', textTransform: 'Capitalize' }}
-                  >
-                    {showNestedComments ? 'Hide Replies' : 'Show More Replies'}
-                  </Button>
-                )}
-              </>
-            )}
-          </Box>
-        </Indentation>
-      </React.Fragment>
+          </>
+        )}
+      </div>
     ));
   };
 
   return (
-    <Box sx={{ ml: 0.5, my: 2 }}>
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          p: 1,
-        }}
-      >
-        <Avatar
-          sx={{
-            width: '1.5rem',
-            height: '1.5rem',
-            bgcolor: 'primary.dark',
-          }}
-        >
-          {comment.author && comment.author.charAt(0)}
-        </Avatar>
-        <Typography variant="body2" color="textSecondary" sx={{ ml: '0.5rem' }}>
-          {comment.author}
-        </Typography>
-      </Box>
-      <Typography variant="body2" sx={{ mb: '0.5rem' }}>
-        {comment.comment}
-      </Typography>
-      <ActionBox
-        isAccess={isAccess}
-        commentId={comment.id}
-        comment={comment}
-        handleReplyButtonClick={handleReplyButtonClick}
-        upVoteTrigger={handleCommentUpdate}
-        downVoteTrigger={handleCommentUpdate}
-      />
+    <div className="py-4">
+      <CommentBody author={comment.author} comment={comment.comment} />
+      <div className="mt-2">
+        <ActionBox
+          isAccess={isAccess}
+          commentId={comment.id}
+          comment={comment}
+          handleReplyButtonClick={handleReplyButtonClick}
+          upVoteTrigger={handleCommentUpdate}
+          downVoteTrigger={handleCommentUpdate}
+        />
+      </div>
       {renderNestedComments(comment.comments, 1)}
-      {comment.id === showReplyBoxId && (
-        <ReplyBox commentId={comment.id} onSubmit={handleSubmitReply} />
-      )}
-    </Box>
+      {comment.id === showReplyBoxId && <ReplyBox commentId={comment.id} onSubmit={handleSubmitReply} />}
+    </div>
   );
 };
 

@@ -1,10 +1,16 @@
 import React from 'react';
+import { Flame, SlidersHorizontal } from 'lucide-react';
 
-import { Box, Typography, TextField, MenuItem, Divider } from '@mui/material';
-
-import CategoryIcon from '@mui/icons-material/Category';
 import { Categories } from '../Constants/Categories';
 import Filters from '../Common/Filters';
+import { SectionHeading } from '../Common/SectionHeading';
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from '../ui/select';
 
 const FilterBar = ({
   title,
@@ -16,55 +22,44 @@ const FilterBar = ({
   handleReset,
 }) => {
   return (
-    <>
-      <Box sx={{ my: 2, p: 1 }}>
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: { xs: 'column', sm: 'row' },
-            justifyContent: 'space-between',
-            alignItems: { xs: 'stretch', sm: 'center' },
-            gap: 2,
-          }}
-        >
-          <Box sx={{ width: '100%' }}>
-            <Divider textAlign="left">
-              <Typography variant="h5" fontWeight="bold">
-                # {title}
-              </Typography>
-            </Divider>
-          </Box>
-          <TextField
-            id="outlined-select-currency"
-            select
-            fullWidth
-            size="small"
-            value={filterState.isCategory}
-            label={
-              <Typography variant="body2">
-                <CategoryIcon sx={{ mx: 1 }} />
-                Filter By Category
-              </Typography>
-            }
-            sx={{ maxWidth: { xs: '100%', sm: '280px' } }}
-            onChange={(event) => handleFilterByCategory(event.target.value)}
-          >
-            {Categories.map((option) => (
-              <MenuItem key={option.id} value={option.id}>
-                <Typography variant="body2">{option.label}</Typography>
-              </MenuItem>
-            ))}
-          </TextField>
-        </Box>
-        <Filters
-          handleReset={handleReset}
-          filterState={filterState}
-          toggleCourse={(val) => handleCourseToggle(val)}
-          togglePosted={(val) => handlePostedToggle(val)}
-          toggleSaved={(val) => handleSavedToggle(val)}
-        />
-      </Box>
-    </>
+    <div className="space-y-4">
+      <SectionHeading
+        icon={Flame}
+        action={
+          <div className="w-[210px]">
+            <Select
+              value={filterState.isCategory ? String(filterState.isCategory) : '0'}
+              onValueChange={(v) => handleFilterByCategory(Number(v))}
+            >
+              <SelectTrigger className="h-9">
+                <span className="flex items-center gap-2 truncate">
+                  <SlidersHorizontal className="h-4 w-4 text-muted-foreground" />
+                  <SelectValue placeholder="Filter by category" />
+                </span>
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="0">All categories</SelectItem>
+                {Categories.map((option) => (
+                  <SelectItem key={option.id} value={String(option.id)}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        }
+      >
+        {title}
+      </SectionHeading>
+
+      <Filters
+        handleReset={handleReset}
+        filterState={filterState}
+        toggleCourse={(val) => handleCourseToggle(val)}
+        togglePosted={(val) => handlePostedToggle(val)}
+        toggleSaved={(val) => handleSavedToggle(val)}
+      />
+    </div>
   );
 };
 

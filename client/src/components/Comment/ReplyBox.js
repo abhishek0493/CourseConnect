@@ -1,35 +1,31 @@
 import React, { useState } from 'react';
-import { Box, TextField, Button, Avatar } from '@mui/material';
+import { Send } from 'lucide-react';
+
+import { Textarea } from '../ui/textarea';
+import { Button } from '../ui/button';
 
 const ReplyBox = ({ commentId, onSubmit }) => {
   const [reply, setReply] = useState('');
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!reply.trim()) return;
     onSubmit(reply, commentId);
     setReply('');
   };
 
   return (
-    <Box sx={{ display: 'flex', alignItems: 'center', my: 2 }}>
-      <Avatar sx={{ width: '1.5rem', height: '1.5rem' }}></Avatar>
-      <Box sx={{ flexGrow: 1, ml: '0.5rem' }}>
-        <form onSubmit={handleSubmit}>
-          <TextField
-            multiline
-            fullWidth
-            rows={4}
-            label="Post a reply.."
-            variant="outlined"
-            value={reply}
-            onChange={(e) => setReply(e.target.value)}
-          />
-          <Button variant="contained" sx={{ mt: 1 }} type="submit" size="small">
-            Submit
-          </Button>
-        </form>
-      </Box>
-    </Box>
+    <form onSubmit={handleSubmit} className="my-3 space-y-2 border-l-2 border-primary/30 pl-3">
+      <Textarea
+        rows={3}
+        placeholder="Post a reply…"
+        value={reply}
+        onChange={(e) => setReply(e.target.value)}
+      />
+      <Button type="submit" size="sm" disabled={!reply.trim()}>
+        <Send className="h-3.5 w-3.5" /> Submit
+      </Button>
+    </form>
   );
 };
 

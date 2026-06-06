@@ -1,27 +1,49 @@
-import {
-  Grid,
-  FormControl,
-  Select,
-  TextField,
-  InputLabel,
-  MenuItem,
-  Button,
-  Card,
-  FormGroup,
-  FormControlLabel,
-  Rating,
-  Box,
-  ListSubheader,
-  Typography,
-  Checkbox,
-} from '@mui/material';
-import axios from 'axios';
 import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { GraduationCap, MessageSquare, PlusCircle } from 'lucide-react';
+
 import ParentContext from '../../ParentContext';
+import { Card, CardContent } from '../ui/card';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
+import { Textarea } from '../ui/textarea';
+import { Label } from '../ui/label';
+import { Checkbox } from '../ui/checkbox';
+import { Rating } from '../ui/rating';
+import { toast } from '../ui/toaster';
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+  SelectGroup,
+  SelectLabel,
+} from '../ui/select';
+import { cn } from '../../lib/utils';
+
+const TypeOption = ({ active, icon: Icon, title, desc, onClick }) => (
+  <button
+    type="button"
+    onClick={onClick}
+    className={cn(
+      'flex flex-1 items-start gap-3 rounded-xl border p-4 text-left transition-all',
+      active ? 'border-primary bg-primary/5 ring-2 ring-primary/20' : 'border-border hover:border-primary/40'
+    )}
+  >
+    <span className={cn('flex h-9 w-9 items-center justify-center rounded-lg', active ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground')}>
+      <Icon className="h-5 w-5" />
+    </span>
+    <span>
+      <span className="block text-sm font-semibold">{title}</span>
+      <span className="mt-0.5 block text-xs text-muted-foreground">{desc}</span>
+    </span>
+  </button>
+);
 
 const CreatePostCard = ({ communities, selectedId }) => {
-  const { baseUrl, setBaseUrl } = useContext(ParentContext);
+  const { baseUrl } = useContext(ParentContext);
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -36,308 +58,140 @@ const CreatePostCard = ({ communities, selectedId }) => {
     rating: 0,
   });
 
+  const set = (name, value) => setFormData((p) => ({ ...p, [name]: value }));
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    const newValue = type === 'checkbox' ? checked : value;
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [name]: newValue,
-    }));
+    set(name, type === 'checkbox' ? checked : value);
   };
 
   const handleCreate = async (e) => {
     e.preventDefault();
-
-    let reqData =
+    const reqData =
       formData.type == 2
-        ? {
-            title: formData.title,
-            body: formData.body,
-            community: formData.community,
-            type: formData.type,
-          }
+        ? { title: formData.title, body: formData.body, community: formData.community, type: formData.type }
         : formData;
-
-    await axios
-      .post(`${baseUrl}/api/v1/threads`, reqData, {
-        withCredentials: true,
-      })
-      .then((res) => {
-        if (res.data.success) {
-          let name = res.data.data.name;
-          navigate(`/dashboard/c/${name}`, { replace: true });
-        }
-      })
-      .catch((err) => {
-        const response = err.response;
-        if (!response.data.success) {
-          // setValidationError(true);
-          // setValidationMessage(response.data.message);
-        }
-      });
+    try {
+      const res = await axios.post(`${baseUrl}/api/v1/threads`, reqData, { withCredentials: true });
+      if (res.data.success) {
+        navigate(`/dashboard/c/${res.data.data.name}`, { replace: true });
+      }
+    } catch (err) {
+      toast.error(err?.response?.data?.message || 'Could not create thread.');
+    }
   };
 
+  const created = Object.values(communities).filter((v) => v.is_author);
+  const joined = Object.values(communities).filter((v) => !v.is_author && v.status == 1);
+
   return (
-    <>
-      <form onSubmit={handleCreate}>
-        <Box sx={{ mt: 2 }}>
-          <Grid container>
-            <Grid item xs={12} sm={8}>
-              <FormControl fullWidth>
-                <InputLabel>Select a community</InputLabel>
-                <Select
-                  label="Select a community"
-                  required
-                  variant="outlined"
-                  value={Number(formData.community)}
-                  name="community"
-                  onChange={handleChange}
-                >
-                  <ListSubheader>Created communities</ListSubheader>
-                  {Object.values(communities).map((value) => {
-                    if (value.is_author) {
-                      return (
-                        <MenuItem
-                          key={value.community_id}
-                          value={value.community_id}
-                        >
-                          {value.name}
-                        </MenuItem>
-                      );
-                    }
-                  })}
-                  <ListSubheader>Joined communities</ListSubheader>
-                  {Object.values(communities).map((value) => {
-                    if (!value.is_author && value.status == 1) {
-                      return (
-                        <MenuItem
-                          key={value.community_id}
-                          value={value.community_id}
-                        >
-                          {value.name}
-                        </MenuItem>
-                      );
-                    }
-                  })}
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} sm={1} alignItems="center" sx={{ textAlign: 'center' }}>
-              <Typography variant="h6" fontWeight="bold" mx="1rem">
-                OR
-              </Typography>
-            </Grid>
-            <Grid item xs={12} sm={3} alignItems="center">
-              <Button
-                variant="contained"
-                size="small"
-                color="primary"
-                onClick={() => {
-                  navigate('/dashboard/create-community', { replace: true });
-                }}
-              >
-                Create Community
-              </Button>
-            </Grid>
-          </Grid>
-        </Box>
-        <Box sx={{ my: 1, p: 2 }}>
-          <Grid container>
-            <Grid item xs={12} sm={4} sx={{ p: 1 }}>
-              <Typography variant="h7" fontWeight="bold">
-                This thread is about
-              </Typography>
-            </Grid>
-            <Grid item xs={12} sm={8}>
-              <FormControl fullWidth>
-                <InputLabel size="small">Type</InputLabel>
-                <Select
-                  label="Type"
-                  variant="outlined"
-                  required
-                  name="type"
-                  size="small"
-                  value={formData.type}
-                  onChange={handleChange}
-                >
-                  <MenuItem key={1} value={1}>
-                    A course which I want to share
-                  </MenuItem>
-                  <MenuItem key={2} value={2}>
-                    Ask a question / Post an update
-                  </MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
-          </Grid>
-        </Box>
-        <Box>
-          {formData.type == 1 && (
-            <>
-              <Card sx={{ p: 2 }}>
-                <Grid container spacing={2}>
-                  <Grid item xs={12}>
-                    <TextField
-                      label="Title"
-                      fullWidth
-                      size="small"
-                      name="title"
-                      required
-                      type="text"
-                      value={formData.title}
-                      onChange={(e) => handleChange(e)}
-                    />
-                  </Grid>
-                  <Grid item xs={6}>
-                    <TextField
-                      label="Platform on which the course is available"
-                      name="source"
-                      size="small"
-                      fullWidth
-                      required
-                      value={formData.source}
-                      helperText={
-                        <Typography variant="caption">
-                          For e.g Youtube,Udemy,Skillshare etc
-                        </Typography>
-                      }
-                      onChange={handleChange}
-                    ></TextField>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <FormControl fullWidth>
-                      <InputLabel size="small">Pricing</InputLabel>
-                      <Select
-                        label="Pricing"
-                        variant="outlined"
-                        name="pricing"
-                        size="small"
-                        value={formData.pricing}
-                        required
-                        onChange={handleChange}
-                      >
-                        <MenuItem key="0" value="0">
-                          --- Select ---
-                        </MenuItem>
-                        <MenuItem key="1" value="1">
-                          Free
-                        </MenuItem>
-                        <MenuItem key="2" value="2">
-                          Paid
-                        </MenuItem>
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      label="Link to the course"
-                      fullWidth
-                      size="small"
-                      name="link"
-                      type="text"
-                      value={formData.link}
-                      required
-                      onChange={handleChange}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      label="Text (Optional)"
-                      fullWidth
-                      name="body"
-                      value={formData.body}
-                      multiline
-                      rows={6}
-                      type="text"
-                      onChange={handleChange}
-                    />
-                  </Grid>
-                  <Grid item xs={6}>
-                    <FormGroup>
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            checked={formData.is_completed}
-                            onChange={handleChange}
-                            name="is_completed"
-                          />
-                        }
-                        label="I have completed this course"
-                      />
-                    </FormGroup>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Typography variant="caption">
-                      Rate the course based on your experience
-                    </Typography>
-                    <Rating
-                      name="rating"
-                      precision={0.5}
-                      value={Number(formData.rating)}
-                      onChange={handleChange}
-                    />
-                  </Grid>
-                  <Grid item xs={12} m={2}>
-                    {/* Submit button */}
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      fullWidth
-                      type="submit"
-                    >
-                      Create
-                    </Button>
-                  </Grid>
-                </Grid>
-              </Card>
-            </>
-          )}
-          {formData.type == 2 && (
-            <>
-              <Card sx={{ p: 2 }}>
-                <Grid container spacing={2}>
-                  <Grid item xs={12}>
-                    <TextField
-                      label="Title"
-                      fullWidth
-                      size="small"
-                      value={formData.title}
-                      onChange={handleChange}
-                      name="title"
-                      type="text"
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      label="Write something"
-                      fullWidth
-                      multiline
-                      rows={6}
-                      size="small"
-                      name="body"
-                      value={formData.body}
-                      onChange={handleChange}
-                      type="text"
-                    />
-                  </Grid>
-                  <Grid item xs={12} m={2}>
-                    {/* Submit button */}
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      fullWidth
-                      type="submit"
-                    >
-                      Create
-                    </Button>
-                  </Grid>
-                </Grid>
-              </Card>
-            </>
-          )}
-        </Box>
-      </form>
-    </>
+    <form onSubmit={handleCreate} className="space-y-5">
+      {/* Community picker */}
+      <Card>
+        <CardContent className="flex flex-col gap-4 p-5 sm:flex-row sm:items-end">
+          <div className="flex-1 space-y-1.5">
+            <Label>Post to community</Label>
+            <Select
+              value={formData.community ? String(formData.community) : undefined}
+              onValueChange={(v) => set('community', Number(v))}
+            >
+              <SelectTrigger><SelectValue placeholder="Select a community" /></SelectTrigger>
+              <SelectContent>
+                {created.length > 0 && (
+                  <SelectGroup>
+                    <SelectLabel>Created communities</SelectLabel>
+                    {created.map((v) => (
+                      <SelectItem key={v.community_id} value={String(v.community_id)}>{v.name}</SelectItem>
+                    ))}
+                  </SelectGroup>
+                )}
+                {joined.length > 0 && (
+                  <SelectGroup>
+                    <SelectLabel>Joined communities</SelectLabel>
+                    {joined.map((v) => (
+                      <SelectItem key={v.community_id} value={String(v.community_id)}>{v.name}</SelectItem>
+                    ))}
+                  </SelectGroup>
+                )}
+              </SelectContent>
+            </Select>
+          </div>
+          <span className="hidden text-sm font-semibold text-muted-foreground sm:block sm:pb-2.5">or</span>
+          <Button type="button" variant="outline" onClick={() => navigate('/dashboard/create-community', { replace: true })}>
+            <PlusCircle className="h-4 w-4" /> Create community
+          </Button>
+        </CardContent>
+      </Card>
+
+      {/* Type picker */}
+      <div className="flex flex-col gap-3 sm:flex-row">
+        <TypeOption active={formData.type == 1} icon={GraduationCap} title="Share a course"
+          desc="Recommend a course you've taken" onClick={() => set('type', 1)} />
+        <TypeOption active={formData.type == 2} icon={MessageSquare} title="Ask / Discuss"
+          desc="Post a question or an update" onClick={() => set('type', 2)} />
+      </div>
+
+      {/* Course form */}
+      {formData.type == 1 && (
+        <Card>
+          <CardContent className="grid gap-4 p-5 sm:grid-cols-2">
+            <div className="space-y-1.5 sm:col-span-2">
+              <Label htmlFor="title">Title</Label>
+              <Input id="title" name="title" required value={formData.title} onChange={handleChange} placeholder="e.g. The Complete React Developer Course" />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="source">Platform</Label>
+              <Input id="source" name="source" required value={formData.source} onChange={handleChange} placeholder="Youtube, Udemy, Skillshare…" />
+            </div>
+            <div className="space-y-1.5">
+              <Label>Pricing</Label>
+              <Select value={String(formData.pricing)} onValueChange={(v) => set('pricing', v)}>
+                <SelectTrigger><SelectValue placeholder="Select pricing" /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="1">Free</SelectItem>
+                  <SelectItem value="2">Paid</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-1.5 sm:col-span-2">
+              <Label htmlFor="link">Link to the course</Label>
+              <Input id="link" name="link" required value={formData.link} onChange={handleChange} placeholder="https://…" />
+            </div>
+            <div className="space-y-1.5 sm:col-span-2">
+              <Label htmlFor="body">Text <span className="font-normal text-muted-foreground">(optional)</span></Label>
+              <Textarea id="body" name="body" rows={5} value={formData.body} onChange={handleChange} placeholder="Why do you recommend this course?" />
+            </div>
+            <label className="flex items-center gap-2.5">
+              <Checkbox checked={formData.is_completed} onCheckedChange={(v) => set('is_completed', !!v)} />
+              <span className="text-sm font-medium">I have completed this course</span>
+            </label>
+            <div className="space-y-1.5">
+              <Label>Your rating</Label>
+              <Rating value={Number(formData.rating)} onChange={(v) => set('rating', v)} />
+            </div>
+            <div className="sm:col-span-2">
+              <Button type="submit" variant="gradient" className="w-full">Create thread</Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Discussion form */}
+      {formData.type == 2 && (
+        <Card>
+          <CardContent className="space-y-4 p-5">
+            <div className="space-y-1.5">
+              <Label htmlFor="qtitle">Title</Label>
+              <Input id="qtitle" name="title" value={formData.title} onChange={handleChange} placeholder="What's your question?" />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="qbody">Write something</Label>
+              <Textarea id="qbody" name="body" rows={6} value={formData.body} onChange={handleChange} placeholder="Add more details…" />
+            </div>
+            <Button type="submit" variant="gradient" className="w-full">Create thread</Button>
+          </CardContent>
+        </Card>
+      )}
+    </form>
   );
 };
 
