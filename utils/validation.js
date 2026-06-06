@@ -1,5 +1,5 @@
 const Joi = require('joi');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 const userCreationSchema = Joi.object({
   name: Joi.string().min(2).required(),

@@ -17,6 +17,7 @@ const miscRouter = require('./routes/misc');
 const threadsRouter = require('./routes/threads');
 const commentRouter = require('./routes/comments');
 const dashboardRouter = require('./routes/dashboard');
+const globalErrorHandler = require('./middleware/errorHandler');
 
 // Start express app
 const app = express();
@@ -81,14 +82,10 @@ app.use('/api/v1/threads', threadsRouter);
 app.use('/api/v1/comments', commentRouter);
 app.use('/api/v1/dashboard', dashboardRouter);
 
-// app.all('*', (req, res, next) => {
-//   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
-// });
-
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// app.use(globalErrorHandler);
+app.use(globalErrorHandler);
 
 module.exports = app;
