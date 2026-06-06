@@ -88,7 +88,7 @@ const Login = ({ isLoggedIn }) => {
   };
 
   return (
-    <Container component="main" sx={{ p: 8 }}>
+    <Container component="main" sx={{ p: { xs: 2, sm: 4, md: 8 } }}>
       <Grid container spacing={3}>
         <Grid item xs={12} sm={6}>
           <img
@@ -105,7 +105,7 @@ const Login = ({ isLoggedIn }) => {
             Course Connect
           </Typography>
         </Grid>
-        <Grid item sx={12} sm={6}>
+        <Grid item xs={12} sm={6}>
           <div className={classes.paper}>
             <Avatar
               className={classes.avatar}

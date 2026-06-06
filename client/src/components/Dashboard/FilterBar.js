@@ -21,8 +21,10 @@ const FilterBar = ({
         <Box
           sx={{
             display: 'flex',
+            flexDirection: { xs: 'column', sm: 'row' },
             justifyContent: 'space-between',
-            alignItems: 'center',
+            alignItems: { xs: 'stretch', sm: 'center' },
+            gap: 2,
           }}
         >
           <Box sx={{ width: '100%' }}>
@@ -44,7 +46,7 @@ const FilterBar = ({
                 Filter By Category
               </Typography>
             }
-            sx={{ maxWidth: '280px' }}
+            sx={{ maxWidth: { xs: '100%', sm: '280px' } }}
             onChange={(event) => handleFilterByCategory(event.target.value)}
           >
             {Categories.map((option) => (

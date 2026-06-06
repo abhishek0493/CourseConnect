@@ -50,7 +50,7 @@ const SecondarySidebar = () => {
   }, []);
 
   return (
-    <Box sx={{ height: '80vh', p: 3 }}>
+    <Box sx={{ height: 'auto', p: 3 }}>
       <Box sx={{ display: 'flex' }}>
         <Typography variant="body2" fontWeight={'bold'}>
           {user && Object.keys(user).length > 0 ? (

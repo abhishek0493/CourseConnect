@@ -1,5 +1,7 @@
 import React, { useContext } from 'react';
 import { makeStyles } from '@mui/styles';
+import { useTheme } from '@mui/material/styles';
+import { useMediaQuery } from '@mui/material';
 
 import {
   Paper,
@@ -25,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'space-between',
     alignItems: 'flex-start',
     padding: theme.spacing(2),
-    width: 'calc(33.33% - 16px)',
+    width: '100%',
     marginBottom: theme.spacing(2),
     marginRight: theme.spacing(2),
   },
@@ -55,6 +57,11 @@ const useStyles = makeStyles((theme) => ({
 const Communities = ({ communities }) => {
   const classes = useStyles();
   const navigate = useNavigate();
+  const theme = useTheme();
+  const isXs = useMediaQuery(theme.breakpoints.down('sm'));
+  const isSm = useMediaQuery(theme.breakpoints.between('sm', 'md'));
+
+  const cardWidth = isXs ? '100%' : isSm ? 'calc(50% - 16px)' : 'calc(33.33% - 16px)';
 
   return (
     <>
@@ -78,7 +85,7 @@ const Communities = ({ communities }) => {
           communities.map((community) => {
             const accessIcon = getAccessIcon(community.access_type);
             return (
-              <Paper key={community.id} elevation={0} className={classes.root}>
+              <Paper key={community.id} elevation={0} className={classes.root} style={{ width: cardWidth }}>
                 <div className={classes.communityInfo}>
                   <Link
                     component="button"

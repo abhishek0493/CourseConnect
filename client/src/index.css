@@ -5,9 +5,23 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+/* Hide header logo text on small screens to save space */
+@media (max-width: 600px) {
+  .header-logo {
+    display: none !important;
+  }
+}
+
+/* Prevent horizontal overflow on all containers */
+img {
+  max-width: 100%;
+  height: auto;
 }

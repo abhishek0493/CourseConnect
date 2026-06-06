@@ -27,9 +27,9 @@ const Filters = ({
 }) => {
   return (
     <Box
-      sx={{ mt: 1, display: 'flex', p: 1.2, justifyContent: 'space-between' }}
+      sx={{ mt: 1, display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, p: 1.2, justifyContent: 'space-between', flexWrap: 'wrap', gap: 1 }}
     >
-      <Box sx={{ display: 'flex' }}>
+      <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
         <FormControl component="fieldset">
           <FormGroup aria-label="position" row>
             <FormControlLabel

@@ -35,9 +35,16 @@ const FireNav = styled(List)({
   },
 });
 
-const Sidebar = ({ communities }) => {
+const Sidebar = ({ communities, isMobile, onClose }) => {
   const [open, setOpen] = React.useState(true);
   const navigate = useNavigate();
+
+  const handleNavigate = (path) => {
+    navigate(path);
+    if (isMobile && onClose) {
+      onClose();
+    }
+  };
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -75,9 +82,10 @@ const Sidebar = ({ communities }) => {
         <Paper
           elevation={0}
           sx={{
-            maxWidth: 256,
+            maxWidth: isMobile ? '100%' : 256,
+            width: isMobile ? '100%' : 'auto',
             flexShrink: 0,
-            position: 'fixed',
+            position: isMobile ? 'static' : 'fixed',
           }}
         >
           <FireNav component="nav" disablePadding>
@@ -85,7 +93,7 @@ const Sidebar = ({ communities }) => {
             <ListItem component="div" disablePadding>
               <ListItemButton
                 sx={{ height: 30 }}
-                onClick={() => navigate('create-community')}
+                onClick={() => handleNavigate('create-community')}
               >
                 <ListItemIcon>
                   <AddCircleIcon color="#333333" />
@@ -186,7 +194,7 @@ const Sidebar = ({ communities }) => {
                       key={item.id}
                       sx={{ py: 1, minHeight: 32 }}
                       onClick={() => {
-                        navigate(`/dashboard/c/${item.name}`);
+                        handleNavigate(`/dashboard/c/${item.name}`);
                       }}
                     >
                       <ListItemIcon>

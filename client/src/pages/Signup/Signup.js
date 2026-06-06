@@ -66,7 +66,7 @@ const SignupNew = ({ userTypes, onSignUpSuccess }) => {
   };
 
   return (
-    <Box sx={{ p: 8 }}>
+    <Box sx={{ p: { xs: 2, sm: 4, md: 8 } }}>
       {state ? (
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6}>
@@ -106,7 +106,7 @@ const SignupNew = ({ userTypes, onSignUpSuccess }) => {
 
             <form onSubmit={handleSignUp}>
               <Grid container spacing={2}>
-                <Grid item xs={6}>
+                <Grid item xs={12} sm={6}>
                   <TextField
                     label="Name"
                     fullWidth
@@ -123,7 +123,7 @@ const SignupNew = ({ userTypes, onSignUpSuccess }) => {
                     }
                   />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={12} sm={6}>
                   <TextField
                     label="Email"
                     fullWidth
@@ -167,7 +167,7 @@ const SignupNew = ({ userTypes, onSignUpSuccess }) => {
                     onChange={handleChange}
                   />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={12} sm={6}>
                   {/* Password and Confirm Password row */}
                   <TextField
                     label="Password"
@@ -186,7 +186,7 @@ const SignupNew = ({ userTypes, onSignUpSuccess }) => {
                     }
                   />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={12} sm={6}>
                   <TextField
                     label="Confirm Password"
                     fullWidth
@@ -233,7 +233,7 @@ const SignupNew = ({ userTypes, onSignUpSuccess }) => {
       ) : (
         <Box>
           <Grid container justifyContent={'cnter'}>
-            <Grid item xs={8}>
+            <Grid item xs={12} md={8}>
               <img
                 src={errorImg}
                 alt="Logo"
@@ -244,7 +244,7 @@ const SignupNew = ({ userTypes, onSignUpSuccess }) => {
                 }}
               />
             </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={12} md={4}>
               <Typography variant="h3" gutterBottom>
                 Consent not received.
               </Typography>

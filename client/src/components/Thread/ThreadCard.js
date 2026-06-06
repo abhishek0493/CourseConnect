@@ -145,7 +145,7 @@ const ThreadCard = ({
               You are not a member of this community yet
             </Alert>
           </Snackbar>
-          <Grid item xs={0.6}>
+          <Grid item xs={1.5} sm={0.6}>
             <Box
               sx={{
                 height: '100%',
@@ -198,7 +198,7 @@ const ThreadCard = ({
           {/* Left vertical strip ends */}
 
           {/* Main body starts */}
-          <Grid item xs={11.4}>
+          <Grid item xs={10.5} sm={11.4}>
             <Box
               sx={{
                 p: 1,
@@ -206,6 +206,8 @@ const ThreadCard = ({
                 justifyContent: 'space-between',
                 alignItems: 'center',
                 borderBottom: '0.5px solid #e3e3e3',
+                flexWrap: 'wrap',
+                gap: 0.5,
               }}
             >
               <Box sx={{ display: 'flex' }}>
@@ -276,7 +278,7 @@ const ThreadCard = ({
                 {thread.body}
               </Typography>
               {thread.type == 1 && (
-                <Box sx={{ mt: 2 }}>
+                <Box sx={{ mt: 2, display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                   {thread.is_course_completed ? (
                     <Chip
                       icon={<VerifiedRoundedIcon />}

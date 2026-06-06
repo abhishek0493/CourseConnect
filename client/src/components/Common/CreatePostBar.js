@@ -45,7 +45,7 @@ const CreatePostBar = ({ community, isAccess }) => {
       elevation={0}
     >
       <Grid container columnSpacing={2}>
-        <Grid item xs={1}>
+        <Grid item xs={2} sm={1}>
           <Badge
             overlap="circular"
             anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
@@ -59,7 +59,7 @@ const CreatePostBar = ({ community, isAccess }) => {
             </Avatar>
           </Badge>
         </Grid>
-        <Grid item xs={10}>
+        <Grid item xs={9} sm={10}>
           <TextField
             label={<Typography variant="body2">Create a thread</Typography>}
             size="small"

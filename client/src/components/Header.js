@@ -232,7 +232,7 @@ const Header = (props) => {
               to={isLoggedIn ? '/dashboard' : '/'}
               style={{ textDecoration: 'none', color: 'inherit' }}
             >
-              <img alt="logo" src={logo} style={{ width: '100px' }} />
+              <img alt="logo" src={logo} style={{ width: '100px', display: 'block' }} className="header-logo" />
             </Link>
           </Box>
           <Search>

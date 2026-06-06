@@ -82,7 +82,7 @@ const CreatePostCard = ({ communities, selectedId }) => {
       <form onSubmit={handleCreate}>
         <Box sx={{ mt: 2 }}>
           <Grid container>
-            <Grid item xs={8}>
+            <Grid item xs={12} sm={8}>
               <FormControl fullWidth>
                 <InputLabel>Select a community</InputLabel>
                 <Select
@@ -122,12 +122,12 @@ const CreatePostCard = ({ communities, selectedId }) => {
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item xs={1} alignItems="center">
+            <Grid item xs={12} sm={1} alignItems="center" sx={{ textAlign: 'center' }}>
               <Typography variant="h6" fontWeight="bold" mx="1rem">
                 OR
               </Typography>
             </Grid>
-            <Grid item xs={3} alignItems="center">
+            <Grid item xs={12} sm={3} alignItems="center">
               <Button
                 variant="contained"
                 size="small"
@@ -143,12 +143,12 @@ const CreatePostCard = ({ communities, selectedId }) => {
         </Box>
         <Box sx={{ my: 1, p: 2 }}>
           <Grid container>
-            <Grid item xs={4} sx={{ p: 1 }}>
+            <Grid item xs={12} sm={4} sx={{ p: 1 }}>
               <Typography variant="h7" fontWeight="bold">
                 This thread is about
               </Typography>
             </Grid>
-            <Grid item xs={8}>
+            <Grid item xs={12} sm={8}>
               <FormControl fullWidth>
                 <InputLabel size="small">Type</InputLabel>
                 <Select

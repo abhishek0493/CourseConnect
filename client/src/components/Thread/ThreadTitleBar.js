@@ -25,7 +25,7 @@ const style = {
   top: '30%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 500,
+  width: { xs: '90vw', sm: 500 },
   bgcolor: 'background.paper',
   borderRadius: 2,
   boxShadow: 24,
@@ -108,7 +108,7 @@ const ThreadTitleBar = ({ community, isCommunityJoined }) => {
   return (
     <Box sx={{ p: 2, mb: 1.5, width: '100%' }}>
       <Grid container>
-        <Grid item xs={9}>
+        <Grid item xs={9} sm={9}>
           <Divider sx={{ width: '100%' }} textAlign="left">
             <Typography variant="h5" fontWeight={'bold'}>
               {community.title}
@@ -118,6 +118,7 @@ const ThreadTitleBar = ({ community, isCommunityJoined }) => {
         <Grid
           item
           xs={3}
+          sm={3}
           sx={{ alignItems: 'center', justifyContent: 'center' }}
         >
           <Chip
@@ -136,7 +137,7 @@ const ThreadTitleBar = ({ community, isCommunityJoined }) => {
         </Grid>
       </Grid>
 
-      <Box sx={{ mt: 1.5, display: 'flex', justifyContent: 'space-between' }}>
+      <Box sx={{ mt: 1.5, display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: 1 }}>
         <Box sx={{ display: 'flex', columnGap: 1 }}>
           <Box>
             <Tooltip sx={{ mx: 1 }} title={accessStyle.message}>

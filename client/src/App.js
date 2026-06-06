@@ -24,12 +24,10 @@ import CommunityRequests from './pages/Dashboard/CommunityRequests';
 import NoAccess from './pages/NoAccess/NoAccess';
 import SavedThreads from './pages/Dashboard/SavedThreads';
 import SearchResults from './pages/Dashboard/SearchResults';
-import MobileNotSupported from './pages/NoAccess/MobileNotSupported';
+
 import FeedbackForm from './pages/Feedback/FeedbackForm';
 
 function App() {
-  const mobileScreenWidth = 768;
-  const isMobile = window.innerWidth < mobileScreenWidth;
 
   const [userTypes, setUserTypes] = useState([]);
   const [accessTypes, setAccessTypes] = useState([]);
@@ -139,14 +137,10 @@ function App() {
         <Routes>
           <Route
             element={
-              isMobile ? (
-                <MobileNotSupported />
-              ) : (
-                <LayoutMain
-                  isLoggedIn={isLoggedIn}
-                  triggerAuthUpdate={handleUpdateTrigger}
-                />
-              )
+              <LayoutMain
+                isLoggedIn={isLoggedIn}
+                triggerAuthUpdate={handleUpdateTrigger}
+              />
             }
           >
             <Route path="/" element={<Home />} />

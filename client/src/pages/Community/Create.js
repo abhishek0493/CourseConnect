@@ -96,7 +96,7 @@ const CreateCommunity = ({ cmCategories, onCreateCommunity }) => {
         <Box sx={{ p: 3 }}>
           <form onSubmit={handleCreate}>
             <Grid container spacing={2}>
-              <Grid item xs={6}>
+              <Grid item xs={12} sm={6}>
                 <TextField
                   label="Community Name"
                   fullWidth
@@ -131,7 +131,7 @@ const CreateCommunity = ({ cmCategories, onCreateCommunity }) => {
                   }}
                 />
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={12} sm={6}>
                 <FormControl fullWidth>
                   <InputLabel size="small">Category</InputLabel>
                   <Select

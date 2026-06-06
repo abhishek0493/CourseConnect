@@ -8,7 +8,7 @@ const Home = () => {
   return (
     <Box>
       <Grid container>
-        <Grid item xs={6}>
+        <Grid item xs={12} md={6}>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <img
               src={image5}
@@ -19,8 +19,9 @@ const Home = () => {
         </Grid>
         <Grid
           item
-          xs={6}
-          sx={{ padding: '45px', alignItems: 'center', margin: 'auto 0' }}
+          xs={12}
+          md={6}
+          sx={{ padding: { xs: '20px', md: '45px' }, alignItems: 'center', margin: 'auto 0' }}
         >
           <Typography variant="h2" color="action.main">
             Welcome to Course Connect
