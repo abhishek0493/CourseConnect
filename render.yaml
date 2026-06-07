@@ -1,0 +1,43 @@
+# Render Blueprint — same-origin monolith (Express serves API + built Vite SPA).
+# Provision the database separately (managed MySQL) and fill the `sync: false`
+# secrets in the Render dashboard. Docs: https://render.com/docs/blueprint-spec
+services:
+  - type: web
+    name: courseconnect
+    runtime: node
+    plan: starter            # 'free' spins down on idle; 'starter'+ stays warm
+    region: oregon           # choose the region closest to your MySQL instance
+    branch: master
+    autoDeploy: true
+    buildCommand: npm ci && npm run build      # installs API deps + builds client/dist
+    startCommand: npm start
+    preDeployCommand: npx knex migrate:latest  # runs migrations before traffic shifts
+    healthCheckPath: /healthz
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET_KEY
+        sync: false          # set in dashboard: a long random string
+      - key: JWT_COOKIE_EXPIRES_IN
+        value: "7"
+      - key: DB_HOST
+        sync: false
+      - key: DB_PORT
+        value: "3306"
+      - key: DB_USER
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: DB_DATABASE
+        sync: false
+      - key: DB_SSL
+        value: "true"
+      # - key: DB_CA          # optional: PEM CA cert for strict TLS verification
+      #   sync: false
+      - key: CLIENT_URL
+        sync: false           # your final HTTPS origin, e.g. https://courseconnect.example.com
+      # Build-time client env (Vite inlines these). Empty base => origin-relative /api/v1.
+      - key: VITE_ENV
+        value: production
+      - key: VITE_BASE_URL
+        value: ""
