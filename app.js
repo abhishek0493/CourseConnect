@@ -9,7 +9,7 @@ const helmet = require('helmet');
 const cors = require('cors');
 const compression = require('compression');
 
-require('dotenv').config();
+require('dotenv').config({ path: require('path').join(__dirname, '.env') });
 
 const db = require('./db');
 const userRouter = require('./routes/users');
@@ -51,7 +51,11 @@ app.use(
       directives: {
         'default-src': ["'self'"],
         'script-src': ["'self'"],
-        'style-src': ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
+        'style-src': [
+          "'self'",
+          "'unsafe-inline'",
+          'https://fonts.googleapis.com',
+        ],
         'font-src': ["'self'", 'https://fonts.gstatic.com'],
         'img-src': ["'self'", 'data:', 'blob:'],
         'connect-src': ["'self'"],
@@ -61,7 +65,7 @@ app.use(
     },
     // Allow same-origin asset loading without COEP friction for the SPA.
     crossOriginEmbedderPolicy: false,
-  })
+  }),
 );
 
 // Gzip/brotli compression for API responses and static assets.
@@ -78,7 +82,7 @@ app.use(
         res.setHeader('Cache-Control', 'no-cache');
       }
     },
-  })
+  }),
 );
 
 // Development request logging
