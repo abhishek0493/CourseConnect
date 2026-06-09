@@ -1,13 +1,16 @@
 const authService = require('../services/authService');
 const catchAsync = require('../utils/catchAsync');
 
+const isProd = process.env.NODE_ENV === 'production';
+
 const createSendToken = (user, token, statusCode, req, res) => {
   res.cookie('jwt', token, {
     expires: new Date(
       Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
     ),
     httpOnly: true,
-    secure: req.secure || req.headers['x-forwarded-proto'] === 'https',
+    secure: isProd || req.secure || req.headers['x-forwarded-proto'] === 'https',
+    sameSite: 'lax',
   });
 
   user.password = undefined;
@@ -37,8 +40,10 @@ exports.isLoggedIn = catchAsync(async (req, res) => {
 
 exports.logout = (req, res) => {
   res.cookie('jwt', 'loggedout', {
-    expires: new Date(Date.now() + 10 * 10),
+    expires: new Date(Date.now() + 10 * 1000),
     httpOnly: true,
+    secure: isProd || req.secure || req.headers['x-forwarded-proto'] === 'https',
+    sameSite: 'lax',
   });
   res.status(200).json({ success: true });
 };
