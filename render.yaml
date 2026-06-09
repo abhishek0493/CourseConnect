@@ -23,17 +23,17 @@ services:
       - key: DB_HOST
         sync: false
       - key: DB_PORT
-        value: "3306"
+        sync: false          # Aiven assigns a custom port (NOT 3306) — set per service
       - key: DB_USER
-        sync: false
+        sync: false          # least-privilege app user (e.g. cc_app), not avnadmin
       - key: DB_PASSWORD
         sync: false
       - key: DB_DATABASE
         sync: false
       - key: DB_SSL
         value: "true"
-      # - key: DB_CA          # optional: PEM CA cert for strict TLS verification
-      #   sync: false
+      - key: DB_CA            # paste Aiven's ca.pem PEM contents for strict TLS verification
+        sync: false
       - key: CLIENT_URL
         sync: false           # your final HTTPS origin, e.g. https://courseconnect.example.com
       # Build-time client env (Vite inlines these). Empty base => origin-relative /api/v1.

@@ -9,7 +9,8 @@
     "start": "node server.js",
     "dev": "nodemon server.js",
     "build": "npm --prefix client ci && npm --prefix client run build",
-    "migrate": "knex migrate:latest"
+    "migrate": "knex migrate:latest",
+    "db:check": "node scripts/db/check-connection.js"
   },
   "author": "Abhishek Padaya",
   "license": "ISC",

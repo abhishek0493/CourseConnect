@@ -73,15 +73,23 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done.
 
 ---
 
-## Phase 2 — Provision the database (managed MySQL 8)
-- [ ] Create a managed MySQL 8 instance in a region close to Render
-- [ ] Create the app database (`CourseConnect`) + a **least-privilege** app user (no `SUPER`)
-- [ ] Enforce TLS-only connections; capture the CA cert (→ `DB_CA` if strict verification)
-- [ ] Ensure the user auth plugin works with `mysql2` (it does — `caching_sha2_password` supported)
-- [ ] Restrict network access to Render's egress where supported
-- [ ] Record `DB_HOST / DB_PORT / DB_USER / DB_PASSWORD / DB_DATABASE` for the secret store
-- [ ] Enable automated daily backups + retention; note PITR availability
-- [ ] **Run a test restore** into a scratch DB to validate backups before go-live
+## Phase 2 — Provision the database (managed MySQL 8 — **Aiven**)
+
+### Prepared in repo (use these to execute the steps below)
+- [x] Least-privilege user SQL → `scripts/db/create-app-user.sql` (creates `CourseConnect` + `cc_app`, db-scoped grants, **no** SUPER/FILE/CREATE USER)
+- [x] TLS connectivity check → `npm run db:check` (`scripts/db/check-connection.js`): reports server version, **negotiated TLS cipher**, current DB, and effective grants; flags any unencrypted connection
+- [x] `render.yaml` updated for Aiven: `DB_PORT` is now a per-service secret (Aiven uses a **non-3306** port) and `DB_CA` is wired in for strict TLS
+
+### Console / account actions (Aiven — user)
+- [ ] Create a managed MySQL 8 service in a region close to Render's `oregon` (e.g. `google-us-west` / `aws-us-west-2`)
+- [ ] In the Aiven console, copy the **service URI** parts → `DB_HOST`, `DB_PORT` (custom!), admin user `avnadmin` + password; download **`ca.pem`**
+- [ ] Create app DB + least-privilege user: `mysql --host <H> --port <P> --user avnadmin --password --ssl-mode=REQUIRED --ssl-ca=ca.pem < scripts/db/create-app-user.sql` (set a strong `cc_app` password first)
+- [ ] Verify before deploy: `DB_HOST=… DB_PORT=… DB_USER=cc_app DB_PASSWORD=… DB_DATABASE=CourseConnect DB_SSL=true DB_CA_FILE=./ca.pem npm run db:check` → expect a TLS cipher + the `cc_app` grants
+- [ ] TLS-only is on by default on Aiven; keep `ca.pem` → set as `DB_CA` in Render (Phase 5)
+- [ ] Restrict network access: add Render's egress IPs to the Aiven **Allowed IP** list
+- [ ] Record `DB_HOST / DB_PORT / DB_USER / DB_PASSWORD / DB_DATABASE` for the Render secret store (Phase 5)
+- [ ] Enable automated daily backups + retention (Aiven backups are on by default; confirm retention + note PITR window)
+- [ ] **Run a test restore**: fork the service (Aiven "fork"/PITR) into a scratch service and `npm run db:check` against it before go-live
 
 ---
 
