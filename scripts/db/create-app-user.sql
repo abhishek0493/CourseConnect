@@ -22,7 +22,7 @@ CREATE DATABASE IF NOT EXISTS `CourseConnect`
 --    provider's network/IP allow-list (Phase 2) to actually restrict origin.
 --    MySQL 8 defaults to caching_sha2_password, which mysql2 supports over TLS.
 CREATE USER IF NOT EXISTS 'cc_app'@'%'
-  IDENTIFIED BY 'REPLACE_WITH_STRONG_PASSWORD';
+  IDENTIFIED BY 'lijKp2vjtYnmY4qSV6SvgyDV9+/86Dxw';
 
 -- 3) Least-privilege grants, scoped to the CourseConnect database only.
 --    DML (runtime) + DDL (Knex migrations: create/alter/drop tables, indexes,
@@ -33,7 +33,8 @@ GRANT SELECT, INSERT, UPDATE, DELETE,
   ON `CourseConnect`.*
   TO 'cc_app'@'%';
 
-FLUSH PRIVILEGES;
+-- (No FLUSH PRIVILEGES: CREATE USER/GRANT apply immediately, and Aiven's avnadmin
+--  lacks the RELOAD privilege FLUSH requires.)
 
 -- Verify what the app user ended up with:
 --   SHOW GRANTS FOR 'cc_app'@'%';

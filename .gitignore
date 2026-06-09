@@ -10,6 +10,12 @@ dist/
 
 # Environment variables
 .env
+.env.*
+!.env.example
+
+# TLS certs (e.g. Aiven ca.pem) — never commit
+*.pem
+certs/
 
 ## Markdown
 *.md
