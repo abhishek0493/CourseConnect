@@ -35,10 +35,14 @@ function App() {
   const [communities, setCommunities] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState([]);
+  // Use Vite's built-in PROD flag (always correct for `vite build`) instead of a
+  // hand-set VITE_ENV that can be missing at build time. In production the
+  // monolith serves the API from the same origin, so default to origin-relative
+  // ('') even if VITE_BASE_URL isn't set — avoids fetches to `undefined/api/...`.
   const [baseUrl, setBaseUrl] = useState(
-    import.meta.env.VITE_ENV == 'production'
-      ? import.meta.env.VITE_BASE_URL
-      : import.meta.env.VITE_SERVER_URL
+    import.meta.env.PROD
+      ? import.meta.env.VITE_BASE_URL || ''
+      : import.meta.env.VITE_SERVER_URL || 'http://localhost:8000'
   );
 
   const fetchLoggedInStatus = () => {
